@@ -1,6 +1,6 @@
-# vojak.cloud
+# homelab
 
-This repository contains the configuration-as-code for my home cloud setup.
+This repository contains the configuration-as-code for my homelab.
 
 ## Prerequisites
 
