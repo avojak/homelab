@@ -1,6 +1,6 @@
 {
     "variables": {
-        "SSH_KEY": ""
+        "ssh_key": ""
     },
     "builders": [
         {
@@ -54,10 +54,13 @@
         },
         {
             "type": "shell",
+            "environment_vars": [
+                "SSH_KEY={{user `ssh_key`}}"
+            ],
             "inline": [
                 "sudo mkdir /root/.ssh/",
                 "sudo chmod -R 700 /root/.ssh",
-                "echo {{user `SSH_KEY` }} | sudo tee /root/.ssh/authorized_keys",
+                "echo $SSH_KEY | sudo tee /root/.ssh/authorized_keys",
                 "sudo chmod 600 /root/.ssh/authorized_keys"
             ]
         },

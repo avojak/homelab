@@ -1,8 +1,8 @@
 IMAGE_NAME=ubuntu-18.04-server
-SSH_KEY=`cat ../id_rsa.pub`
+SSH_KEY:=$(shell cat ../id_rsa.pub)
 
 ova:
-	packer build -var 'SSH_KEY=$(SSH_KEY)' ./$(IMAGE_NAME)-template.json
+	packer build -var 'ssh_key=$(SSH_KEY)' ./$(IMAGE_NAME)-template.json
 
 .PHONY: clean
 clean:

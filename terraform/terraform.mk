@@ -1,9 +1,11 @@
-PASSWORD = $(shell bash -c 'read -s -p "ESXi Password: " pwd; echo $$pwd')
-
-deploy:
+init:
 	terraform init
-	@terraform plan -var 'esxi_password=$(PASSWORD)'
-	@terraform apply -var 'esxi_password=$(PASSWORD)'
+plan:
+	terraform plan
+apply:
+	terraform apply
+destroy:
+	terraform destroy
 
 .PHONY: lint
 lint:
