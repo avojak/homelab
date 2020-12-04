@@ -1,0 +1,16 @@
+*.lck
+*.vmdk
+*.nvram
+*.ova
+*.vmsd
+*.vmx
+*.vmxf
+packer_cache/
+
+.terraform/
+terraform-provider-esxi
+terraform.tfstate
+terraform.tfstate.backup
+
+id_rsa
+id_rsa.pub

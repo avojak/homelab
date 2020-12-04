@@ -1,0 +1,77 @@
+{
+    "variables": {
+        "SSH_KEY": ""
+    },
+    "builders": [
+        {
+            "type": "vmware-iso",
+            "guest_os_type": "ubuntu-64",
+            "memory": 1024,
+            "name": "ubuntu-18.04",
+            "floppy_files": ["./preseed_server.cfg"],
+            "iso_urls": [
+                "http://cdimage.ubuntu.com/releases/18.04/release/ubuntu-18.04.5-server-amd64.iso"
+            ],
+            "iso_checksum": "sha256:8c5fc24894394035402f66f3824beb7234b757dd2b5531379cb310cedfdf0996",
+            "http_directory": "http",
+            "boot_wait": "10s",
+            "boot_command": [
+                "<enter><wait><f6><wait><esc><wait>",
+                "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs>",
+                "/install/vmlinuz",
+                " initrd=/install/initrd.gz",
+                " priority=critical",
+                " locale=en_US",
+                " file=/media/preseed_server.cfg",
+                "<enter>"
+            ],
+            "shutdown_command": "echo 'packer' | sudo -S shutdown -P now",
+            "ssh_username": "packer",
+            "ssh_password": "packer",
+            "ssh_pty": true,
+            "ssh_timeout": "1800s",
+            "ssh_handshake_attempts": "20",
+            "output_directory": "output/ubuntu-18.04-server"
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "inline": [
+                "sudo apt-get update",
+                "sudo apt-get upgrade -y",
+                "sudo apt-get install -y curl cloud-init python3-distutils",
+                "curl -sSL https://raw.githubusercontent.com/vmware/cloud-init-vmware-guestinfo/master/install.sh | sudo sh -"
+            ]
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "sudo mkdir /root/.ssh/",
+                "sudo chmod -R 700 /root/.ssh",
+                "echo {{user `SSH_KEY` }} | sudo tee /root/.ssh/authorized_keys",
+                "sudo chmod 600 /root/.ssh/authorized_keys"
+            ]
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "echo 'Packer Template Build -- Complete'"
+            ]    
+        } 
+    ],
+    "post-processors": [
+        {
+            "type": "shell-local",
+            "inline": [ "ovftool output/ubuntu-18.04-server/packer-ubuntu-18.04.vmx output/ubuntu-18.04-server/packer-ubuntu-18.04.ova" ]
+        }
+    ]
+}
