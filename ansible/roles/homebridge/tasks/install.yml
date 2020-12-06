@@ -1,0 +1,38 @@
+---
+- name: Pull the image
+  docker_image:
+    name: oznu/homebridge
+    source: pull
+
+- name: Create the homebridge directory
+  become: true
+  file:
+    path: /homebridge
+    state: directory
+    owner: provisioner
+    group: provisioner
+    mode: 0755
+
+- name: Create the configuration file
+  template:
+    src: config.json.j2
+    dest: /homebridge/config.json
+    mode: 0755
+  notify:
+    - Restart Homebridge
+
+- name: Run the container
+  docker_container:
+    name: homebridge
+    image: oznu/homebridge
+    state: started
+    restart_policy: always
+    network_mode: host
+    volumes:
+      - /homebridge:/homebridge
+    env:
+      TZ: "America/Denver"
+      PGID: "1000"
+      PUID: "1000"
+      HOMEBRIDGE_CONFIG_UI: "1"
+      HOMEBRIDGE_CONFIG_UI_PORT: "8080"

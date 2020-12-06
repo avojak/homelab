@@ -5,6 +5,7 @@
 *.vmsd
 *.vmx
 *.vmxf
+*.plist
 packer_cache/
 
 .terraform/

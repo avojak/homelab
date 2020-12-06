@@ -1,0 +1,3 @@
+---
+- name: Restart Homebridge
+  command: docker restart homebridge
