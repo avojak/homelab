@@ -13,5 +13,7 @@ terraform-provider-esxi
 terraform.tfstate
 terraform.tfstate.backup
 
+.vault-password-file
+
 id_rsa
 id_rsa.pub

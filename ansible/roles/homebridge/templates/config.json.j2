@@ -1,22 +1,10 @@
 {
     "bridge": {
-        "name": "Homebridge",
-        "username": "CC:22:3D:E3:CE:30",
-        "manufacturer": "homebridge.io",
-        "model": "homebridge",
-        "port": 51826,
-        "pin": "031-45-154"
+        "name": "{{ homebridge_name }}",
+        "username": "{{ homebridge_username }}",
+        "port": 51454,
+        "pin": "{{ homebridge_pin }}"
     },
-    "platforms": [
-        {
-            "name": "Config",
-            "port": 8080,
-            "auth": "form",
-            "theme": "auto",
-            "tempUnits": "f",
-            "lang": "auto",
-            "platform": "config"
-        }
-    ],
-    "accessories": []
+    "accessories": {{ homebridge_accessories|to_json(indent=4) }},
+    "platforms": {{ homebridge_platforms|to_json(indent=4) }}
 }

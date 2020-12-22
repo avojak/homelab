@@ -1,3 +1,4 @@
 ---
 - name: Restart Homebridge
-  command: docker restart homebridge
+  become: yes
+  shell: hb-service restart

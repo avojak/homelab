@@ -1,7 +1,0 @@
----
-- hosts: all
-  roles:
-    - docker-ce
-    - homebridge
-  vars:
-    - ansible_user: provisioner

@@ -1,38 +1,47 @@
 ---
-- name: Pull the image
-  docker_image:
-    name: oznu/homebridge
-    source: pull
+- name: Install modules
+  become: yes
+  community.general.npm:
+    name: "{{ item.name }}"
+    version: "{{ item.version|default('') }}"
+    state: present
+    global: yes
+    unsafe_perm: yes
+  with_items:
+    - name: homebridge
+      version: "{{ homebridge_version }}"
+    - name: homebridge-config-ui-x
+      version: "{{ homebridge_config_ui_version }}"
 
-- name: Create the homebridge directory
-  become: true
-  file:
-    path: /homebridge
-    state: directory
-    owner: provisioner
-    group: provisioner
-    mode: 0755
+- name: Setup Homebridge service
+  become: yes
+  shell: hb-service install --user homebridge
+  args:
+    creates: /etc/systemd/system/homebridge.service
 
-- name: Create the configuration file
+- name: Update the config file
+  become: yes
   template:
     src: config.json.j2
-    dest: /homebridge/config.json
-    mode: 0755
-  notify:
-    - Restart Homebridge
+    dest: "{{ homebridge_dir }}/config.json"
+    owner: homebridge
+    group: homebridge
+  notify: Restart Homebridge
 
-- name: Run the container
-  docker_container:
+- name: Install plugins
+  become: yes
+  community.general.npm:
+    name: "{{ item.name }}"
+    version: "{{ item.version|default('') }}"
+    state: present
+    global: yes
+    unsafe_perm: yes
+  with_items: "{{ homebridge_plugins }}"
+  notify: Restart Homebridge
+
+- name: Start Homebridge
+  become: yes
+  systemd:
     name: homebridge
-    image: oznu/homebridge
     state: started
-    restart_policy: always
-    network_mode: host
-    volumes:
-      - /homebridge:/homebridge
-    env:
-      TZ: "America/Denver"
-      PGID: "1000"
-      PUID: "1000"
-      HOMEBRIDGE_CONFIG_UI: "1"
-      HOMEBRIDGE_CONFIG_UI_PORT: "8080"
+    enabled: true

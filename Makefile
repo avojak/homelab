@@ -19,6 +19,8 @@ deploy:
 	@$(MAKE) -C $(TERRAFORM_DIR) -f $(TERRAFORM_MAKEFILE) apply
 undeploy:
 	@$(MAKE) -C $(TERRAFORM_DIR) -f $(TERRAFORM_MAKEFILE) destroy
+install:
+	@$(MAKE) -C $(ANSIBLE_DIR) -f $(ANSIBLE_MAKEFILE) run
 all: lint init image deploy
 
 .PHONY: clean

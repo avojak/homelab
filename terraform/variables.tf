@@ -3,7 +3,7 @@
 #########################################
 
 variable "esxi_hostname" {
-    default = "esxi01"
+    default = "esxi02"
 }
 
 variable "esxi_hostport" {
