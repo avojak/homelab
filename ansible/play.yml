@@ -6,9 +6,13 @@
     homebridge_plugins:
       - name: homebridge-ring
         version: '9.12.8'
+      - name: homebridge-tplink-smarthome
+        version: '6.1.0'
     homebridge_platforms:
       - platform: 'Ring'
         refreshToken: "{{ ring_token }}"
+      - platform: 'TplinkSmarthome'
+        name: 'TplinkSmarthome'
     ring_token: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           33626332666238383634373334303764393730643966313539623036613739316263626630633935
