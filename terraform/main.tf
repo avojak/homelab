@@ -9,22 +9,11 @@ provider "esxi" {
     esxi_password = var.esxi_password
 }
 
-# data "template_file" "userdata_default" {
-#     template = file("userdata.tpl")
-#     # vars = {
-#     #     HOSTNAME = var.vm_hostname
-#     #     HELLO    = "Hello EXSI World!"
-#     # }
-# }
-
-# data "template_file" "metadata_default" {
-#     template = file("metadata.tpl")
-# }
-
 #########################################
-#  ESXI Guest resource
+#  ESXI Guest resources
 #########################################
 
+# Homebridge
 resource "esxi_guest" "ubuntusrv01" {
     guest_name = "ubuntusrv01"
     disk_store = var.disk_store
@@ -42,29 +31,47 @@ resource "esxi_guest" "ubuntusrv01" {
     numvcpus = 4
     power = "on"
 
-    # ovf_source = "/Users/avojak/Downloads/centos8-1.vmdk"
     ovf_source = var.ovf_file
-    # clone_from_vm = "_TEMPLATE_centos8"
+}
 
-    # guestinfo = {
-    #     "userdata.encoding" = "gzip+base64"
-    #     "userdata" = base64gzip(data.template_file.userdata_default.rendered)
-    #     "metadata.encoding" = "gzip+base64"
-    #     "metadata" = base64gzip(data.template_file.metadata_default.rendered)
-    # }
+# Pi-hole 1
+resource "esxi_guest" "pihole01" {
+    guest_name = "pihole01"
+    disk_store = var.disk_store
 
-    # ovf_properties {
-    #     key = "password"
-    #     value = "Passw0rd1"
-    # }
+    network_interfaces {
+        virtual_network = var.virtual_network
+        nic_type = var.nic_type
+    }
 
-    # ovf_properties {
-    #     key = "hostname"
-    #     value = "ubuntusrv01"
-    # }
+    guest_startup_timeout = var.guest_startup_timeout
+    guest_shutdown_timeout = var.guest_shutdown_timeout
 
-    # ovf_properties {
-    #     key = "user-data"
-    #     value = base64encode(data.template_file.userdata_default.rendered)
-    # }
+    boot_disk_size = 8
+    memsize = 1024
+    numvcpus = 1
+    power = "on"
+
+    ovf_source = var.ovf_file
+}
+
+# Pi-hole 2
+resource "esxi_guest" "pihole02" {
+    guest_name = "pihole02"
+    disk_store = var.disk_store
+
+    network_interfaces {
+        virtual_network = var.virtual_network
+        nic_type = var.nic_type
+    }
+
+    guest_startup_timeout = var.guest_startup_timeout
+    guest_shutdown_timeout = var.guest_shutdown_timeout
+
+    boot_disk_size = 8
+    memsize = 1024
+    numvcpus = 1
+    power = "on"
+
+    ovf_source = var.ovf_file
 }

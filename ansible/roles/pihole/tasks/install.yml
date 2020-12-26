@@ -1,0 +1,12 @@
+---
+- name: Fetch installer script
+  get_url:
+    url: https://install.pi-hole.net
+    dest: /tmp/basic-install.sh
+    mode: '0755'
+  register: pihole_installer_script
+
+- name: Run installer script
+  become: yes
+  shell: /tmp/basic-install.sh
+  when: pihole_installer_script.changed
