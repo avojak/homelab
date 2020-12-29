@@ -1,4 +1,12 @@
 ---
+- name: Check if Pi-hole is already installed
+  stat: path=/usr/local/bin/pihole
+  register: pihole
+
+# - name: Check if setupVars.conf already exists
+#   stat: "path={{ pihole_directory }}/setupVars.conf"
+#   register: setupvars
+
 - name: Fetch installer script
   get_url:
     url: https://install.pi-hole.net
@@ -6,7 +14,32 @@
     mode: '0755'
   register: pihole_installer_script
 
+- name: Create pihole directory
+  become: yes
+  file:
+    state: directory
+    path: "{{ pihole_directory }}"
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Set setupVars config file
+  become: yes
+  template:
+    src: setupVars.conf.j2
+    dest: "{{ pihole_directory }}/setupVars.conf"
+    owner: root
+    group: root
+    mode: 0644
+  register: setupvars
+  # notify: Reconfigure
+
 - name: Run installer script
   become: yes
-  shell: /tmp/basic-install.sh
-  when: pihole_installer_script.changed
+  shell: /tmp/basic-install.sh --unattended
+  when: not pihole.stat.exists
+
+- name: Reconfigure
+  become: yes
+  shell: pihole -r
+  when: setupvars.changed
