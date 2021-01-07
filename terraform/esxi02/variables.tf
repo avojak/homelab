@@ -43,5 +43,5 @@ variable "guest_shutdown_timeout" {
 }
 
 variable "ovf_file" {
-    default = "../packer/output/ubuntu-18.04-server/packer-ubuntu-18.04.ova"
+    default = "../../packer/output/ubuntu-18.04-server/packer-ubuntu-18.04.ova"
 }

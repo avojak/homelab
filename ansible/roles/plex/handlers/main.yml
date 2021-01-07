@@ -1,0 +1,6 @@
+---
+- name: 'Restart Plex'
+  become: true
+  service:
+    name: 'plexmediaserver'
+    state: 'restarted'

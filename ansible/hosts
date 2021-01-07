@@ -1,6 +1,8 @@
 [homebridge]
-192.168.0.71 ansible_python_interpreter=/usr/bin/python3
+192.168.0.83 ansible_python_interpreter=/usr/bin/python3
 
-[pihole]
-192.168.0.73 ansible_python_interpreter=/usr/bin/python3
-192.168.0.74 ansible_python_interpreter=/usr/bin/python3
+[unificontroller]
+192.168.0.82 ansible_python_interpreter=/usr/bin/python3
+
+[plex]
+192.168.0.81 ansible_python_interpreter=/usr/bin/python3
