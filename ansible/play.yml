@@ -93,6 +93,10 @@
     plex_nas_host: "192.168.0.46"
     plex_nas_mount_path: "/volume1/Plex"
 
+- hosts: unificontroller
+  roles:
+    - unificontroller
+
 # - hosts: pihole
 #   roles:
 #     - pihole

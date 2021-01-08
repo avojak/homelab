@@ -1,0 +1,11 @@
+---
+- name: Install packages
+  become: true
+  apt:
+    update_cache: yes
+    state: present
+    name:
+      - ca-certificates
+      - apt-transport-https
+      - wget
+      - firewalld

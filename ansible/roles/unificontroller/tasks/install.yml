@@ -1,0 +1,67 @@
+---
+- name: Add the repo
+  become: true
+  copy:
+    src: etc/apt/sources.list.d/100-ubnt-unifi.list
+    dest: /etc/apt/sources.list.d/100-ubnt-unifi.list
+
+- name: Add apt key
+  become: true
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: 06E85760C0A52C50
+    state: present
+
+- name: Add apt key for MongoDB
+  become: true
+  apt_key:
+    url: https://www.mongodb.org/static/pgp/server-3.4.asc
+    state: present
+
+- name: Add the repo for MongoDB
+  become: true
+  copy:
+    src: etc/apt/sources.list.d/mongodb-org-3.4.list
+    dest: /etc/apt/sources.list.d/mongodb-org-3.4.list
+
+- name: Install MongoDB
+  become: true
+  apt:
+    update_cache: yes
+    state: present
+    name: 
+      - mongodb-org
+
+- name: Update packages
+  become: true
+  apt:
+    update_cache: yes
+
+- name: Install UniFi packages
+  become: true
+  apt:
+    state: present
+    name:
+      - openjdk-8-jre-headless
+      - unifi
+
+- name: Start UniFi
+  become: true
+  systemd:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+  with_items:
+    - unifi
+    - mongod
+
+- name: Open firewall port
+  become: true
+  firewalld:
+    port: "{{ item }}"
+    permanent: true
+    state: enabled
+  with_items:
+    - 8443/tcp
+    - 8080/tcp
+  notify: Restart UniFi

@@ -1,0 +1,6 @@
+---
+- name: Restart UniFi
+  become: true
+  service:
+    name: unifi
+    state: restarted
