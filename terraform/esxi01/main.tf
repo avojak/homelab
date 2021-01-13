@@ -13,8 +13,8 @@ provider "esxi" {
 #  ESXI Guest resources
 #########################################
 
-resource "esxi_guest" "homebridge" {
-    guest_name = "homebridge"
+resource "esxi_guest" "plex" {
+    guest_name = "plex"
     disk_store = var.disk_store
 
     network_interfaces {
@@ -26,15 +26,15 @@ resource "esxi_guest" "homebridge" {
     guest_shutdown_timeout = var.guest_shutdown_timeout
 
     boot_disk_size = 100
-    memsize = 4096
-    numvcpus = 2
+    memsize = 8192
+    numvcpus = 4
     power = "on"
 
     ovf_source = var.ovf_file
 }
 
-resource "esxi_guest" "unificontroller" {
-    guest_name = "unificontroller"
+resource "esxi_guest" "homebridge" {
+    guest_name = "homebridge"
     disk_store = var.disk_store
 
     network_interfaces {

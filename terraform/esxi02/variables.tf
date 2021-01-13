@@ -3,7 +3,7 @@
 #########################################
 
 variable "esxi_hostname" {
-    default = "esxi02"
+    default = "192.168.1.11"
 }
 
 variable "esxi_hostport" {

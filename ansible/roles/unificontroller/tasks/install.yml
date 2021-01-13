@@ -64,4 +64,4 @@
   with_items:
     - 8443/tcp
     - 8080/tcp
-  notify: Restart UniFi
+  notify: Restart firewall

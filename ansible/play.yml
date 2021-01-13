@@ -5,7 +5,7 @@
   vars:
     homebridge_plugins:
       - name: homebridge-ring
-        version: '9.14.0'
+        version: '9.14.1'
       - name: homebridge-tplink-smarthome
         version: '6.1.0'
       - name: homebridge-myq
@@ -90,12 +90,12 @@
   roles:
     - plex
   vars:
-    plex_nas_host: "192.168.0.46"
+    plex_nas_host: "192.168.1.46"
     plex_nas_mount_path: "/volume1/Plex"
 
-- hosts: unificontroller
-  roles:
-    - unificontroller
+# - hosts: unificontroller
+#   roles:
+#     - unificontroller
 
 # - hosts: pihole
 #   roles:
