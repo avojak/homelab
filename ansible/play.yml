@@ -9,7 +9,7 @@
       - name: homebridge-tplink-smarthome
         version: '6.1.0'
       - name: homebridge-myq
-        version: '2.4.1'
+        version: '2.4.2'
       - name: homebridge-tcc
         version: '0.2.16'
     homebridge_platforms:
