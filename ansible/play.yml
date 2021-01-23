@@ -9,9 +9,11 @@
       - name: homebridge-tplink-smarthome
         version: '6.1.0'
       - name: homebridge-myq
-        version: '2.4.2'
+        version: '2.5.0'
       - name: homebridge-tcc
-        version: '0.2.16'
+        version: '0.2.17'
+      - name: homebridge-camera-ffmpeg
+        version: '3.0.3'
     homebridge_platforms:
       - platform: 'Ring'
         refreshToken: "{{ ring_token }}"
@@ -24,6 +26,13 @@
         name: 'Thermostat'
         username: "{{ honeywell_tcc_username }}"
         password: "{{ honeywell_tcc_password }}"
+      - platform: 'Camera-ffmpeg'
+        cameras:
+          - name: 'Wyze Cam'
+            videoConfig:
+              source: "-i rtsp://{{ wyze_rtsp_username }}:{{ wyze_rtsp_password }}@192.168.1.49/live"
+              stillImageSource: "-i rtsp://{{ wyze_rtsp_username }}:{{ wyze_rtsp_password }}@192.168.1.49/live -vframes 1 -r 1"
+              vcodec: "copy"
       - platform: 'config'
         name: 'Config'
         port: 8581
@@ -85,6 +94,20 @@
           33303665636435633438323836393331643463646265666565333738643865373763373337366134
           6565366237333237370a306235626366386134356430666433386634613263656364303930343839
           34643439643733323566646636663230666635633734633933316639666630363463
+    wyze_rtsp_username: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          63666632616435313433316233613234393666633136323532333965636237363165616535633633
+          3138646237336436313665333262313761323038333365650a356164303531306538326534623961
+          64376634366563396137643664316462363664623766393730383532343064613135656239353732
+          6662386235323663330a383833616331376438653633396330356630343766393234336331383532
+          3762
+    wyze_rtsp_password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          35343665343462646336353165346466323938643736373432646639366463633634323837616132
+          3738393761383836343437343837633466393961393238340a643036333737353462333030303530
+          61333833383330323065613231393331663165663064306231616565636162313234306130643730
+          3830626631353733360a383463663364306665333331663136663039373635383132383032656432
+          3930
 
 - hosts: plex
   roles:

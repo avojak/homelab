@@ -23,3 +23,12 @@
       - make
       - python
       - net-tools
+
+- name: Install ffmpeg
+  become: yes
+  apt:
+    update_cache: yes
+    state: present
+    name:
+      - libavahi-compat-libdnssd-dev
+      - ffmpeg
