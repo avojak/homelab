@@ -1,6 +1,6 @@
 ---
 homebridge_version: '1.1.7'
-homebridge_config_ui_version: '4.36.0'
+homebridge_config_ui_version: '4.37.0'
 homebridge_dir: /var/lib/homebridge
 homebridge_name: Homebridge
 homebridge_username: CC:22:3D:E3:CE:30

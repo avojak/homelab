@@ -5,11 +5,11 @@
   vars:
     homebridge_plugins:
       - name: homebridge-ring
-        version: '9.14.1'
+        version: '9.14.2'
       - name: homebridge-tplink-smarthome
         version: '6.1.0'
       - name: homebridge-myq
-        version: '2.5.0'
+        version: '2.6.2'
       - name: homebridge-tcc
         version: '0.2.17'
       - name: homebridge-camera-ffmpeg
