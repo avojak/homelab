@@ -12,6 +12,7 @@
       version: "{{ homebridge_version }}"
     - name: homebridge-config-ui-x
       version: "{{ homebridge_config_ui_version }}"
+  notify: Restart Homebridge
 
 - name: Setup Homebridge service
   become: yes
