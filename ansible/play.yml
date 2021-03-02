@@ -7,13 +7,13 @@
       - name: homebridge-ring
         version: '9.15.3'
       - name: homebridge-tplink-smarthome
-        version: '6.1.0'
+        version: '6.2.0'
       - name: homebridge-myq
         version: '2.6.2'
       - name: homebridge-tcc
         version: '0.2.18'
       - name: homebridge-camera-ffmpeg
-        version: '3.1.0'
+        version: '3.1.1'
     homebridge_platforms:
       - platform: 'Ring'
         refreshToken: "{{ ring_token }}"
