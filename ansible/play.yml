@@ -5,7 +5,7 @@
   vars:
     homebridge_plugins:
       - name: homebridge-ring
-        version: '9.15.5'
+        version: '9.15.6'
       - name: homebridge-tplink-smarthome
         version: '6.3.0'
       - name: homebridge-myq
