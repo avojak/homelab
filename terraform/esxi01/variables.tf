@@ -3,7 +3,7 @@
 #########################################
 
 variable "esxi_hostname" {
-    default = "192.168.1.41"
+    default = "192.168.1.64"
 }
 
 variable "esxi_hostport" {
@@ -23,7 +23,7 @@ variable "esxi_password" {
 #########################################
 
 variable "disk_store" {
-    default = "DS_001"
+    default = "datastore1"
 }
 
 variable "virtual_network" {
@@ -43,5 +43,5 @@ variable "guest_shutdown_timeout" {
 }
 
 variable "ovf_file" {
-    default = "../../packer/output/ubuntu-18.04-server/packer-ubuntu-18.04.ova"
+    default = "../../packer/output/ubuntu-20.04-server/packer-ubuntu-20.04-server.ova"
 }

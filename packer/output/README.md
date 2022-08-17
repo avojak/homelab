@@ -1,1 +1,1 @@
-Generated image files will be placed here
+Generated image files will be placed here!

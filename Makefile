@@ -8,9 +8,15 @@ PACKER_MAKEFILE    := packer.mk
 TERRAFORM_MAKEFILE := terraform.mk
 ANSIBLE_MAKEFILE   := ansible.mk
 
-init:
-	ssh-keygen -t rsa -b 4096 -f ./id_rsa -C "" -N ""
-	@$(MAKE) -C $(TERRAFORM_DIR) -f $(TERRAFORM_MAKEFILE) init
+all: lint init image deploy
+
+SSH_KEY_FILE := id_rsa
+
+$(SSH_KEY_FILE):
+	ssh-keygen -t rsa -b 4096 -f $@ -C "" -N ""
+
+init: $(SSH_KEY_FILE)
+	@$(MAKE) -C $(TERRAFORM_DIR) -f $(TERRAFORM_MAKEFILE) $@
 image:
 	@$(MAKE) -C $(PACKER_DIR) -f $(PACKER_MAKEFILE) ova
 plan-deploy:
@@ -21,13 +27,8 @@ undeploy:
 	@$(MAKE) -C $(TERRAFORM_DIR) -f $(TERRAFORM_MAKEFILE) destroy
 install:
 	@$(MAKE) -C $(ANSIBLE_DIR) -f $(ANSIBLE_MAKEFILE) run
-all: lint init image deploy
-
-.PHONY: clean
 clean:
 	@$(MAKE) -C $(PACKER_DIR) -f $(PACKER_MAKEFILE) $@
-
-.PHONY: lint
 lint:
 	@$(MAKE) -C $(PACKER_DIR) -f $(PACKER_MAKEFILE) $@
 	@$(MAKE) -C $(TERRAFORM_DIR) -f $(TERRAFORM_MAKEFILE) $@

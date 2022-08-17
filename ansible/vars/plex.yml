@@ -1,0 +1,2 @@
+plex_nas_host: "192.168.1.46"
+plex_nas_mount_path: "/volume1/Plex"

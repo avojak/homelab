@@ -17,3 +17,5 @@ terraform.tfstate.backup
 
 id_rsa
 id_rsa.pub
+
+.DS_Store

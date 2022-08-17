@@ -1,3 +1,0 @@
----
-- name: Reconfigure
-  shell: pihole -r
