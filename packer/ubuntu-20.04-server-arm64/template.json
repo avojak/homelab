@@ -1,21 +1,32 @@
 {
     "variables": {
-        "iso_url": "https://cdimage.ubuntu.com/ubuntu-legacy-server/releases/20.04/release/ubuntu-20.04.1-legacy-server-amd64.iso",
-        "iso_checksum": "sha256:f11bda2f2caed8f420802b59f382c25160b114ccc665dbac9c5046e7fceaced2",
+        "iso_url": "https://cdimage.ubuntu.com/ubuntu-legacy-server/releases/20.04/release/ubuntu-20.04.1-legacy-server-arm64.iso",
+        "iso_checksum": "sha256:5922d88e2e5de002bc3af1c2ef2c21ee6fa61132c26d6b742e1ebc366bfbbe3d",
         "username": "provisioner",
         "password": "provisioner",
         "vm_name": "",
-        "ssh_key": ""
+        "ssh_key": "",
+        "builder_host": "192.168.30.240",
+        "builder_host_username": "",
+        "builder_host_password": "",
+        "builder_host_datastore": "",
+        "builder_host_portgroup": ""
     },
     "builders": [
         {
             "type": "vmware-iso",
             "guest_os_type": "ubuntu-64",
+            "version": "17",
             "memory": 1024,
             "name": "{{user `vm_name`}}",
             "iso_urls": "{{user `iso_url`}}",
             "iso_checksum": "{{user `iso_checksum`}}",
             "http_directory": "http",
+            "disk_size": 10240,
+            "disk_additional_size": [
+                "1024"
+            ],
+            "cdrom_adapter_type": "sata",
             "boot_wait": "10s",
             "boot_command": [
                 "<esc><wait>",
@@ -42,13 +53,29 @@
                 "preseed/url=http://{{.HTTPIP}}:{{.HTTPPort}}/preseed_server.cfg ",
                 " -- <enter>"
             ],
+            "headless": false,
+            "vnc_over_websocket": true,
+            "insecure_connection": true,
+            "remote_type": "esx5",
+            "remote_host": "{{user `builder_host`}}",
+            "remote_datastore": "{{user `builder_host_datastore`}}",
+            "remote_username": "{{user `builder_host_username`}}",
+            "remote_password": "{{user `builder_host_password`}}",
             "shutdown_command": "echo '{{user `password`}}' | sudo -S shutdown -P now",
+            "format": "ovf",
             "ssh_username": "{{user `username`}}",
             "ssh_password": "{{user `password`}}",
             "ssh_pty": true,
             "ssh_timeout": "1800s",
             "ssh_handshake_attempts": "20",
-            "output_directory": "output/{{user `vm_name`}}"
+            "output_directory": "{{user `vm_name`}}/build",
+            "vmx_data": {
+                "numvcpus": "{{ user `numvcpus` }}",
+                "memsize": "{{ user `ramsize` }}",
+                "annotation": "Version: {{ user `version` }}",
+                "architecture": "arm64"
+            },
+            "vmx_template_path": "packer.vmx"
         }
     ],
     "provisioners": [
@@ -70,18 +97,20 @@
                 "sudo chmod 600 /home/{{user `username`}}/.ssh/authorized_keys",
                 "sudo chown -R {{user `username`}} /home/{{user `username`}}/"
             ]
-        },
-        {
-            "type": "shell",
-            "inline": [
-                "echo 'Packer Template Build -- Complete'"
-            ]    
-        } 
+        }
     ],
     "post-processors": [
         {
             "type": "shell-local",
-            "inline": [ "ovftool output/{{user `vm_name`}}/packer-{{user `vm_name`}}.vmx output/{{user `vm_name`}}/packer-{{user `vm_name`}}.ova" ]
+            "inline": [
+                "ovftool {{user `vm_name`}}/build/packer-{{user `vm_name`}}.vmx output/{{user `vm_name`}}.ova"
+            ]
+        },
+        {
+            "type": "shell-local",
+            "inline": [
+                "rm -rf {{user `vm_name`}}/build"
+            ]
         }
     ]
 }

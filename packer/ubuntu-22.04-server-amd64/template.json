@@ -1,0 +1,58 @@
+{
+    "variables": {
+        "iso_url": "https://releases.ubuntu.com/22.04/ubuntu-22.04.1-live-server-amd64.iso",
+        "iso_checksum": "file:https://releases.ubuntu.com/22.04/SHA256SUMS",
+        "username": "provisioner",
+        "password": "provisioner",
+        "vm_name": "",
+        "ssh_key": ""
+    },
+    "builders": [
+        {
+            "type": "vmware-iso",
+            "guest_os_type": "ubuntu-64",
+            "memory": 1024,
+            "name": "{{user `vm_name`}}",
+            "iso_url": "{{user `iso_url`}}",
+            "iso_checksum": "{{user `iso_checksum`}}",
+            "http_directory": "{{user `vm_name`}}/http",
+            "boot_wait": "10s",
+            "boot_command": [
+                "c<wait>",
+                "linux /casper/vmlinuz --- autoinstall ds=\"nocloud-net;seedfrom=http://{{.HTTPIP}}:{{.HTTPPort}}/\"",
+                "<enter><wait>",
+                "initrd /casper/initrd",
+                "<enter><wait>",
+                "boot",
+                "<enter>"
+            ],
+            "shutdown_command": "echo '{{user `password`}}' | sudo -S shutdown -P now",
+            "ssh_username": "{{user `username`}}",
+            "ssh_password": "{{user `password`}}",
+            "ssh_port": 22,
+            "ssh_pty": true,
+            "ssh_timeout": "1800s",
+            "ssh_handshake_attempts": "20",
+            "output_directory": "{{user `vm_name`}}/build"
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "inline": [
+                "sudo apt-get install -y curl cloud-init python3-distutils",
+                "curl -sSL https://raw.githubusercontent.com/vmware/cloud-init-vmware-guestinfo/master/install.sh | sudo sh -"
+            ]
+        }
+    ],
+    "post-processors": [
+        {
+            "type": "shell-local",
+            "inline": [ "ovftool {{user `vm_name`}}/build/packer-{{user `vm_name`}}.vmx output/{{user `vm_name`}}.ova" ]
+        },
+        {
+            "type": "shell-local",
+            "inline": [ "rm -rf {{user `vm_name`}}/build" ]
+        }
+    ]
+}

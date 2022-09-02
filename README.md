@@ -4,14 +4,18 @@ This repository contains the configuration-as-code for my homelab.
 
 ## Prerequisites
 
-### 1. ESXi Host
+### 1. VMware Workstation
+
+For the Packer builds to work you will need VMware Workstation (or Fusion if you're on macOS) to be installed.
+
+### 2. ESXi Hosts
 
 * SSH access must be enabled temporarily on the ESXi host when running Terraform. **(Don't forget to disable this when you're done!)**
 * By default, Terraform expects a virtual network named "VM Network" *(Created by default when ESXi is installed)*
 * By default, Terraform expects a disk store named "datastore1" *(Created by default when ESXi is installed)*
 * By default, Terraform expects an ESXi user "root" and access on port 22 *(Created by default when ESXi is installed)*
 
-### 2. Terraform ESXi Provider
+### 3. Terraform ESXi Provider
 
 To use Terraform with ESXi without vCenter (because $$$), I used [terraform-provider-esxi](https://github.com/josenk/terraform-provider-esxi).
 
@@ -63,6 +67,16 @@ $ make install
 ```
 
 In following with Ansible principles, this command can be run repeatedly to ensure constant state and apply any updates.
+
+## Landscape
+
+| Physical ESXi Host (IP) | Virtual Host (IP) | OS | Software |
+| ----------------------- | ----------------- | -- | -------- |
+| Mac mini 01 (192.168.1.64) | TBD | Ubuntu Server 22.04 (amd64) | TBD |
+| Mac mini 02 (TBD) | TBD | Ubuntu Server 22.04 (amd64) | TBD |
+| Raspberry Pi 8 GB (192.168.1.230) | TBD | Ubuntu Server 22.04 (arm64) | Traefik, Cloudflare DDNS |
+| Raspberry Pi 4 GB (192.168.1.22) | TBD | Ubuntu Server 22.04 (arm64) | Pi-hole |
+|  | TBD | Ubuntu Server 22.04 (arm64) | Pi-hole |
 
 ----
 

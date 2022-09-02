@@ -32,3 +32,6 @@ clean:
 lint:
 	@$(MAKE) -C $(PACKER_DIR) -f $(PACKER_MAKEFILE) $@
 	@$(MAKE) -C $(TERRAFORM_DIR) -f $(TERRAFORM_MAKEFILE) $@
+
+runner:
+	docker build -t avojak/homelab-runner .

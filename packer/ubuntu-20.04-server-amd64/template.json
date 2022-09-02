@@ -1,0 +1,85 @@
+{
+    "variables": {
+        "iso_url": "https://cdimage.ubuntu.com/ubuntu-legacy-server/releases/20.04/release/ubuntu-20.04.1-legacy-server-amd64.iso",
+        "iso_checksum": "sha256:f11bda2f2caed8f420802b59f382c25160b114ccc665dbac9c5046e7fceaced2",
+        "username": "provisioner",
+        "password": "provisioner",
+        "vm_name": "",
+        "ssh_key": ""
+    },
+    "builders": [
+        {
+            "type": "vmware-iso",
+            "guest_os_type": "ubuntu-64",
+            "memory": 1024,
+            "name": "{{user `vm_name`}}",
+            "iso_urls": "{{user `iso_url`}}",
+            "iso_checksum": "{{user `iso_checksum`}}",
+            "http_directory": "{{user `vm_name`}}/http",
+            "boot_wait": "10s",
+            "boot_command": [
+                "<esc><wait>",
+                "<esc><wait>",
+                "<enter><wait>",
+                "/install/vmlinuz <wait>",
+                "auto <wait>",
+                "console-setup/ask_detect=false ",
+                "debconf/frontend=noninteractive ",
+                "debian-installer=en_US ",
+                "fb=false ",
+                "hostname={{.Name}} ",
+                "initrd=/install/initrd.gz ",
+                "kbd-chooser/method=us ",
+                "keyboard-configuration/modelcode=SKIP ",
+                "keyboard-configuration/layout=USA ",
+                "keyboard-configuration/variant=USA ",
+                "locale=en_US ",
+                "passwd/username={{user `username`}} ",
+                "passwd/user-fullname={{user `username`}} ",
+                "passwd/user-password={{user `password`}} ",
+                "passwd/user-password-again={{user `password`}} ",
+                "noapic ",
+                "preseed/url=http://{{.HTTPIP}}:{{.HTTPPort}}/preseed_server.cfg ",
+                " -- <enter>"
+            ],
+            "shutdown_command": "echo '{{user `password`}}' | sudo -S shutdown -P now",
+            "ssh_username": "{{user `username`}}",
+            "ssh_password": "{{user `password`}}",
+            "ssh_pty": true,
+            "ssh_timeout": "1800s",
+            "ssh_handshake_attempts": "20",
+            "output_directory": "{{user `vm_name`}}/build"
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "inline": [
+                "sudo apt-get update",
+                "sudo apt-get upgrade -y",
+                "sudo apt-get install -y curl cloud-init python3-distutils",
+                "curl -sSL https://raw.githubusercontent.com/vmware/cloud-init-vmware-guestinfo/master/install.sh | sudo sh -"
+            ]
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "sudo mkdir /home/{{user `username`}}/.ssh/",
+                "sudo chmod -R 700 /home/{{user `username`}}/.ssh",
+                "echo {{user `ssh_key`}} | sudo tee /home/{{user `username`}}/.ssh/authorized_keys",
+                "sudo chmod 600 /home/{{user `username`}}/.ssh/authorized_keys",
+                "sudo chown -R {{user `username`}} /home/{{user `username`}}/"
+            ]
+        }
+    ],
+    "post-processors": [
+        {
+            "type": "shell-local",
+            "inline": [ "ovftool {{user `vm_name`}}/build/packer-{{user `vm_name`}}.vmx output/{{user `vm_name`}}.ova" ]
+        },
+        {
+            "type": "shell-local",
+            "inline": [ "rm -rf {{user `vm_name`}}/build" ]
+        }
+    ]
+}

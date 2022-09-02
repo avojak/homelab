@@ -1,0 +1,84 @@
+{
+    "variables": {
+        "iso_url": "https://cdimage.ubuntu.com/releases/22.04/release/ubuntu-22.04.1-live-server-arm64.iso",
+        "iso_checksum": "file:https://cdimage.ubuntu.com/releases/22.04/release/SHA256SUMS",
+        "username": "provisioner",
+        "password": "provisioner",
+        "vm_name": "",
+        "ssh_key": "",
+        "builder_host": "192.168.1.230",
+        "builder_host_username": "root",
+        "builder_host_password": "",
+        "builder_host_datastore": "datastore1",
+        "builder_host_portgroup": "VM Network"
+    },
+    "builders": [
+        {
+            "type": "vmware-iso",
+            "guest_os_type": "ubuntu-64",
+            "version": "17",
+            "name": "{{user `vm_name`}}",
+            "iso_url": "{{user `iso_url`}}",
+            "iso_checksum": "{{user `iso_checksum`}}",
+            "http_directory": "{{user `vm_name`}}/http",
+            "memory": 1024,
+            "disk_size": 10240,
+            "disk_additional_size": [
+                "1024"
+            ],
+            "vmx_data": {
+                "numvcpus": "1",
+                "memsize": "1024",
+                "architecture": "arm64"
+            },
+            "vmx_template_path": "{{user `vm_name`}}/packer.vmx",
+            "boot_wait": "10s",
+            "boot_command": [
+                "<esc><wait>",
+                "c<wait>",
+                "linux /casper/vmlinuz --- autoinstall ds=\"nocloud-net;seedfrom=http://{{.HTTPIP}}:{{.HTTPPort}}/\"",
+                "<enter><wait>",
+                "initrd /casper/initrd",
+                "<enter><wait>",
+                "boot",
+                "<enter>"
+            ],
+            "headless": false,
+            "vnc_over_websocket": true,
+            "insecure_connection": true,
+            "format": "vmx",
+            "remote_type": "esx5",
+            "remote_host": "{{user `builder_host`}}",
+            "remote_datastore": "{{user `builder_host_datastore`}}",
+            "remote_username": "{{user `builder_host_username`}}",
+            "remote_password": "{{user `builder_host_password`}}",
+            "shutdown_command": "echo '{{user `password`}}' | sudo -S shutdown -P now",
+            "ssh_username": "{{user `username`}}",
+            "ssh_password": "{{user `password`}}",
+            "ssh_port": 22,
+            "ssh_pty": true,
+            "ssh_timeout": "180m",
+            "ssh_handshake_attempts": "20",
+            "output_directory": "{{user `vm_name`}}/build"
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "inline": [
+                "sudo apt-get install -y curl cloud-init python3-distutils",
+                "curl -sSL https://raw.githubusercontent.com/vmware/cloud-init-vmware-guestinfo/master/install.sh | sudo sh -"
+            ]
+        }
+    ],
+    "post-processors": [
+        {
+            "type": "shell-local",
+            "inline": [ "ovftool {{user `vm_name`}}/build/packer-{{user `vm_name`}}.vmx output/{{user `vm_name`}}.ova" ]
+        },
+        {
+            "type": "shell-local",
+            "inline": [ "rm -rf {{user `vm_name`}}/build" ]
+        }
+    ]
+}

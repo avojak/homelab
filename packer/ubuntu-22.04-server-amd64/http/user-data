@@ -1,0 +1,29 @@
+#cloud-config
+autoinstall:
+  version: 1
+  packages_update: true
+  packages_upgrade: true
+  identity:
+    hostname: ubuntu-server-22.04
+    username: provisioner
+    # This is just 'mkpasswd -m sha-512 provisioner'
+    password: "$6$fktlURvslu3X5Glg$1sLeT/PkcS7kH3PTiHF.Q.BliWYa1L6GoaSWkEPVw/NKGp8TQ65dvVoK2gnc.CjID8F/LGHah4GbIFxnGp6GY."
+  early-commands:
+    # otherwise packer tries to connect and exceed max attempts:
+    - systemctl stop ssh
+    - systemctl restart systemd-timesyncd
+  keyboard:
+    layout: us
+  locale: en_US
+  timezone: UTC
+  ssh:
+    install-server: true
+    allow-pw: true
+    authorized-keys:
+      - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC/mLUccLwppGiWISbcvDYmszha4THSIfDScxoi6I/XJ+Xi0me4QflXB7uybnWEUMKH5hcsDQnx7duapQoKJTSSAo6xxne/ljixicDTL8X9j9VdblhKJ3hTc3m/pL4/J80TZjcd9sGgNhSAbfZX19qQgJGfov4MDSG+oFbNqX3FS8fnLRr7BwQGBCBvX9pqC+tyRJJDCWtDWJVQKv/qjWqgT/lbxjuDts2cPMpPhUTYcMoy7avyfoe1+1D4qY5+obtFiO1xzarhCEOC31YkcUJVS3jVuMpVu2LEU3iTScVb/IYG9OIUV7Wb8CzNQHyNlXyztXcqvLGkweLXmIkYZyD00BdIinG5QV4r57A2ts016b6tFCcv1qcI1JUQ48EiDXAtGamjaq49i4tZFY6vKN0ZQA84djvjCo6bRQy9PK6lx4uTg3QnHoSycykk9XBVk7q/PuOb1t1JqDvIBRzYwdPD85wemk/O2HbbTBv07N9osw8a8dycakwFbdbHKXeCS70ehMsVaDja9axPs+9muVTjZrigNpHr+5BvjnUf2HmOnbZ4JdA3psARtsdM0btR90IzheJAbc9PRMNBt+7g15SKfTX8VtMh0pPZB62Gst25budVIxbeQqv4nsm/rj0Vc1p1lKR0SiWV7ikscdzwiR5SV4MDwpx4UI4tPJxYUeaZJw=="
+  late-commands:
+    - sed -i -e 's/^#\?PasswordAuthentication.*/PasswordAuthentication yes/g' /target/etc/ssh/sshd_config
+    - echo 'provisioner ALL=(ALL) NOPASSWD:ALL' > /target/etc/sudoers.d/provisioner
+  storage:
+    layout:
+      name: direct

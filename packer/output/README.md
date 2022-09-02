@@ -1,1 +1,1 @@
-Generated image files will be placed here!
+Output `.ova` files will be placed here!
