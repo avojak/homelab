@@ -1,12 +1,11 @@
 BASE_IMAGE_NAME  := ubuntu-22.04-server
-AMD64_IMAGE_NAME := $(BASE_IMAGE_NAME)-amd64
-ARM64_IMAGE_NAME := $(BASE_IMAGE_NAME)-arm64
-
 OUTPUT_DIR := output
 
+AMD64_IMAGE_NAME := $(BASE_IMAGE_NAME)-amd64
 AMD64_OVA_FILE := $(OUTPUT_DIR)/$(AMD64_IMAGE_NAME).ova
 AMD64_TEMPLATE_FILE := $(AMD64_IMAGE_NAME)/template.json
 
+ARM64_IMAGE_NAME := $(BASE_IMAGE_NAME)-arm64
 ARM64_OVA_FILE := $(OUTPUT_DIR)/$(ARM64_IMAGE_NAME).ova
 ARM64_TEMPLATE_FILE := $(ARM64_IMAGE_NAME)/template.json
 
@@ -15,25 +14,40 @@ ESXI_ROOT_PASSWORD := $(shell cat ../.esxi_root_password)
 
 .DEFAULT_GOAL := ova
 
-$(AMD64_OVA_FILE):
-	packer build -var 'ssh_key=$(SSH_KEY)' -var 'vm_name=$(AMD64_IMAGE_NAME)' $(AMD64_TEMPLATE_FILE)
-#	PACKER_LOG=1 packer build -var 'ssh_key=$(SSH_KEY)' -var 'vm_name=$(AMD64_IMAGE_NAME)' $(AMD64_TEMPLATE_FILE)
+# Build the amd64 .ova image
+$(AMD64_OVA_FILE): $(AMD64_TEMPLATE_FILE)
+	@echo Building $(AMD64_IMAGE_NAME)...
+	@packer build \
+		-var 'ssh_key=$(SSH_KEY)' \
+		-var 'vm_name=$(AMD64_IMAGE_NAME)' \
+		$<
 
-$(ARM64_OVA_FILE):
-	packer build \
+# Build the arm64 .ova image
+$(ARM64_OVA_FILE): $(ARM64_TEMPLATE_FILE)
+	@echo Building $(ARM64_IMAGE_NAME)...
+	@packer build \
 		-var 'ssh_key=$(SSH_KEY)' \
 		-var 'vm_name=$(ARM64_IMAGE_NAME)' \
 		-var 'builder_host_password=$(ESXI_ROOT_PASSWORD)' \
-		$(ARM64_TEMPLATE_FILE)
-# 	packer build -var 'ssh_key=$(SSH_KEY)' -var 'vm_name=$(ARM64_IMAGE_NAME)' $(ARM64_TEMPLATE_FILE)
+		$<
 
+# Build all .ova images
 ova: $(AMD64_OVA_FILE) $(ARM64_OVA_FILE)
 
 .PHONY: clean
 clean:
-	@$(RM) -rf $(AMD64_IMAGE_NAME) $(ARM64_IMAGE_NAME)
+	@$(RM) -rf $(AMD64_OVA_FILE) $(ARM64_OVA_FILE)
 
 .PHONY: lint
 lint:
-	packer validate $(AMD64_TEMPLATE_FILE)
-	packer validate $(ARM64_TEMPLATE_FILE)
+	@echo Validating $(AMD64_TEMPLATE_FILE)...
+	@packer validate \
+		-var 'ssh_key=$(SSH_KEY)' \
+		-var 'vm_name=$(AMD64_IMAGE_NAME)' \
+		$(AMD64_TEMPLATE_FILE)
+	@echo Validating $(AMD64_TEMPLATE_FILE)...
+	@packer validate \
+		-var 'ssh_key=$(SSH_KEY)' \
+		-var 'vm_name=$(ARM64_IMAGE_NAME)' \
+		-var 'builder_host_password=$(ESXI_ROOT_PASSWORD)' \
+		$(ARM64_TEMPLATE_FILE)

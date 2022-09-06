@@ -22,14 +22,12 @@
             "iso_checksum": "{{user `iso_checksum`}}",
             "http_directory": "{{user `vm_name`}}/http",
             "memory": 1024,
-            "disk_size": 10240,
-            "disk_additional_size": [
-                "1024"
-            ],
+            "disk_size": 51200,
             "vmx_data": {
                 "numvcpus": "1",
                 "memsize": "1024",
-                "architecture": "arm64"
+                "architecture": "arm64",
+                "firmware": "efi"
             },
             "vmx_template_path": "{{user `vm_name`}}/packer.vmx",
             "boot_wait": "10s",
@@ -69,16 +67,25 @@
                 "sudo apt-get install -y curl cloud-init python3-distutils",
                 "curl -sSL https://raw.githubusercontent.com/vmware/cloud-init-vmware-guestinfo/master/install.sh | sudo sh -"
             ]
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "sudo rm /etc/machine-id /var/lib/dbus/machine-id",
+                "sudo touch /etc/machine-id",
+                "sudo chmod 444 /etc/machine-id"
+            ]
         }
     ],
     "post-processors": [
         {
             "type": "shell-local",
-            "inline": [ "ovftool {{user `vm_name`}}/build/packer-{{user `vm_name`}}.vmx output/{{user `vm_name`}}.ova" ]
-        },
-        {
-            "type": "shell-local",
-            "inline": [ "rm -rf {{user `vm_name`}}/build" ]
+            "inline": [
+                "sed -i '' '/^sata0:0.fileName.*$/d' {{user `vm_name`}}/build/packer-{{user `vm_name`}}.vmx",
+                "sed -i '' 's/^sata0:0.startConnected = \"TRUE\"$/sata0:0.startConnected = \"FALSE\"/' {{user `vm_name`}}/build/packer-{{user `vm_name`}}.vmx",
+                "ovftool --noImageFiles {{user `vm_name`}}/build/packer-{{user `vm_name`}}.vmx output/{{user `vm_name`}}.ova",
+                "rm -rf {{user `vm_name`}}/build"
+            ]
         }
     ]
 }

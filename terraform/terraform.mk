@@ -1,25 +1,26 @@
-# MAKE_DIR = $(PWD)
+ESXI_ROOT_PASSWORD := $(shell cat ../.esxi_root_password)
 
-ESXI01_DIR    := esxi01
-# ESXI02_DIR    := esxi02
-
-ESXI01_MAKEFILE    := esxi01.mk
-# ESXI02_MAKEFILE    := esxi02.mk
-
+.PHONY: init
 init:
-	@$(MAKE) -C $(ESXI01_DIR) -f $(ESXI01_MAKEFILE) init
-#	@$(MAKE) -C $(ESXI02_DIR) -f $(ESXI02_MAKEFILE) init
+	@echo Initializing Terraform...
+	@terraform $@
+
+.PHONY: plan
 plan:
-	@$(MAKE) -C $(ESXI01_DIR) -f $(ESXI01_MAKEFILE) plan
-#	@$(MAKE) -C $(ESXI02_DIR) -f $(ESXI02_MAKEFILE) plan
+	@echo Planning Terraform deployment...
+	@terraform $@ -var='esxi_password=$(ESXI_ROOT_PASSWORD)'
+
+.PHONY: apply
 apply:
-	@$(MAKE) -C $(ESXI01_DIR) -f $(ESXI01_MAKEFILE) apply
-#	@$(MAKE) -C $(ESXI02_DIR) -f $(ESXI02_MAKEFILE) apply
+	@echo Applying Terraform deployment...
+	@terraform $@ -var='esxi_password=$(ESXI_ROOT_PASSWORD)'
+
+.PHONY: destroy
 destroy:
-	@$(MAKE) -C $(ESXI01_DIR) -f $(ESXI01_MAKEFILE) destroy
-#	@$(MAKE) -C $(ESXI02_DIR) -f $(ESXI02_MAKEFILE) destroy
+	@echo Destroying Terraform deployment...
+	@terraform $@ -var='esxi_password=$(ESXI_ROOT_PASSWORD)'
 
 .PHONY: lint
 lint:
-	@$(MAKE) -C $(ESXI01_DIR) -f $(ESXI01_MAKEFILE) $@
-#	@$(MAKE) -C $(ESXI02_DIR) -f $(ESXI02_MAKEFILE) $@
+	@echo Validating Terraform module...
+	@terraform validate
