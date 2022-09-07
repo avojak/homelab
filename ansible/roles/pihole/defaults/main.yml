@@ -1,7 +1,9 @@
 ---
-pihole_user: pihole
-pihole_password: P@$$w0rd
-pihole_upstream_dns: 208.67.222.222;208.67.220.220;1.1.1.1;1.0.0.1
-pihole_web_password: P@$$w0rd
-pihole_timezone: America/Denver
-pihole_temp_unit: f
+pihole_upstream_dns:
+  - "208.67.222.222" # OpenDNS
+  - "208.67.220.220" # OpenDNS
+  - "1.1.1.1" # Cloudflare
+  - "1.0.0.1" # Cloudflare
+pihole_web_password: "P@$$w0rd"
+pihole_timezone: "America/Denver"
+pihole_temp_unit: "f"

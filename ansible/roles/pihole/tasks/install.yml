@@ -17,9 +17,9 @@
     env:
       TZ: "{{ pihole_timezone }}"
       WEBPASSWORD: "{{ pihole_web_password }}"
-      PIHOLE_DNS_: "{{ pihole_upstream_dns }}"
+      PIHOLE_DNS_: "{{ pihole_upstream_dns | join(';') }}"
       TEMPERATUREUNIT: "{{ pihole_temp_unit }}"
-      DNSMASQ_LISTENING: "all"
+      DNSMASQ_LISTENING: "local"
       FTLCONF_LOCAL_IPV4: "127.0.0.1"
       DNS_FQDN_REQUIRED: "true"
       DNSSEC: "true"
