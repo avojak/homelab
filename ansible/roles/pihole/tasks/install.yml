@@ -1,0 +1,37 @@
+---
+- name: Ensure container is running
+  docker_container:
+    name: pihole
+    image: pihole/pihole:latest
+    state: started
+    restart: no
+    restart_policy: unless-stopped
+    ports:
+      - '{{ ansible_host }}:53:53/udp'
+      - '{{ ansible_host }}:53:53/tcp'
+      - '80:80/tcp'
+      - '443:443/tcp'
+    volumes:
+      - /opt/pihole/etc-pihole/:/etc/pihole/
+      - /opt/pihole/etc-dnsmasq.d:/etc/dnsmasq.d/
+    env:
+      TZ: "{{ pihole_timezone }}"
+      WEBPASSWORD: "{{ pihole_web_password }}"
+      PIHOLE_DNS_: "{{ pihole_upstream_dns }}"
+      TEMPERATUREUNIT: "{{ pihole_temp_unit }}"
+      DNSMASQ_LISTENING: "all"
+      FTLCONF_LOCAL_IPV4: "127.0.0.1"
+      DNS_FQDN_REQUIRED: "true"
+      DNSSEC: "true"
+      VIRTUAL_HOST: "{{ inventory_hostname }}"
+
+- name: Ensure ports open on the firewall
+  ufw:
+    rule: allow
+    port: "{{ item.port }}"
+    proto: "{{ item.proto }}"
+  loop:
+    - { port: 53, proto: "udp" }
+    - { port: 53, proto: "tcp" }
+    - { port: 80, proto: "tcp" }
+    - { port: 443, proto: "tcp" }

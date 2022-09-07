@@ -18,6 +18,7 @@ $(SSH_KEY_FILE):
 .PHONY: init
 init: $(SSH_KEY_FILE)
 	@$(MAKE) -C $(TERRAFORM_DIR) -f $(TERRAFORM_MAKEFILE) $@
+	@$(MAKE) -C $(ANSIBLE_DIR) -f $(ANSIBLE_MAKEFILE) $@
 
 .PHONY: image
 image:

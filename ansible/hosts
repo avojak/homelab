@@ -1,2 +1,20 @@
-[coruscant]
-192.168.1.176 ansible_python_interpreter=/usr/bin/python3
+all:
+  children:
+    esxi:
+      hosts:
+        esx-mac-01:
+          ansible_host: 192.168.1.64
+        # esx-mac-02:
+        #   ansible_host:
+        esx-rpi-01:
+          ansible_host: 192.168.1.230
+        esx-rpi-02:
+          ansible_host: 192.168.1.22
+    piholes:
+      hosts:
+        pihole-01:
+          ansible_host: 192.168.1.153
+          ansible_python_interpreter: /usr/bin/python3
+        # pihole-02:
+        #   ansible_host: 192.168.1.131
+        #   ansible_python_interpreter: /usr/bin/python3

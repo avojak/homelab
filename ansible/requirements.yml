@@ -1,3 +1,8 @@
 ---
 collections:
   - name: community.general
+roles:
+  - name: geerlingguy.docker
+    version: 5.2.0
+  - name: geerlingguy.docker_arm
+    version: 5.0.0

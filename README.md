@@ -91,11 +91,11 @@ In following with Ansible principles, this command can be run repeatedly to ensu
 
 | ESXi Host Alias (IP) | Virtual Host (IP) | OS | Software |
 | ----------------------- | ----------------- | -- | -------- |
-| [`esx-mac-01`](./terraform/esxi01/) (192.168.1.64) | TBD | [Ubuntu Server 22.04 (amd64)](./packer/ubuntu-22.04-server-amd64/) | TBD |
+| `esx-mac-01` (192.168.1.64) | TBD | [Ubuntu Server 22.04 (amd64)](./packer/ubuntu-22.04-server-amd64/) | TBD |
 | `esx-mac-02` (TBD) | TBD | [Ubuntu Server 22.04 (amd64)](./packer/ubuntu-22.04-server-amd64/) | TBD |
 | `esx-rpi-01` (192.168.1.230) | TBD | [Ubuntu Server 22.04 (arm64)](./packer/ubuntu-22.04-server-arm64/) | Traefik, Cloudflare DDNS |
-| `esx-rpi-02` (192.168.1.22) | TBD | [Ubuntu Server 22.04 (arm64)](./packer/ubuntu-22.04-server-arm64/) | Pi-hole |
-|  | TBD | [Ubuntu Server 22.04 (arm64)](./packer/ubuntu-22.04-server-arm64/) | Pi-hole |
+| `esx-rpi-02` (192.168.1.22) | pihole-01 (192.168.1.153) | [Ubuntu Server 22.04 (arm64)](./packer/ubuntu-22.04-server-arm64/) | Pi-hole (:53, :80) |
+|  | pihole-02 (192.168.1.131) | [Ubuntu Server 22.04 (arm64)](./packer/ubuntu-22.04-server-arm64/) | Pi-hole (:53, :80) |
 
 ----
 

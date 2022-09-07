@@ -1,15 +1,26 @@
 ---
-- hosts: coruscant
+- hosts: piholes
   become: true
-  roles:
-    - geerlingguy.docker
-    - geerlingguy.pip
-    - homebridge
-    - plex
-    - portainer
   vars:
-    pip_install_packages:
-      - name: docker
+    pip_package: python3-pip
   vars_files:
-    - vars/homebridge.yml
-    - vars/plex.yml
+    - vars/pihole.yml
+  roles:
+    - guest-base
+    - geerlingguy.pip
+    - geerlingguy.docker_arm
+    - pihole
+# - hosts: coruscant
+#   become: true
+#   roles:
+#     - geerlingguy.docker
+#     - geerlingguy.pip
+#     - homebridge
+#     - plex
+#     - portainer
+  # vars:
+  #   pip_install_packages:
+  #     - name: docker
+  # vars_files:
+  #   - vars/homebridge.yml
+  #   - vars/plex.yml
