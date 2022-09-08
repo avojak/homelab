@@ -7,3 +7,7 @@ pihole_upstream_dns:
 pihole_web_password: "P@$$w0rd"
 pihole_timezone: "America/Denver"
 pihole_temp_unit: "f"
+pihole_adlists:
+  - address: "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"
+    enabled: 1
+    comment: "Migrated from /etc/pihole/adlists.list"

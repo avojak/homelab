@@ -5,3 +5,19 @@ pihole_web_password: !vault |
           61356364366433616134396533366463323536613764333136613733343231336239313434323466
           3430333938353131660a626363396435383965386534303365643138396636366438306466353536
           62643235626235336437623631343338636637633464623634643836666631643264
+pihole_adlists:
+  - address: "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"
+    enabled: 1
+    comment: "Migrated from /etc/pihole/adlists.list"
+  - address: "https://blocklistproject.github.io/Lists/abuse.txt"
+    enabled: 1
+    comment: "Block List Project (Abuse)"
+  - address: "https://blocklistproject.github.io/Lists/ads.txt"
+    enabled: 1
+    comment: "Block List Project (Ads)"
+  - address: "https://blocklistproject.github.io/Lists/malware.txt"
+    enabled: 1
+    comment: "Block List Project (Malware)"
+  - address: "https://blocklistproject.github.io/Lists/phishing.txt"
+    enabled: 1
+    comment: "Block List Project (Phishing)"

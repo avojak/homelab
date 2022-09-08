@@ -14,6 +14,7 @@
     volumes:
       - /opt/pihole/etc-pihole/:/etc/pihole/
       - /opt/pihole/etc-dnsmasq.d:/etc/dnsmasq.d/
+    hostname: "{{ inventory_hostname }}"
     env:
       TZ: "{{ pihole_timezone }}"
       WEBPASSWORD: "{{ pihole_web_password }}"
@@ -24,6 +25,49 @@
       DNS_FQDN_REQUIRED: "true"
       DNSSEC: "true"
       VIRTUAL_HOST: "{{ inventory_hostname }}"
+
+- name: Get current adlists
+  community.docker.docker_container_exec:
+    container: pihole
+    command: sqlite3 /etc/pihole/gravity.db 'select address,enabled from adlist;'
+  register: current_adlists
+  changed_when: false
+
+- name: Sort current adlists
+  set_fact:
+    current_adlists_sorted: "{{ current_adlists.stdout_lines | sort }}"
+
+- name: Create list of target adlists
+  set_fact:
+    target_adlists: "{{ target_adlists | default([]) | union([item.address ~ '|' ~ item.enabled]) }}"
+  loop: "{{ pihole_adlists  }}"
+
+- name: Sort target adlists
+  set_fact:
+    target_adlists_sorted: "{{ target_adlists | sort }}"
+
+- name: Determine if target adlists are changed
+  set_fact:
+    adlists_changed: "{{ current_adlists_sorted != target_adlists_sorted }}"
+
+- name: Remove existing adlists in the gravity database when adlists have changed
+  community.docker.docker_container_exec:
+    container: pihole
+    command: sqlite3 /etc/pihole/gravity.db 'delete from adlist;'
+  when: adlists_changed
+
+- name: Insert adlists to the gravity database
+  community.docker.docker_container_exec:
+    container: pihole
+    command: sqlite3 /etc/pihole/gravity.db 'insert into adlist(address,enabled,comment) values ("{{ item.address }}","{{ item.enabled }}","{{ item.comment }}");'
+  with_items: "{{ pihole_adlists }}"
+  when: adlists_changed
+
+- name: Update gravity
+  community.docker.docker_container_exec:
+    container: pihole
+    command: pihole -g
+  when: adlists_changed
 
 - name: Ensure ports open on the firewall
   ufw:
