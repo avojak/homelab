@@ -1,0 +1,59 @@
+---
+# Query the domainlist table in the database database for the domain, type and enabled status
+- name: Get current domainlist
+  community.docker.docker_container_exec:
+    container: pihole
+    command: sqlite3 /etc/pihole/gravity.db 'select domain,type,enabled from domainlist;'
+  register: current_domainlist
+  changed_when: false
+
+# Sort the domainlist so that it can be accurately compared with the target domainlist
+- name: Sort current domainlist
+  set_fact:
+    current_domainlist_sorted: "{{ current_domainlist.stdout_lines | sort }}"
+
+# Ensure that the target_domainlist variable is defined even if there are none provided by the user
+- name: Create target domainlist
+  set_fact:
+    target_domainlist: []
+
+# Convert the target domainlist variable into a list that will match the format of the current domainlist
+- name: Populate target domainlist
+  set_fact:
+    target_domainlist: "{{ target_domainlist | default([]) | union([item.domain ~ '|' ~ item.type ~ '|' ~ (item.enabled | default('yes') | bool | int)]) }}"
+  loop: "{{ pihole_domainlist  }}"
+
+# Apply the same sorting to the target domainlist as we did for the current domainlist
+- name: Sort target domainlist
+  set_fact:
+    target_domainlist_sorted: "{{ target_domainlist | sort }}"
+
+# The target domainlist is considered changed if it doesn't match what was found in the database
+- name: Determine if target domainlist is changed
+  set_fact:
+    domainlist_changed: "{{ current_domainlist_sorted != target_domainlist_sorted }}"
+
+# Remove existing domainlist from the database so we can easily insert the target domainlist
+- name: Remove existing domainlist in the gravity database when domainlist has changed
+  community.docker.docker_container_exec:
+    container: pihole
+    command: sqlite3 /etc/pihole/gravity.db 'delete from domainlist;'
+  when: domainlist_changed
+  notify: "Update gravity"
+
+# Reset the index sequence back to 0 on the domainlist table after clearing all rows
+- name: Reset domainlist table sequence
+  community.docker.docker_container_exec:
+    container: pihole
+    command: sqlite3 /etc/pihole/gravity.db "UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='domainlist';"
+  when: domainlist_changed
+  notify: "Update gravity"
+
+# Insert target domainlist
+- name: Insert domainlist to the gravity database
+  community.docker.docker_container_exec:
+    container: pihole
+    command: sqlite3 /etc/pihole/gravity.db 'insert into domainlist(domain,type,enabled,comment) values ("{{ item.domain }}","{{ item.type }}","{{ item.enabled | default('yes') | bool | int }}","{{ item.comment | default('') }}");'
+  with_items: "{{ pihole_domainlist }}"
+  when: domainlist_changed
+  notify: "Update gravity"

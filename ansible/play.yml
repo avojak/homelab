@@ -10,6 +10,19 @@
     - geerlingguy.pip
     - geerlingguy.docker_arm
     - pihole
+
+- hosts:
+  become: true
+  vars:
+    pip_package: python3-pip
+  vars_files:
+    - vars/cloudflare-ddns.yml
+  roles:
+    - guest-base
+    - geerlingguy.pip
+    - geerlingguy.docker_arm
+    - cloudflare-ddns
+
 # - hosts: coruscant
 #   become: true
 #   roles:

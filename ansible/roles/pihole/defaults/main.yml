@@ -5,9 +5,11 @@ pihole_upstream_dns:
   - "1.1.1.1" # Cloudflare
   - "1.0.0.1" # Cloudflare
 pihole_web_password: "P@$$w0rd"
-pihole_timezone: "America/Denver"
+pihole_timezone: "America/Chicago"
 pihole_temp_unit: "f"
-pihole_adlists:
-  - address: "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"
-    enabled: 1
-    comment: "Migrated from /etc/pihole/adlists.list"
+pihole_dnsmasq: "local"
+pihole_adlists: []
+  # - address: "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"
+  #   enabled: yes
+  #   comment: "Migrated from /etc/pihole/adlists.list"
+pihole_domainlist: []

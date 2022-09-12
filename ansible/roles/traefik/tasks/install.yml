@@ -1,0 +1,22 @@
+---
+- name: Ensure container is running
+  docker_container:
+    name: traefik
+    image: traefik:latest
+    state: started
+    restart: no
+    restart_policy: unless-stopped
+    pull: yes
+    ports:
+      - '80:80/tcp'
+      - '443:443/tcp'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /opt/traefik/letsencrypt:/letsencrypt
+      - /opt/traefik/services:/etc/traefik/services
+
+- name: Cleanup stale Docker images
+  docker_prune:
+    images: yes
+    images_filters:
+      dangling: false

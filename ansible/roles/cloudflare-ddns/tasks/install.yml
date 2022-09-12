@@ -1,0 +1,20 @@
+---
+- name: Ensure container is running
+  docker_container:
+    name: cloudflare-ddns
+    image: oznu/cloudflare-ddns:latest
+    state: started
+    restart: no
+    restart_policy: unless-stopped
+    pull: yes
+    env:
+      API_KEY: "{{ cloudflare_ddns_api_key }}"
+      ZONE: "{{ cloudflare_ddns_zone }}"
+      SUBDOMAIN: "{{ cloudflare_ddns_subdomain }}"
+      PROXIED: "{{ cloudflare_ddns_proxied }}"
+
+- name: Cleanup stale Docker images
+  docker_prune:
+    images: yes
+    images_filters:
+      dangling: false

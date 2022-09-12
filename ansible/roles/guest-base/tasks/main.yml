@@ -8,3 +8,17 @@
     upgrade: yes
     update_cache: yes
     cache_valid_time: 86400 # One day
+
+- name: Ensure default deny on firewall
+  ufw:
+    default: deny
+
+- name: Ensure SSH available through firewall
+  ufw:
+    rule: limit
+    port: ssh
+    proto: tcp
+
+- name: Ensure firewall enabled and running
+  ufw:
+    state: enabled
