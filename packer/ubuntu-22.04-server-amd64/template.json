@@ -43,6 +43,28 @@
                 "sudo apt-get install -y curl cloud-init python3-distutils",
                 "curl -sSL https://raw.githubusercontent.com/vmware/cloud-init-vmware-guestinfo/master/install.sh | sudo sh -"
             ]
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "sudo rm /etc/machine-id /var/lib/dbus/machine-id",
+                "sudo touch /etc/machine-id",
+                "sudo chmod 444 /etc/machine-id"
+            ]
+        },
+        {
+            "type": "file",
+            "source": "{{user `vm_name`}}/files/00-installer-config.yaml",
+            "destination": "/tmp/00-installer-config.yaml"
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "sudo mv /tmp/00-installer-config.yaml /etc/netplan/00-installer-config.yaml",
+                "sudo chmod 644 /etc/netplan/00-installer-config.yaml",
+                "sudo chown root:root /etc/netplan/00-installer-config.yaml",
+                "sudo netplan apply"
+            ]
         }
     ],
     "post-processors": [
