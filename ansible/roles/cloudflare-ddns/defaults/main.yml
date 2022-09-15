@@ -1,4 +1,4 @@
 cloudflare_ddns_api_key:
 cloudflare_ddns_zone:
 cloudflare_ddns_subdomain:
-cloudflare_ddns_proxied: true
+cloudflare_ddns_proxied: "true"

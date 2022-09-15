@@ -11,7 +11,7 @@ pihole_dnsmasq: "all"
 
 pihole_adlists:
   - address: "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"
-    comment: "Migrated from /etc/pihole/adlists.list"
+    comment: "StevenBlack/hosts (adware + malware)"
   - address: "https://blocklistproject.github.io/Lists/abuse.txt"
     comment: "Block List Project (Abuse)"
   - address: "https://blocklistproject.github.io/Lists/ads.txt"
@@ -39,10 +39,24 @@ pihole_adlists:
   - address: "https://v.firebog.net/hosts/Admiral.txt"
   - address: "https://raw.githubusercontent.com/anudeepND/blacklist/master/adservers.txt"
   - address: "https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt"
+    comment: "Disconnect.me SimpleAd"
+  - address: "https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt"
+    comment: "Disconnect.me SimpleTracking"
   - address: "https://v.firebog.net/hosts/Easylist.txt"
   - address: "https://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext"
   - address: "https://raw.githubusercontent.com/FadeMind/hosts.extras/master/UncheckyAds/hosts"
   - address: "https://raw.githubusercontent.com/bigdargon/hostsVN/master/hosts"
+  - address: "https://raw.githubusercontent.com/jdlingyu/ad-wars/master/hosts"
+  - address: "https://dbl.oisd.nl/"
+    comment: "Ads, Mobile Ads, Phishing, Malvertising, Malware, Spyware, Ransomware, CryptoJacking and some Telemetry, Analytics, Tracking"
+  - address: "https://osint.digitalside.it/Threat-Intel/lists/latestdomains.txt"
+    comment: "osint.digitalside.it malicious domains + malware"
+  - address: "https://urlhaus.abuse.ch/downloads/hostfile/"
+    comment: "abuse.ch malicious domains + malware"
+  - address: "https://raw.githubusercontent.com/crazy-max/WindowsSpyBlocker/master/data/dnscrypt/spy.txt"
+    comment: "windows telemetry"
+  - address: "https://raw.githubusercontent.com/hectorm/hmirror/master/data/adaway.org/list.txt"
+    comment: "AdAway"
 
 pihole_domainlist:
   - domain: "(\\.|^)plausible\\.io$"
@@ -52,3 +66,9 @@ pihole_domainlist:
     type: 0
   - domain: "t.co"
     type: 0
+  - domain: "clipcentric-a.akamaihd.net"
+    type: 1
+  - domain: "app-measurement.com"
+    type: 1
+  - domain: "events.ads.vungle.com"
+    type: 1

@@ -11,17 +11,24 @@
     - geerlingguy.docker_arm
     - pihole
 
-- hosts:
+- hosts: homelab-prx
   become: true
   vars:
     pip_package: python3-pip
   vars_files:
     - vars/cloudflare-ddns.yml
+    - vars/traefik.yml
   roles:
     - guest-base
     - geerlingguy.pip
     - geerlingguy.docker_arm
     - cloudflare-ddns
+    - traefik
+
+- hosts: homelab-app-01
+  become: true
+  roles:
+    - guest-base
 
 # - hosts: coruscant
 #   become: true

@@ -1,4 +1,9 @@
 all:
+  hosts:
+    homelab-prx:
+      ansible_host: 192.168.1.150
+    homelab-app-01:
+      ansible_host: 192.168.1.56
   children:
     esxi:
       hosts:
@@ -18,3 +23,4 @@ all:
         pihole-02:
           ansible_host: 192.168.1.131
           ansible_python_interpreter: /usr/bin/python3
+    

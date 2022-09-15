@@ -1,0 +1,8 @@
+http:
+  services:
+{% for service in traefik_services %}
+    {{ service.name }}:
+      loadBalancer:
+        servers:
+          - url: {{ service.url }}
+{% endfor %}

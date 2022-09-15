@@ -82,8 +82,8 @@ In following with Ansible principles, this command can be run repeatedly to ensu
 
 | Physical ESXi Host | Specs | Alias |
 | ------------------ | ----- | ----- |
-| Mac mini | Late 2012, Quad-core i7, 16 GB RAM | `esx-mac-01` |
-| Mac mini | Late 2012, Quad-core i7, 16 GB RAM | `esx-mac-02` |
+| Mac mini | Late 2012 (6,2), Quad-core i7, 16 GB RAM | `esx-mac-01` |
+| Mac mini | Late 2012 (6,2), Quad-core i7, 16 GB RAM | `esx-mac-02` |
 | Raspberry Pi | Model 4B, 8 GB RAM | `esx-rpi-01` |
 | Raspberry Pi | Model 4B, 4 GB RAM | `esx-rpi-02` |
 
@@ -93,9 +93,9 @@ In following with Ansible principles, this command can be run repeatedly to ensu
 | ----------------------- | ----------------- | -- | -------- |
 | `esx-mac-01` (192.168.1.64) | TBD | [Ubuntu Server 22.04 (amd64)](./packer/ubuntu-22.04-server-amd64/) | TBD |
 | `esx-mac-02` (TBD) | TBD | [Ubuntu Server 22.04 (amd64)](./packer/ubuntu-22.04-server-amd64/) | TBD |
-| `esx-rpi-01` (192.168.1.230) | TBD | [Ubuntu Server 22.04 (arm64)](./packer/ubuntu-22.04-server-arm64/) | Traefik, Cloudflare DDNS |
-| `esx-rpi-02` (192.168.1.22) | pihole-01 (192.168.1.153) | [Ubuntu Server 22.04 (arm64)](./packer/ubuntu-22.04-server-arm64/) | Pi-hole (:53, :80) |
-|  | pihole-02 (192.168.1.131) | [Ubuntu Server 22.04 (arm64)](./packer/ubuntu-22.04-server-arm64/) | Pi-hole (:53, :80) |
+| `esx-rpi-01` (192.168.1.230) | `homelab-prx` (192.168.1.150) | [Ubuntu Server 22.04 (arm64)](./packer/ubuntu-22.04-server-arm64/) | Traefik, Cloudflare DDNS |
+| `esx-rpi-02` (192.168.1.22) | `pihole-01` (192.168.1.153) | [Ubuntu Server 22.04 (arm64)](./packer/ubuntu-22.04-server-arm64/) | Pi-hole (:53, :80) |
+|  | `pihole-02` (192.168.1.131) | [Ubuntu Server 22.04 (arm64)](./packer/ubuntu-22.04-server-arm64/) | Pi-hole (:53, :80) |
 
 ----
 

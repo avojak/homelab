@@ -82,9 +82,9 @@ resource "esxi_guest" "pihole-02" {
     ovf_source = var.ova_file["arm64"]
 }
 
-resource "esxi_guest" "" {
+resource "esxi_guest" "homelab-prx" {
     provider = esxi.esx-rpi-01
-    guest_name = ""
+    guest_name = "homelab-prx"
     disk_store = var.disk_store
 
     network_interfaces {
@@ -96,7 +96,7 @@ resource "esxi_guest" "" {
     guest_shutdown_timeout = var.guest_shutdown_timeout
 
     # boot_disk_size = 50 # GB
-    memsize = 8192 # 8 GB
+    memsize = 6144 # 6 GB
     numvcpus = 4
     power = "on"
     boot_firmware = "efi"
@@ -104,23 +104,23 @@ resource "esxi_guest" "" {
     ovf_source = var.ova_file["arm64"]
 }
 
-# resource "esxi_guest" "coruscant" {
-#     provider = esxi.esx-mac-01
-#     guest_name = "coruscant"
-#     disk_store = var.disk_store
+resource "esxi_guest" "homelab-app-01" {
+    provider = esxi.esx-mac-01
+    guest_name = "homelab-app-01"
+    disk_store = var.disk_store
 
-#     network_interfaces {
-#         virtual_network = var.virtual_network
-#         nic_type = var.nic_type
-#     }
+    network_interfaces {
+        virtual_network = var.virtual_network
+        nic_type = var.nic_type
+    }
 
-#     guest_startup_timeout = var.guest_startup_timeout
-#     guest_shutdown_timeout = var.guest_shutdown_timeout
+    guest_startup_timeout = var.guest_startup_timeout
+    guest_shutdown_timeout = var.guest_shutdown_timeout
 
-#     boot_disk_size = 100 # GB
-#     memsize = 14336 # 14 GB
-#     numvcpus = 4
-#     power = "on"
+    boot_disk_size = 100 # GB
+    memsize = 14336 # 14 GB
+    numvcpus = 4
+    power = "on"
 
-#     ovf_source = var.ova_file["amd64"]
-# }
+    ovf_source = var.ova_file["amd64"]
+}

@@ -7,4 +7,4 @@ cloudflare_ddns_api_key: !vault |
           63313136376664643838346465313735646231333239646433366566346531626239626131313434
           3739623161613462663932343762353832643932396438383564
 cloudflare_ddns_zone: "vojak.cloud"
-cloudflare_ddns_subdomain: "home"
+cloudflare_ddns_subdomain: "homelab"
