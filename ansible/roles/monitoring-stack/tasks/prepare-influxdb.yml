@@ -1,0 +1,17 @@
+---
+- name: Create directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  with_items:
+    - "{{ influxdb_data_dir }}"
+    - "{{ influxdb_config_dir }}"
+
+- name: Ensure ports open on the firewall
+  ufw:
+    rule: allow
+    port: "{{ item.port }}"
+    proto: "{{ item.proto }}"
+  loop:
+    - { port: "{{ influxdb_port }}", proto: "tcp" }

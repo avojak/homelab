@@ -1,26 +1,41 @@
 all:
   hosts:
+    esx-mac-01:
+      ansible_host: 192.168.1.64
+    # esx-mac-02:
+    #   ansible_host:
+    esx-rpi-01:
+      ansible_host: 192.168.1.230
+    esx-rpi-02:
+      ansible_host: 192.168.1.22
     homelab-prx:
-      ansible_host: 192.168.1.150
-    homelab-app-01:
-      ansible_host: 192.168.1.56
+      ansible_host: 192.168.1.152
+    homelab-mon:
+      ansible_host: 192.168.1.114
+      ansible_python_interpreter: /usr/bin/python3
+    pihole-01:
+      ansible_host: 192.168.1.153
+      ansible_python_interpreter: /usr/bin/python3
+    pihole-02:
+      ansible_host: 192.168.1.131
+      ansible_python_interpreter: /usr/bin/python3
   children:
+    # ESXi hosts
     esxi:
       hosts:
         esx-mac-01:
-          ansible_host: 192.168.1.64
         # esx-mac-02:
-        #   ansible_host:
         esx-rpi-01:
-          ansible_host: 192.168.1.230
         esx-rpi-02:
-          ansible_host: 192.168.1.22
+    # Guest VMs
+    guests:
+      hosts:
+        homelab-prx:
+        homelab-mon:
+        pihole-01:
+        pihole-02:
+    # Pi-hole VMs
     piholes:
       hosts:
         pihole-01:
-          ansible_host: 192.168.1.153
-          ansible_python_interpreter: /usr/bin/python3
         pihole-02:
-          ansible_host: 192.168.1.131
-          ansible_python_interpreter: /usr/bin/python3
-    

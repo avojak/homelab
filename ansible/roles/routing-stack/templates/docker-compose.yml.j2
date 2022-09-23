@@ -1,0 +1,48 @@
+---
+version: '3.3'
+services:
+  traefik:
+    image: "traefik:{{ traefik_version }}"
+    container_name: traefik
+    restart: unless-stopped
+    pull_policy: always
+    command:
+      - "--api.dashboard=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.file.directory=/etc/traefik/services"
+      - "--providers.file.watch=true"
+      - "--entrypoints.web.address=:{{ traefik_port_http }}"
+      - "--entrypoints.websecure.address=:{{ traefik_port_https }}"
+      - "--entrypoints.websecure.http.tls=true"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.email={{ traefik_email_address }}"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      - "--log.level={{ traefik_log_level }}"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashboard.rule=Host(`{{ traefik_dashboard_domain }}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+      - "traefik.http.routers.dashboard.service=api@internal"
+      - "traefik.http.routers.dashboard.entrypoints=websecure"
+      - "traefik.http.routers.dashboard.middlewares=auth"
+      - "traefik.http.middlewares.auth.basicauth.users={{ traefik_username }}:{{ traefik_password | string | password_hash('bcrypt') | replace('$','$$') }}"
+    ports:
+      - "{{ traefik_port_http }}:80"
+      - "{{ traefik_port_https }}:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - "{{ traefik_dir_letsencrypt }}:/letsencrypt"
+      - "{{ traefik_dir_services }}:/etc/traefik/services"
+
+  cloudflare-ddns:
+    image: "oznu/cloudflare-ddns:{{ cloudflare_ddns_version }}"
+    container_name: cloudflare-ddns
+    restart: unless-stopped
+    pull_policy: always
+    environment:
+      - "API_KEY={{ cloudflare_ddns_api_key }}"
+      - "ZONE={{ cloudflare_ddns_zone }}"
+      - "SUBDOMAIN={{ cloudflare_ddns_subdomain }}"
+      - "PROXIED={{ cloudflare_ddns_proxied }}"

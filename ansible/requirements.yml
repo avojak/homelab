@@ -7,3 +7,5 @@ roles:
     version: 5.2.0
   - name: geerlingguy.docker_arm
     version: 5.0.0
+  - name: geerlingguy.nodejs
+    version: 6.0.0

@@ -1,0 +1,6 @@
+---
+- include_tasks: prepare-grafana.yml
+- include_tasks: prepare-influxdb.yml
+- include_tasks: prepare-portainer.yml
+- include_tasks: prepare-uptime-kuma.yml
+- include_tasks: install.yml

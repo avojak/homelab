@@ -1,0 +1,29 @@
+# Default InfluxDB variables
+influxdb_version: latest
+influxdb_mode: "setup"
+influxdb_username: "my-user"
+influxdb_password: "my-password"
+influxdb_org: "my-org"
+influxdb_bucket: "my-bucket"
+influxdb_retention: "1w"
+influxdb_admin_token: "my-super-secret-auth-token"
+influxdb_port: 8086
+influxdb_data_dir: "/opt/influxdb/data"
+influxdb_config_dir: "/opt/influxdb/config"
+
+# Default Grafana variables
+grafana_version: latest
+grafana_admin_user: admin
+grafana_admin_password: admin
+grafana_port: 3000
+grafana_data_dir: "/opt/grafana/data"
+
+# Default Portainer variables
+portainer_version: latest
+portainer_port_https: 9443
+portainer_data_dir: "/opt/portainer/data"
+
+# Default Uptime Kuma variables
+uptime_kuma_version: latest
+uptime_kuma_port: 3001
+uptime_kuma_data_dir: "/opt/uptime-kuma/data"

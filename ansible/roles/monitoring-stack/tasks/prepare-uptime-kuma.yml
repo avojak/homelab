@@ -1,0 +1,16 @@
+---
+- name: Create directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  with_items:
+    - "{{ uptime_kuma_data_dir }}"
+
+- name: Ensure ports open on the firewall
+  ufw:
+    rule: allow
+    port: "{{ item.port }}"
+    proto: "{{ item.proto }}"
+  loop:
+    - { port: "{{ uptime_kuma_port }}", proto: "tcp" }

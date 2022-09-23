@@ -1,0 +1,6 @@
+telegraf_host_etc: /etc
+telegraf_host_proc: /proc
+telegraf_host_sys: /sys
+telegraf_host_var: /var
+telegraf_host_run: /run
+telegraf_host_mnt_prefix: /mnt

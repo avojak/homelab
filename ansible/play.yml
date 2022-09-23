@@ -1,34 +1,61 @@
 ---
+- hosts: guests
+  become: true
+  roles:
+    - guest-base
+
 - hosts: piholes
   become: true
+  serial: 1 # Prevent a total loss of DNS on the network
   vars:
     pip_package: python3-pip
   vars_files:
     - vars/pihole.yml
   roles:
-    - guest-base
     - geerlingguy.pip
     - geerlingguy.docker_arm
+    - docker-monitoring
     - pihole
 
 - hosts: homelab-prx
   become: true
   vars:
     pip_package: python3-pip
+    docker_install_compose: true
   vars_files:
     - vars/cloudflare-ddns.yml
     - vars/traefik.yml
   roles:
-    - guest-base
     - geerlingguy.pip
     - geerlingguy.docker_arm
-    - cloudflare-ddns
-    - traefik
+    - docker-monitoring
+    - routing-stack
 
-- hosts: homelab-app-01
+- hosts: homelab-mon
   become: true
+  vars:
+    pip_package: python3-pip
+    docker_install_compose: true
+    pip_install_packages:
+      - name: docker
+      - name: docker-compose
+  #   - nodejs_version: "16.x"
+  vars_files:
+    # - vars/homebridge.yml
+    # - vars/pihole.yml
+    # - vars/scrypted.yml
+    - vars/influxdb.yml
+    - vars/grafana.yml
+    - vars/portainer.yml
+    # - vars/uptime-kuma.yml
   roles:
-    - guest-base
+    - geerlingguy.pip
+    - geerlingguy.docker
+    - docker-monitoring
+    - monitoring-stack
+    # - geerlingguy.nodejs
+    # - homebridge
+    # - scrypted
 
 # - hosts: coruscant
 #   become: true

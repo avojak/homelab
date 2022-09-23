@@ -2,6 +2,8 @@
 
 This repository contains the configuration-as-code for my homelab.
 
+The goal is to automate as much as possible to a reasonable extent. This means that there will be manual intervention involved, such as plugging in IP addresses after VMs are provisioned, and some application configuration after installation.
+
 ## Prerequisites
 
 ### 1. VMware Workstation
@@ -80,22 +82,22 @@ In following with Ansible principles, this command can be run repeatedly to ensu
 
 ## Landscape
 
-| Physical ESXi Host | Specs | Alias |
-| ------------------ | ----- | ----- |
-| Mac mini | Late 2012 (6,2), Quad-core i7, 16 GB RAM | `esx-mac-01` |
-| Mac mini | Late 2012 (6,2), Quad-core i7, 16 GB RAM | `esx-mac-02` |
-| Raspberry Pi | Model 4B, 8 GB RAM | `esx-rpi-01` |
-| Raspberry Pi | Model 4B, 4 GB RAM | `esx-rpi-02` |
+| Physical Host | Specs | OS | Alias |
+| ------------- | ----- | -- | ----- |
+| Mac mini | Late 2012 (6,2), Quad-core i7, 16 GB RAM | ESXi 7.0 | `esx-mac-01` |
+| Mac mini | Late 2012 (6,2), Quad-core i7, 16 GB RAM | ESXi 7.0 |  `esx-mac-02` |
+| Raspberry Pi | Model 4B, 8 GB RAM | ESXi 7.0 |  `esx-rpi-01` |
+| Raspberry Pi | Model 4B, 4 GB RAM | ESXi 7.0 |  `esx-rpi-02` |
 
 
 
-| ESXi Host Alias (IP) | Virtual Host (IP) | OS | Software |
+| Host Alias (IP) | Virtual Host (IP) | OS | Software |
 | ----------------------- | ----------------- | -- | -------- |
-| `esx-mac-01` (192.168.1.64) | TBD | [Ubuntu Server 22.04 (amd64)](./packer/ubuntu-22.04-server-amd64/) | TBD |
+| `esx-mac-01` (192.168.1.64) | `homelab-mon` (192.168.1.56) | [Ubuntu Server 22.04 (amd64)](./packer/ubuntu-22.04-server-amd64/) | InfluxDB (`:8086`)<br>Grafana (`:3000`)<br>Uptime Kuma (`:3001`)<br>Portainer (`:9443`) |
 | `esx-mac-02` (TBD) | TBD | [Ubuntu Server 22.04 (amd64)](./packer/ubuntu-22.04-server-amd64/) | TBD |
-| `esx-rpi-01` (192.168.1.230) | `homelab-prx` (192.168.1.150) | [Ubuntu Server 22.04 (arm64)](./packer/ubuntu-22.04-server-arm64/) | Traefik, Cloudflare DDNS |
-| `esx-rpi-02` (192.168.1.22) | `pihole-01` (192.168.1.153) | [Ubuntu Server 22.04 (arm64)](./packer/ubuntu-22.04-server-arm64/) | Pi-hole (:53, :80) |
-|  | `pihole-02` (192.168.1.131) | [Ubuntu Server 22.04 (arm64)](./packer/ubuntu-22.04-server-arm64/) | Pi-hole (:53, :80) |
+| `esx-rpi-01` (192.168.1.230) | `homelab-prx` (192.168.1.150) | [Ubuntu Server 22.04 (arm64)](./packer/ubuntu-22.04-server-arm64/) | Traefik (`:443`)<br>Cloudflare DDNS |
+| `esx-rpi-02` (192.168.1.22) | `pihole-01` (192.168.1.153) | [Ubuntu Server 22.04 (arm64)](./packer/ubuntu-22.04-server-arm64/) | Pi-hole (`:53`, `:80`) |
+|  | `pihole-02` (192.168.1.131) | [Ubuntu Server 22.04 (arm64)](./packer/ubuntu-22.04-server-arm64/) | Pi-hole (`:53`, `:80`) |
 
 ----
 

@@ -3,7 +3,9 @@
         "name": "{{ homebridge_name }}",
         "username": "{{ homebridge_username }}",
         "port": 51454,
-        "pin": "{{ homebridge_pin }}"
+        "pin": "{{ homebridge_pin | string }}",
+        "manufacturer": "homebridge.io",
+        "model": "homebridge"
     },
     "accessories": {{ homebridge_accessories|to_json(indent=4) }},
     "platforms": {{ homebridge_platforms|to_json(indent=4) }}

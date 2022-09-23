@@ -1,0 +1,16 @@
+traefik_version: latest
+traefik_dashboard_domain: traefik.example.com
+traefik_username: admin
+traefik_password: P@$$w0rd
+traefik_email_address: admin@example.com
+traefik_log_level: DEBUG
+traefik_port_http: 80
+traefik_port_https: 443
+traefik_dir_letsencrypt: /opt/traefik/letsencrypt
+traefik_dir_services: /opt/traefik/services
+
+cloudflare_ddns_version: latest
+cloudflare_ddns_api_key:
+cloudflare_ddns_zone: example.com
+cloudflare_ddns_subdomain: test
+cloudflare_ddns_proxied: "true"

@@ -104,9 +104,9 @@ resource "esxi_guest" "homelab-prx" {
     ovf_source = var.ova_file["arm64"]
 }
 
-resource "esxi_guest" "homelab-app-01" {
+resource "esxi_guest" "homelab-mon" {
     provider = esxi.esx-mac-01
-    guest_name = "homelab-app-01"
+    guest_name = "homelab-mon"
     disk_store = var.disk_store
 
     network_interfaces {
