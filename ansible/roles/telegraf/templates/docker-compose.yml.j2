@@ -1,0 +1,17 @@
+---
+version: '3.3'
+services:
+  telegraf:
+    image: "telegraf/{{ telegraf_version }}"
+    container_name: telegraf
+    restart: always
+    environment:
+      - "HOST_ETC={{ telegraf_host_etc }}"
+      - "HOST_PROC={{ telegraf_host_proc }}"
+      - "HOST_SYS={{ telegraf_host_sys }}"
+      - "HOST_VAR={{ telegraf_host_var }}"
+      - "HOST_RUN={{ telegraf_host_run }}"
+      - "HOST_MOUNT_PREFIX={{ telegraf_host_mnt_prefix }}"
+    volumes:
+      - "{{ telegraf_install_dir }}/telegraf.conf:/etc/telegraf/telegraf.conf:ro"
+      - /:/hostfs:ro

@@ -16,6 +16,7 @@
     project_name: Cloudflare DDNS
     project_src: "{{ cloudflare_ddns_install_dir }}"
     state: present
+    pull: yes
 
 - name: Cleanup stale Docker images
   docker_prune:

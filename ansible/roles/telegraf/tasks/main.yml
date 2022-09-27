@@ -1,3 +1,31 @@
 ---
-- include_tasks: prerequisites.yml
-- include_tasks: install.yml
+- name: Create install directory
+  file:
+    path: "{{ telegraf_install_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Copy docker-compose template
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{ telegraf_install_dir }}/docker-compose.yml"
+    mode: '0644'
+
+- name: Copy telegraf.conf
+  template:
+    src: telegraf.conf.j2
+    dest: "{{ telegraf_install_dir }}/telegraf.conf"
+    mode: '0644'
+
+- name: Ensure stack is running
+  docker_compose:
+    project_name: Telegraf
+    project_src: "{{ telegraf_install_dir }}"
+    state: present
+    pull: yes
+
+- name: Cleanup stale Docker images
+  docker_prune:
+    images: yes
+    images_filters:
+      dangling: false

@@ -22,6 +22,7 @@
     project_name: Grafana
     project_src: "{{ grafana_install_dir }}"
     state: present
+    pull: yes
 
 - name: Cleanup stale Docker images
   docker_prune:

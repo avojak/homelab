@@ -25,6 +25,7 @@
     project_name: InfluxDB
     project_src: "{{ influxdb_install_dir }}"
     state: present
+    pull: yes
 
 - name: Cleanup stale Docker images
   docker_prune:

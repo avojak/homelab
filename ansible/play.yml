@@ -40,11 +40,7 @@
     pip_install_packages:
       - name: docker
       - name: docker-compose
-  #   - nodejs_version: "16.x"
   vars_files:
-    # - vars/homebridge.yml
-    # - vars/pihole.yml
-    # - vars/scrypted.yml
     - vars/influxdb.yml
     - vars/grafana.yml
     - vars/portainer.yml
