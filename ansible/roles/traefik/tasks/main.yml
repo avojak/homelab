@@ -1,3 +1,46 @@
 ---
-- include_tasks: prerequisites.yml
-- include_tasks: install.yml
+- name: Create install directory
+  file:
+    path: "{{ traefik_installation_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Create directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  with_items:
+    - "{{ traefik_dir_letsencrypt }}"
+    - "{{ traefik_dir_services }}"
+
+- name: Setup the services file
+  template:
+    src: config.yml.j2
+    dest: "{{ traefik_dir_services }}/config.yml"
+    mode: '0644'
+# TODO: restart container if this changed
+
+- name: Copy docker-compose template
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{ traefik_installation_dir }}/docker-compose.yml"
+    mode: '0644'
+
+- name: Ensure stack is running
+  docker_compose:
+    project_name: Traefik
+    project_src: "{{ traefik_installation_dir }}"
+    state: present
+
+- name: Cleanup stale Docker images
+  docker_prune:
+    images: yes
+    images_filters:
+      dangling: false
+
+- name: Ensure port open on the firewall for HTTPS dashboard
+  ufw:
+    rule: allow
+    port: "{{ traefik_port_https }}"
+    proto: tcp

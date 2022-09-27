@@ -1,0 +1,20 @@
+---
+version: '3.3'
+services:
+  influxdb:
+    image: "influxdb:{{ influxdb_version }}"
+    container_name: influxdb
+    restart: always
+    ports:
+      - "{{ influxdb_port }}:8086"
+    environment:
+      - "DOCKER_INFLUXDB_INIT_MODE={{ influxdb_mode }}"
+      - "DOCKER_INFLUXDB_INIT_USERNAME={{ influxdb_username }}"
+      - "DOCKER_INFLUXDB_INIT_PASSWORD={{ influxdb_password }}"
+      - "DOCKER_INFLUXDB_INIT_ORG={{ influxdb_org }}"
+      - "DOCKER_INFLUXDB_INIT_BUCKET={{ influxdb_bucket }}"
+      - "DOCKER_INFLUXDB_INIT_RETENTION={{ influxdb_retention }}"
+      - "DOCKER_INFLUXDB_INIT_ADMIN_TOKEN={{ influxdb_admin_token }}"
+    volumes:
+      - "{{ influxdb_data_dir }}:/var/lib/influxdb2"
+      - "{{ influxdb_config_dir }}:/etc/influxdb2"

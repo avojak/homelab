@@ -1,0 +1,12 @@
+influxdb_version: latest
+influxdb_mode: "setup"
+influxdb_username: "my-user"
+influxdb_password: "my-password"
+influxdb_org: "my-org"
+influxdb_bucket: "my-bucket"
+influxdb_retention: "1w"
+influxdb_admin_token: "my-super-secret-auth-token"
+influxdb_port: 8086
+influxdb_install_dir: /opt/influxdb
+influxdb_data_dir: "{{ influxdb_install_dir }}/data"
+influxdb_config_dir: "{{ influxdb_install_dir }}/config"

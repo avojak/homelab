@@ -29,7 +29,8 @@
     - geerlingguy.pip
     - geerlingguy.docker_arm
     - docker-monitoring
-    - routing-stack
+    - cloudflare-ddns
+    - traefik
 
 - hosts: homelab-mon
   become: true
@@ -47,15 +48,14 @@
     - vars/influxdb.yml
     - vars/grafana.yml
     - vars/portainer.yml
-    # - vars/uptime-kuma.yml
   roles:
     - geerlingguy.pip
     - geerlingguy.docker
     - docker-monitoring
-    - monitoring-stack
-    # - geerlingguy.nodejs
-    # - homebridge
-    # - scrypted
+    - influxdb
+    - grafana
+    - portainer
+    - uptime-kuma
 
 # - hosts: coruscant
 #   become: true

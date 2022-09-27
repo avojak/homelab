@@ -1,4 +1,6 @@
+cloudflare_ddns_version: latest
 cloudflare_ddns_api_key:
-cloudflare_ddns_zone:
-cloudflare_ddns_subdomain:
+cloudflare_ddns_zone: example.com
+cloudflare_ddns_subdomain: test
 cloudflare_ddns_proxied: "true"
+cloudflare_ddns_install_dir: /opt/cloudflare-ddns

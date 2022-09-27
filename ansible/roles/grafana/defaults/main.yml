@@ -1,0 +1,6 @@
+grafana_version: latest
+grafana_admin_user: admin
+grafana_admin_password: admin
+grafana_port: 3000
+grafana_install_dir: /opt/grafana
+grafana_data_dir: "{{ grafana_install_dir }}/data"

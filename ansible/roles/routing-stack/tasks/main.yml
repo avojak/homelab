@@ -1,3 +1,0 @@
----
-- include_tasks: prepare-traefik.yml
-- include_tasks: install.yml
