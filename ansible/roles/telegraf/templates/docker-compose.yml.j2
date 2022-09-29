@@ -15,3 +15,4 @@ services:
     volumes:
       - "{{ telegraf_install_dir }}/telegraf.conf:/etc/telegraf/telegraf.conf:ro"
       - /:/hostfs:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
