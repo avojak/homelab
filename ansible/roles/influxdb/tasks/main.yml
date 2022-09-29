@@ -19,6 +19,7 @@
     src: docker-compose.yml.j2
     dest: "{{ influxdb_install_dir }}/docker-compose.yml"
     mode: '0644'
+# TODO: Restart container when this changes
 
 - name: Ensure stack is running
   docker_compose:

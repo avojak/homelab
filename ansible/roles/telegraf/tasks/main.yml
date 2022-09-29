@@ -16,6 +16,7 @@
     src: telegraf.conf.j2
     dest: "{{ telegraf_install_dir }}/telegraf.conf"
     mode: '0644'
+  register: telegraf_config
 
 - name: Ensure stack is running
   docker_compose:
@@ -23,6 +24,13 @@
     project_src: "{{ telegraf_install_dir }}"
     state: present
     pull: yes
+
+- name: Restart service when config has changed
+  docker_compose:
+    project_src: "{{ telegraf_install_dir }}"
+    build: false
+    restarted: true
+  when: telegraf_config.changed
 
 - name: Cleanup stale Docker images
   docker_prune:

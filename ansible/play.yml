@@ -1,14 +1,19 @@
 ---
 - hosts: guests
   become: true
+  vars_files:
+    - roles/influxdb/defaults/main.yml
+    - vars/influxdb.yml
   roles:
     - guest-base
+    - { role: telegraf, tags: telegraf_tag }
 
 - hosts: piholes
   become: true
   serial: 1 # Prevent a total loss of DNS on the network
   vars:
     pip_package: python3-pip
+    docker_install_compose: true
   vars_files:
     - vars/pihole.yml
   roles:

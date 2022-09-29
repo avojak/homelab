@@ -1,3 +1,4 @@
+telegraf_version: latest
 telegraf_host_etc: /etc
 telegraf_host_proc: /proc
 telegraf_host_sys: /sys

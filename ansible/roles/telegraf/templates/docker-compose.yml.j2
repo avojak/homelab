@@ -2,7 +2,7 @@
 version: '3.3'
 services:
   telegraf:
-    image: "telegraf/{{ telegraf_version }}"
+    image: "telegraf:{{ telegraf_version }}"
     container_name: telegraf
     restart: always
     environment:
