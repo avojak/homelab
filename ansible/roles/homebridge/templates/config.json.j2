@@ -1,11 +1,12 @@
 {
     "bridge": {
-        "name": "{{ homebridge_name }}",
-        "username": "{{ homebridge_username }}",
+        "name": "{{ homebridge_bridge_name }}",
+        "username": "{{ homebridge_bridge_username }}",
         "port": 51454,
-        "pin": "{{ homebridge_pin | string }}",
+        "pin": "{{ homebridge_bridge_pin }}",
         "manufacturer": "homebridge.io",
-        "model": "homebridge"
+        "model": "homebridge",
+        "advertiser": "bonjour-hap"
     },
     "accessories": {{ homebridge_accessories|to_json(indent=4) }},
     "platforms": {{ homebridge_platforms|to_json(indent=4) }}

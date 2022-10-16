@@ -1,0 +1,17 @@
+---
+version: '3.3'
+services:
+  homebridge:
+    image: "oznu/homebridge:{{ homebridge_version }}"
+    container_name: homebridge
+    restart: always
+    environment:
+      - "TZ={{ homebridge_timezone }}"
+    network_mode: host
+    volumes:
+      - "{{ homebridge_install_dir }}:/homebridge"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10mb"
+        max-file: "1"

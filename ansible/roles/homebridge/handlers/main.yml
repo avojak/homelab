@@ -1,4 +1,0 @@
----
-- name: Restart Homebridge
-  become: yes
-  shell: hb-service restart

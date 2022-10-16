@@ -1,13 +1,13 @@
-homebridge_version: '1.5.0'
-homebridge_config_ui_version: '4.50.1'
-homebridge_username: CC:22:3D:E3:CE:30
-homebridge_pin: !vault |
+homebridge_bridge_name: Homebridge
+homebridge_bridge_pin: !vault |
       $ANSIBLE_VAULT;1.1;AES256
       63303166313538343337633161656337646262373966313635616632616439323332623063383835
       6335623264616130343161663764323764663963633139660a343862626662623863303931666361
       35663763323335666336663536326236643839353731306436653835616262393930666438653262
       3432326664316665390a633335636331303637633937356232346463353362396335306461333433
       6236
+homebridge_bridge_username: CC:22:3D:E3:CE:30
+homebridge_timezone: America/Denver
 homebridge_plugins:
   - name: homebridge-tplink-smarthome
     version: '7.0.1'
@@ -57,6 +57,7 @@ homebridge_platforms:
     theme: 'auto'
     tempUnits: 'f'
     lang: 'auto'
+
 homebridge_myq_email: !vault |
       $ANSIBLE_VAULT;1.1;AES256
       32346662306663636432633762393639303431373632383434306539326230636631363264643335

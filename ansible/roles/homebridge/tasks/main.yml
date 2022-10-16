@@ -1,3 +1,65 @@
 ---
-- include_tasks: prerequisites.yml
-- include_tasks: install.yml
+- name: Create install directory
+  file:
+    path: "{{ homebridge_install_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Copy the config file
+  template:
+    src: config.json.j2
+    dest: "{{ homebridge_install_dir }}/config.json"
+    mode: '0644'
+  register: config
+
+- name: Copy docker-compose template
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{ homebridge_install_dir }}/docker-compose.yml"
+    mode: '0644'
+
+- name: Ensure stack is running
+  docker_compose:
+    project_name: Homebridge
+    project_src: "{{ homebridge_install_dir }}"
+    state: present
+    pull: yes
+
+- name: Install plugins
+  community.general.npm:
+    name: "{{ item.name }}"
+    version: "{{ item.version|default('') }}"
+    state: present
+    # global: yes
+    unsafe_perm: yes
+    path: "{{ homebridge_install_dir }}"
+  with_items: "{{ homebridge_plugins }}"
+  register: npm_packages
+
+- name: Restart service when plugins or config have changed
+  docker_compose:
+    project_src: "{{ homebridge_install_dir }}"
+    build: false
+    restarted: true
+  when: npm_packages.changed or config.changed
+
+- name: Cleanup stale Docker images
+  docker_prune:
+    images: yes
+    images_filters:
+      dangling: false
+
+# - name: Ensure ports open on the firewall
+#   ufw:
+#     rule: allow
+#     port: "{{ item.port }}"
+#     proto: "{{ item.proto }}"
+#   loop:
+#     - { port: "{{ homebridge_port_http }}", proto: "tcp" }
+#     - { port: "{{ homebridge_port_https }}", proto: "tcp" }
+
+- name: Ensure port open on the firewall
+  ufw:
+    rule: allow
+    port: 8581
+    proto: tcp
