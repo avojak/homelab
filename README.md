@@ -82,22 +82,24 @@ In following with Ansible principles, this command can be run repeatedly to ensu
 
 ## Landscape
 
-| Physical Host | Specs | OS | Alias |
-| ------------- | ----- | -- | ----- |
-| Mac mini | Late 2012 (6,2), Quad-core i7, 16 GB RAM | ESXi 7.0 | `esx-mac-01` |
-| Mac mini | Late 2012 (6,2), Quad-core i7, 16 GB RAM | ESXi 7.0 |  `esx-mac-02` |
-| Raspberry Pi | Model 4B, 8 GB RAM | ESXi 7.0 |  `esx-rpi-01` |
-| Raspberry Pi | Model 4B, 4 GB RAM | ESXi 7.0 |  `esx-rpi-02` |
+| Physical Host | Model | Specs | OS | Alias |
+| ------------- | ----- | ----- | -- | ----- |
+| Mac mini | Late 2012 (6,2) | Quad-core i7-3720QM @ 2.6GHz, 16 GB RAM | ESXi 7.0 | `esx-mac-01` |
+| Mac mini | Late 2012 (6,2) | Quad-core i7-3720QM @ 2.6GHz, 16 GB RAM | ESXi 7.0 |  `esx-mac-02` |
+| Raspberry Pi | Model 4B | Quad-core ARM Cortex-A72, 8 GB RAM | ESXi 7.0 |  `esx-rpi-01` |
+| Raspberry Pi | Model 4B | Quad-core ARM Cortex-A72, 4 GB RAM | ESXi 7.0 |  `esx-rpi-02` |
+<!-- | Lenovo | W540 | Quad-core i7-4800MQ @ 2.7GHz, 16 GB RAM | ESXi 6.7.0 U3 | `esx-lvo-01` | -->
 
 
 
 | Host Alias (IP) | Virtual Host (IP) | OS | Software |
 | ----------------------- | ----------------- | -- | -------- |
-| `esx-mac-01` (192.168.1.64) | `homelab-mon` (192.168.1.56) | [Ubuntu Server 22.04 (amd64)](./packer/ubuntu-22.04-server-amd64/) | InfluxDB (`:8086`)<br>Grafana (`:3000`)<br>Uptime Kuma (`:3001`)<br>Portainer (`:9443`) |
-| `esx-mac-02` (TBD) | TBD | [Ubuntu Server 22.04 (amd64)](./packer/ubuntu-22.04-server-amd64/) | TBD |
-| `esx-rpi-01` (192.168.1.230) | `homelab-prx` (192.168.1.150) | [Ubuntu Server 22.04 (arm64)](./packer/ubuntu-22.04-server-arm64/) | Traefik (`:443`)<br>Cloudflare DDNS |
+| `esx-mac-01` (192.168.1.64) | `homelab-mon` (192.168.1.114) | [Ubuntu Server 22.04 (amd64)](./packer/ubuntu-22.04-server-amd64/) | InfluxDB (`:8086`)<br>Grafana (`:3000`)<br>Uptime Kuma (`:3001`)<br>Portainer (`:9000`, `:9443`) |
+| `esx-mac-02` (TBD) | TBD | TBD | TBD |
+| `esx-rpi-01` (192.168.1.230) | `homelab-prx` (192.168.1.152) | [Ubuntu Server 22.04 (arm64)](./packer/ubuntu-22.04-server-arm64/) | Traefik (`:80`, `:443`, `:8081`)<br>Cloudflare DDNS<br>Heimdall (`:8080`, `:8443`) |
 | `esx-rpi-02` (192.168.1.22) | `pihole-01` (192.168.1.153) | [Ubuntu Server 22.04 (arm64)](./packer/ubuntu-22.04-server-arm64/) | Pi-hole (`:53`, `:80`) |
 |  | `pihole-02` (192.168.1.131) | [Ubuntu Server 22.04 (arm64)](./packer/ubuntu-22.04-server-arm64/) | Pi-hole (`:53`, `:80`) |
+<!-- | `esx-lvo-01` (192.168.1.112) | `homelab-app-01` (192.168.1.220) | [Ubuntu Server 22.04 (amd64)](./packer/ubuntu-22.04-server-amd64/) |  | -->
 
 ----
 

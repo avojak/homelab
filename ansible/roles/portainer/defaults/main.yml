@@ -1,4 +1,5 @@
 portainer_version: latest
+portainer_port_http: 9000
 portainer_port_https: 9443
 portainer_install_dir: /opt/portainer
 portainer_data_dir: "{{ portainer_install_dir }}/data"

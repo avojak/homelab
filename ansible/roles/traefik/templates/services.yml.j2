@@ -1,0 +1,22 @@
+http:
+  routers:
+    dashboard:
+      rule: Host(`{{ traefik_dashboard_subdomain }}.{{ traefik_root_domain }}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
+      service: api@internal
+      middlewares:
+        - auth
+  middlewares:
+    auth:
+      basicAuth:
+        users:
+          - {{ traefik_username }}:{{ traefik_password | string | password_hash('bcrypt', traefik_password_salt) }}
+{% if traefik_services is defined and traefik_services|length %}
+  services:
+{% for service in traefik_services %}
+    {{ service.name }}:
+      loadBalancer:
+        servers:
+          - url: {{ service.url }}
+        passHostHeader: true
+{% endfor %}
+{% endif %}

@@ -1,0 +1,36 @@
+global:
+  sendAnonymousUsage: false
+
+api:
+  dashboard: true
+
+log:
+  level: "{{ traefik_log_level }}"
+
+entrypoints:
+  web:
+    address: ":{{ traefik_port_http }}"
+    http:
+      redirections:
+        entryPoint:
+          to: "websecure"
+          scheme: "https"
+          permanent: true
+  websecure:
+    address: ":{{ traefik_port_https }}"
+    http:
+      tls: true
+
+providers:
+  docker:
+    exposedByDefault: false
+  file:
+    watch: true
+    directory: "/dynamic_config/"
+
+certificatesResolvers:
+  le:
+    acme:
+      storage: "/letsencrypt/acme.json"
+      dnsChallenge:
+        provider: "cloudflare"

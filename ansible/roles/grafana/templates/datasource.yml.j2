@@ -1,0 +1,16 @@
+# config file version
+apiVersion: 1
+
+# list of datasources to insert/update depending
+# what's available in the database
+datasources:
+  - name: InfluxDB-Flux
+    type: influxdb
+    url: "http://{{ hostvars['homelab-mon'].ansible_host }}:{{ influxdb_port }}"
+    secureJsonData:
+      token: "{{ influxdb_admin_token }}"
+    jsonData:
+      version: Flux
+      organization: "{{ influxdb_org }}"
+      defaultBucket: "{{ influxdb_bucket }}"
+    

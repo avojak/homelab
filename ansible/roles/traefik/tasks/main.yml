@@ -12,14 +12,20 @@
     mode: '0755'
   with_items:
     - "{{ traefik_dir_letsencrypt }}"
-    - "{{ traefik_dir_services }}"
+    - "{{ traefik_dir_dynamic_config }}"
 
-- name: Setup the services file
+- name: Copy the static config file
   template:
-    src: config.yml.j2
-    dest: "{{ traefik_dir_services }}/config.yml"
+    src: traefik.yml.j2
+    dest: "{{ traefik_installation_dir }}/traefik.yml"
     mode: '0644'
-# TODO: restart container if this changed
+  register: traefik_static_config
+
+- name: Copy the dynamic config file
+  template:
+    src: services.yml.j2
+    dest: "{{ traefik_dir_dynamic_config }}/services.yml"
+    mode: '0644'
 
 - name: Copy docker-compose template
   template:
@@ -33,6 +39,13 @@
     project_src: "{{ traefik_installation_dir }}"
     state: present
 
+- name: Restart service when config has changed
+  docker_compose:
+    project_src: "{{ traefik_installation_dir }}"
+    build: false
+    restarted: true
+  when: traefik_static_config.changed
+
 - name: Cleanup stale Docker images
   docker_prune:
     images: yes
@@ -42,5 +55,9 @@
 - name: Ensure port open on the firewall for HTTPS dashboard
   ufw:
     rule: allow
-    port: "{{ traefik_port_https }}"
+    port: "{{ item }}"
     proto: tcp
+  with_items:
+    - "{{ traefik_port_api }}"
+    - "{{ traefik_port_http }}"
+    - "{{ traefik_port_https }}"

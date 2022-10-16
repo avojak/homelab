@@ -1,0 +1,15 @@
+version: "3.5"
+services:
+  jellyfin:
+    image: "jellyfin/jellyfin:{{ jellyfin_version }}"
+    container_name: jellyfin
+    user: uid:gid
+    network_mode: "host"
+    volumes:
+      - "{{ jellyfin_config_dir}}:/config"
+      - "{{ jellyfin_cache_dir}}:/cache"
+      - "{{ jellyfin_media_dir}}:/media"
+    restart: "always"
+    # Optional - alternative address used for autodiscovery
+    # environment:
+    #  - JELLYFIN_PublishedServerUrl=http://example.com

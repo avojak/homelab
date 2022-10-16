@@ -4,3 +4,9 @@ grafana_admin_password: admin
 grafana_port: 3000
 grafana_install_dir: /opt/grafana
 grafana_data_dir: "{{ grafana_install_dir }}/data"
+grafana_provisioning_dir: "{{ grafana_install_dir }}/provisioning"
+grafana_datasource_dir: "{{ grafana_provisioning_dir }}/datasources"
+grafana_plugin_dir: "{{ grafana_provisioning_dir }}/plugins"
+grafana_notifier_dir: "{{ grafana_provisioning_dir }}/notifiers"
+grafana_alerting_dir: "{{ grafana_provisioning_dir }}/alerting"
+grafana_dashboard_dir: "{{ grafana_provisioning_dir }}/dashboards"

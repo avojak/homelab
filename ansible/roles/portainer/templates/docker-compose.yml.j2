@@ -6,6 +6,7 @@ services:
     container_name: portainer
     restart: always
     ports:
+      - "{{ portainer_port_http }}:9000"
       - "{{ portainer_port_https }}:9443"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock

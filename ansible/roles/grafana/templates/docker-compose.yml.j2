@@ -14,3 +14,4 @@ services:
       - "GF_USERS_ALLOW_SIGN_UP=false"
     volumes:
       - "{{ grafana_data_dir }}:/var/lib/grafana"
+      - "{{ grafana_provisioning_dir }}:/etc/grafana/provisioning"

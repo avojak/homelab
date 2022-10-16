@@ -5,11 +5,26 @@
     state: directory
     mode: '0775'
 
-- name: Create data directory
+- name: Create directories
   file:
-    path: "{{ grafana_data_dir }}"
+    path: "{{ item }}"
     state: directory
     mode: '0775'
+  with_items:
+    - "{{ grafana_data_dir }}"
+    - "{{ grafana_provisioning_dir }}"
+    - "{{ grafana_datasource_dir }}"
+    - "{{ grafana_plugin_dir }}"
+    - "{{ grafana_notifier_dir }}"
+    - "{{ grafana_alerting_dir }}"
+    - "{{ grafana_dashboard_dir }}"
+
+- name: Copy datasource config
+  template:
+    src: datasource.yml.j2
+    dest: "{{ grafana_datasource_dir }}/datasource.yml"
+    mode: '0755'
+  register: datasource_config
 
 - name: Copy docker-compose template
   template:
@@ -23,6 +38,13 @@
     project_src: "{{ grafana_install_dir }}"
     state: present
     pull: yes
+
+- name: Restart service when config has changed
+  docker_compose:
+    project_src: "{{ grafana_install_dir }}"
+    build: false
+    restarted: true
+  when: datasource_config.changed
 
 - name: Cleanup stale Docker images
   docker_prune:

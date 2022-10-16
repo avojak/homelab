@@ -1,0 +1,14 @@
+---
+version: '3.3'
+services:
+  heimdall:
+    image: "lscr.io/linuxserver/heimdall:{{ heimdall_version }}"
+    container_name: heimdall
+    restart: always
+    environment:
+      - "TZ={{ heimdall_timezone }}"
+    ports:
+      - "{{ heimdall_port_http }}:80"
+      - "{{ heimdall_port_https }}:443"
+    volumes:
+      - "{{ heimdall_config_dir }}:/config"

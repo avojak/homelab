@@ -1,43 +1,22 @@
 ---
+# Run base role against all guests
 - hosts: guests
   become: true
-  vars_files:
-    - roles/influxdb/defaults/main.yml
-    - vars/influxdb.yml
   roles:
     - guest-base
-    - { role: telegraf, tags: telegraf_tag }
 
-- hosts: piholes
-  become: true
-  serial: 1 # Prevent a total loss of DNS on the network
-  vars:
-    pip_package: python3-pip
-    docker_install_compose: true
-  vars_files:
-    - vars/pihole.yml
-  roles:
-    - geerlingguy.pip
-    - geerlingguy.docker_arm
-    - docker-monitoring
-    - pihole
-
-- hosts: homelab-prx
+# Install Docker on ARM guests
+- hosts: guests:&arm64
   become: true
   vars:
     pip_package: python3-pip
     docker_install_compose: true
-  vars_files:
-    - vars/cloudflare-ddns.yml
-    - vars/traefik.yml
   roles:
     - geerlingguy.pip
     - geerlingguy.docker_arm
-    - docker-monitoring
-    - cloudflare-ddns
-    - traefik
 
-- hosts: homelab-mon
+# Install Docker on x86 guests
+- hosts: guests:&amd64
   become: true
   vars:
     pip_package: python3-pip
@@ -45,18 +24,60 @@
     pip_install_packages:
       - name: docker
       - name: docker-compose
+  roles:
+    - geerlingguy.pip
+    - geerlingguy.docker
+
+# Install Docker-based monitoring on all guests
+- hosts: guests
+  become: true
+  vars_files:
+    - roles/influxdb/defaults/main.yml
+    - vars/influxdb.yml
+  roles:
+    - telegraf
+    - docker-monitoring
+
+# Setup Pi-holes
+- hosts: piholes
+  become: true
+  serial: 1 # Prevent a total loss of DNS on the network
+  vars_files:
+    - vars/pihole.yml
+  roles:
+    - pihole
+
+# Install homelab proxy & routing tools
+- hosts: homelab-prx
+  become: true
+  vars_files:
+    - vars/cloudflare-ddns.yml
+    - vars/traefik.yml
+    - vars/heimdall.yml
+  roles:
+    - cloudflare-ddns
+    - { role: "traefik", tags: "traefik" }
+    - heimdall
+
+# Installing homelab monitoring tools
+- hosts: homelab-mon
+  become: true
   vars_files:
     - vars/influxdb.yml
     - vars/grafana.yml
     - vars/portainer.yml
   roles:
-    - geerlingguy.pip
-    - geerlingguy.docker
-    - docker-monitoring
     - influxdb
     - grafana
     - portainer
     - uptime-kuma
+
+# - hosts: homelab-app-01
+#   become: true
+#   vars_files:
+#     - vars/heimdall.yml
+#   roles:
+#     - heimdall
 
 # - hosts: coruscant
 #   become: true

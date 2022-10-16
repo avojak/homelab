@@ -1,0 +1,3 @@
+heimdall_timezone: America/Denver
+heimdall_port_http: 8080
+heimdall_port_https: 8443

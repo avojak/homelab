@@ -1,7 +1,7 @@
 ---
 - name: Create install directory
   file:
-    path: "{{ influxdb_install_dir }}"
+    path: "{{ jellyfin_install_dir }}"
     state: directory
     mode: '0755'
 
@@ -11,19 +11,20 @@
     state: directory
     mode: '0755'
   with_items:
-    - "{{ influxdb_data_dir }}"
-    - "{{ influxdb_config_dir }}"
+    - "{{ jellyfin_config_dir }}"
+    - "{{ jellyfin_cache_dir }}"
+    - "{{ jellyfin_media_dir }}"
 
 - name: Copy docker-compose template
   template:
     src: docker-compose.yml.j2
-    dest: "{{ influxdb_install_dir }}/docker-compose.yml"
+    dest: "{{ jellyfin_install_dir }}/docker-compose.yml"
     mode: '0644'
 
 - name: Ensure stack is running
   docker_compose:
-    project_name: InfluxDB
-    project_src: "{{ influxdb_install_dir }}"
+    project_name: Jellyfin
+    project_src: "{{ jellyfin_install_dir }}"
     state: present
     pull: yes
 
@@ -33,8 +34,8 @@
     images_filters:
       dangling: false
 
-- name: Ensure ports open on the firewall
+- name: Ensure port open on the firewall
   ufw:
     rule: allow
-    port: "{{ influxdb_port }}"
-    proto: "tcp"
+    port: 8096
+    proto: tcp
