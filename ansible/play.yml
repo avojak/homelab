@@ -56,7 +56,7 @@
     - vars/heimdall.yml
   roles:
     - cloudflare-ddns
-    - { role: "traefik", tags: "traefik" }
+    - traefik
     - heimdall
 
 # Installing homelab monitoring tools

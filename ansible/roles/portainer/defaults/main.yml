@@ -1,4 +1,7 @@
 portainer_version: latest
+portainer_password: P@$$w0rd
+# Salt for bcrypt must be 22 characters
+portainer_password_salt: R@nd0mS@1t123456789012
 portainer_port_http: 9000
 portainer_port_https: 9443
 portainer_install_dir: /opt/portainer
