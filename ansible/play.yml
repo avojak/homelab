@@ -71,6 +71,7 @@
     # -- temp --
     - vars/pihole.yml
     - vars/homebridge.yml
+    - vars/jellyfin.yml
   roles:
     - influxdb
     - grafana
@@ -79,6 +80,7 @@
     # -- temp --
     - { role: geerlingguy.nodejs, tags: homebridge }
     - { role: homebridge, tags: homebridge }
+    - { role: jellyfin, tags: jellyfin }
 
 # - hosts: homelab-app-01
 #   become: true

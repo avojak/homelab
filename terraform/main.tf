@@ -34,13 +34,13 @@ provider "esxi" {
     esxi_password = var.esxi_password
 }
 
-provider "esxi" {
-    alias = "esx-lvo-01"
-    esxi_hostname = var.esxi_hostname["esx-lvo-01"]
-    esxi_hostport = var.esxi_hostport
-    esxi_username = var.esxi_username
-    esxi_password = var.esxi_password
-}
+# provider "esxi" {
+#     alias = "esx-lvo-01"
+#     esxi_hostname = var.esxi_hostname["esx-lvo-01"]
+#     esxi_hostport = var.esxi_hostport
+#     esxi_username = var.esxi_username
+#     esxi_password = var.esxi_password
+# }
 
 #########################################
 #  ESXI Guest resources
@@ -133,23 +133,23 @@ resource "esxi_guest" "homelab-mon" {
     ovf_source = var.ova_file["amd64"]
 }
 
-resource "esxi_guest" "homelab-app-01" {
-    provider = esxi.esx-lvo-01
-    guest_name = "homelab-app-01"
-    disk_store = var.disk_store
+# resource "esxi_guest" "homelab-app-01" {
+#     provider = esxi.esx-lvo-01
+#     guest_name = "homelab-app-01"
+#     disk_store = var.disk_store
 
-    network_interfaces {
-        virtual_network = var.virtual_network
-        nic_type = var.nic_type
-    }
+#     network_interfaces {
+#         virtual_network = var.virtual_network
+#         nic_type = var.nic_type
+#     }
 
-    guest_startup_timeout = var.guest_startup_timeout
-    guest_shutdown_timeout = var.guest_shutdown_timeout
+#     guest_startup_timeout = var.guest_startup_timeout
+#     guest_shutdown_timeout = var.guest_shutdown_timeout
 
-    boot_disk_size = 100 # GB
-    memsize = 14336 # 14 GB
-    numvcpus = 4
-    power = "on"
+#     boot_disk_size = 100 # GB
+#     memsize = 14336 # 14 GB
+#     numvcpus = 4
+#     power = "on"
 
-    ovf_source = var.ova_file["amd64"]
-}
+#     ovf_source = var.ova_file["amd64"]
+# }

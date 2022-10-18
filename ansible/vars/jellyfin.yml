@@ -1,0 +1,2 @@
+jellyfin_nas_host: "192.168.1.46"
+jellyfin_nas_mount_path: "/volume1/Plex"
