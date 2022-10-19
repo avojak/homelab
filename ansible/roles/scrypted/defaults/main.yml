@@ -1,0 +1,3 @@
+scrypted_version: latest
+scrypted_install_dir: /opt/scrypted
+scrypted_volume_dir: "{{ scrypted_install_dir }}/volume"

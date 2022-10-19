@@ -1,3 +1,37 @@
 ---
-- include_tasks: prerequisites.yml
-- include_tasks: install.yml
+- name: Create install directory
+  file:
+    path: "{{ scrypted_install_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Create volume directory
+  file:
+    path: "{{ scrypted_volume_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Copy docker-compose template
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{ scrypted_install_dir }}/docker-compose.yml"
+    mode: '0644'
+
+- name: Ensure stack is running
+  docker_compose:
+    project_name: Scrypted
+    project_src: "{{ scrypted_install_dir }}"
+    state: present
+    pull: yes
+
+- name: Cleanup stale Docker images
+  docker_prune:
+    images: yes
+    images_filters:
+      dangling: false
+
+- name: Ensure port open on the firewall
+  ufw:
+    rule: allow
+    port: 10443
+    proto: tcp
