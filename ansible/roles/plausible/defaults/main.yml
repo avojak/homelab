@@ -1,0 +1,21 @@
+# For plausible/analytics
+plausible_version: latest
+plausible_install_dir: /opt/plausible
+plausible_port_http: 8000
+plausible_admin_email: admin@example.com
+plausible_admin_username: admin
+plausible_admin_password: P@$$w0rd
+plausible_base_url: https://plausible.example.com
+plausible_secret_key_base: 
+
+# For bytemark/smtp
+plausible_smtp_version: latest
+
+# For postgres
+plausible_postgres_vesion: 12
+plausible_postgres_data_dir: "{{ plausible_install_dir }}/postgres"
+
+# For clickhouse/clickhouse-server
+plausible_clickhouse_version: 22.6-alpine
+plausible_clickhouse_dir: "{{ plausible_install_dir }}/clickhouse"
+plausible_clickhouse_event_dir: "{{ plausible_clickhouse_dir }}/event-data"

@@ -1,0 +1,41 @@
+---
+- name: Create install directory
+  file:
+    path: "{{ plausible_install_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Create service directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  with_items:
+    - "{{ plausible_postgres_data_dir }}"
+    - "{{ plausible_clickhouse_dir }}"
+    - "{{ plausible_clickhouse_event_dir }}"
+
+- name: Copy docker-compose template
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{ plausible_install_dir }}/docker-compose.yml"
+    mode: '0644'
+
+- name: Ensure stack is running
+  docker_compose:
+    project_name: Plausible Analytics
+    project_src: "{{ plausible_install_dir }}"
+    state: present
+    pull: yes
+
+- name: Cleanup stale Docker images
+  docker_prune:
+    images: yes
+    images_filters:
+      dangling: false
+
+- name: Ensure ports open on the firewall
+  ufw:
+    rule: allow
+    port: "{{ plausible_port_http }}"
+    proto: tcp

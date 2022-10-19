@@ -1,31 +1,32 @@
-version: "3.3"
+---
+version: '3.3'
 services:
   mail:
-    image: bytemark/smtp
+    image: bytemark/smtp:{{ plausible_smtp_version }}
     restart: always
 
   plausible_db:
-    image: postgres:12
+    image: postgres:{{ plausible_postgres_vesion }}
     restart: always
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - {{ plausible_postgres_data_dir }}:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=postgres
 
   plausible_events_db:
-    image: clickhouse/clickhouse-server:22.6-alpine
+    image: clickhouse/clickhouse-server:{{ plausible_clickhouse_version }}
     restart: always
     volumes:
-      - event-data:/var/lib/clickhouse
-      - ./clickhouse/clickhouse-config.xml:/etc/clickhouse-server/config.d/logging.xml:ro
-      - ./clickhouse/clickhouse-user-config.xml:/etc/clickhouse-server/users.d/logging.xml:ro
+      - {{ plausible_clickhouse_event_dir }}:/var/lib/clickhouse
+      - {{ plausible_clickhouse_dir }}/clickhouse-config.xml:/etc/clickhouse-server/config.d/logging.xml:ro
+      - {{ plausible_clickhouse_dir }}/clickhouse-user-config.xml:/etc/clickhouse-server/users.d/logging.xml:ro
     ulimits:
       nofile:
         soft: 262144
         hard: 262144
 
   plausible:
-    image: plausible/analytics:latest
+    image: plausible/analytics:{{ plausible_version }}
     restart: always
     command: sh -c "sleep 10 && /entrypoint.sh db createdb && /entrypoint.sh db migrate && /entrypoint.sh db init-admin && /entrypoint.sh run"
     depends_on:
@@ -33,14 +34,10 @@ services:
       - plausible_events_db
       - mail
     ports:
-      - 8000:8000
-    env_file:
-      - plausible-conf.env
-
-volumes:
-  db-data:
-    driver: local
-  event-data:
-    driver: local
-  geoip:
-    driver: local
+      - {{ plausible_port_http }}:8000
+    environment:
+      - "ADMIN_USER_EMAIL={{ plausible_admin_email }}"
+      - "ADMIN_USER_NAME={{ plausible_admin_username }}"
+      - "ADMIN_USER_PWD={{ plausible_admin_password }}"
+      - "BASE_URL={{ plausible_base_url }}"
+      - "SECRET_KEY_BASE={{ plausible_secret_key_base }}"

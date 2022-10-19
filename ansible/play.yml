@@ -73,6 +73,7 @@
     - vars/homebridge.yml
     - vars/scrypted.yml
     - vars/jellyfin.yml
+    - vars/plausible.yml
   roles:
     - influxdb
     - grafana
@@ -83,6 +84,7 @@
     - { role: homebridge, tags: homebridge }
     - { role: scrypted, tags: scrypted }
     - { role: jellyfin, tags: jellyfin }
+    - { role: plausible, tags: plausible }
 
 # - hosts: homelab-app-01
 #   become: true
