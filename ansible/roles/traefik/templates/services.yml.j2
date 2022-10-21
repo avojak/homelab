@@ -5,6 +5,13 @@ http:
       service: api@internal
       middlewares:
         - auth
+{% for service in traefik_services %}
+    {{ service.name }}:
+      entrypoints: websecure
+      rule: Host(`{{ service.hostname }}`)
+      tls: true
+      service: {{ service.name }}@file
+{% endfor %}
   middlewares:
     auth:
       basicAuth:
