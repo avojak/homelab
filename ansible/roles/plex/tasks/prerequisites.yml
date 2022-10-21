@@ -10,7 +10,7 @@
   become: yes
   mount:
     src: "{{ plex_nas_host }}:{{ plex_nas_mount_path }}"
-    path: "/mnt/plexmedia"
+    path: "{{ plex_local_nas_mount_path }}"
     fstype: nfs
     opts: defaults
     dump: '0'

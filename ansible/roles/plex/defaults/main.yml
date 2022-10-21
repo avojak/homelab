@@ -1,0 +1,9 @@
+plex_version: latest
+plex_hostname:
+plex_timezone: America/Chicago
+plex_claim_token:
+plex_port_http: 32400
+plex_install_dir: /opt/plex
+plex_database_dir: "{{ plex_install_dir }}/database"
+plex_transcode_dir: "{{ plex_install_dir }}/transcode"
+plex_local_nas_mount_path: "/mnt/plexmedia"
