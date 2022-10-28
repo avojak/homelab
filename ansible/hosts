@@ -11,7 +11,7 @@ all:
     # esx-lvo-01:
     #   ansible_host: 192.168.1.112
     homelab-prx:
-      ansible_host: 192.168.1.152
+      ansible_host: 192.168.1.150
     homelab-mon:
       ansible_host: 192.168.1.114
       ansible_python_interpreter: /usr/bin/python3

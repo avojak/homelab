@@ -27,8 +27,8 @@ traefik_password_salt: !vault |
 traefik_services:
   - name: plex
     hostname: plex.vojak.cloud
-    url: http://192.168.1.114:32400
+    url: "http://{{ hostvars['homelab-app-01'].ansible_host }}:{{ plex_port_http }}"
   - name: plausible
     hostname: plausible.vojak.cloud
-    url: http://192.168.1.114:8000
+    url: "http://{{ hostvars['homelab-app-01'].ansible_host }}:{{ plausible_port_http }}"
 traefik_port_api: 8081

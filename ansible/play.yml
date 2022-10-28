@@ -54,9 +54,11 @@
     - vars/cloudflare-ddns.yml
     - vars/traefik.yml
     - vars/heimdall.yml
+    - vars/plex.yml
+    - vars/plausible.yml
   roles:
     - cloudflare-ddns
-    - { role: traefik, tags: traefik }
+    - traefik
     - heimdall
 
 # Installing homelab monitoring tools
