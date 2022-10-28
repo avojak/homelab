@@ -85,7 +85,7 @@ In following with Ansible principles, this command can be run repeatedly to ensu
 | Physical Host | Model | Specs | OS | Alias |
 | ------------- | ----- | ----- | -- | ----- |
 | Mac mini | Late 2012 (6,2) | Quad-core i7-3720QM @ 2.6GHz, 16 GB RAM | ESXi 7.0 | `esx-mac-01` |
-| Mac mini | Late 2012 (6,2) | Quad-core i7-3720QM @ 2.6GHz, 16 GB RAM | ESXi 7.0 |  `esx-mac-02` |
+| Mac mini | Late 2012 (6,2) | Quad-core i7-3720QM @ 2.6GHz, 16 GB RAM | ESXi 7.0 | `esx-mac-02` |
 | Raspberry Pi | Model 4B | Quad-core ARM Cortex-A72, 8 GB RAM | ESXi 7.0 |  `esx-rpi-01` |
 | Raspberry Pi | Model 4B | Quad-core ARM Cortex-A72, 4 GB RAM | ESXi 7.0 |  `esx-rpi-02` |
 <!-- | Lenovo | W540 | Quad-core i7-4800MQ @ 2.7GHz, 16 GB RAM | ESXi 6.7.0 U3 | `esx-lvo-01` | -->
@@ -100,6 +100,19 @@ In following with Ansible principles, this command can be run repeatedly to ensu
 | `esx-rpi-02` (192.168.1.22) | `pihole-01` (192.168.1.153) | [Ubuntu Server 22.04 (arm64)](./packer/ubuntu-22.04-server-arm64/) | Pi-hole (`:53`, `:80`) |
 |  | `pihole-02` (192.168.1.131) | [Ubuntu Server 22.04 (arm64)](./packer/ubuntu-22.04-server-arm64/) | Pi-hole (`:53`, `:80`) |
 <!-- | `esx-lvo-01` (192.168.1.112) | `homelab-app-01` (192.168.1.220) | [Ubuntu Server 22.04 (amd64)](./packer/ubuntu-22.04-server-amd64/) |  | -->
+
+<!-- ## Pi-hole Hosts
+
+The Pi-holes are hosted on older Raspberry Pi models (3B Rev 1.2 and 2B Rev 1.1), so the host OS is configured manually vs. running ESXi.
+
+After installation, each host was manually configured as follows:
+1. Login to the host and create the `provisioner` user account
+    - `sudo adduser provisioner`
+    - `sudo usermod -aG sudo provisioner`
+2. Add passwordless sudo (`sudo visudo`), at the end add `provisioner ALL=(ALL) NOPASSWD: ALL`
+3. Run `sudo raspi-config`, and enable SSH and I2C under Interface Options
+4. Reboot
+5. The SSH key for the `provisioner` user account was copied with `ssh-copy-id -i id_rsa provisioner@192.168.1.xxx` -->
 
 ----
 

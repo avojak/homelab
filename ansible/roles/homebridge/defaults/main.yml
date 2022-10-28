@@ -7,3 +7,4 @@ homebridge_timezone: America/Chicago
 homebridge_plugins: []
 homebridge_accessories: []
 homebridge_platforms: []
+homebridge_plugin_ports: [] # Specific ports needed by plugins for discovery, etc.

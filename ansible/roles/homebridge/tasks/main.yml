@@ -61,5 +61,17 @@
 - name: Ensure port open on the firewall
   ufw:
     rule: allow
-    port: 8581
-    proto: tcp
+    port: "{{ item.port }}"
+    proto: "{{ item.proto }}"
+  with_items:
+    - { port: 8581, proto: "tcp" } # HTTP dashboard
+    - { port: 5353, proto: "udp" } # mDNS
+    - { port: 5353, proto: "tcp" } # mDNS
+    - { port: 51454, proto: "tcp" } # Bridge (See config.json)
+
+- name: Ensure port open on the firewall for plugins
+  ufw:
+    rule: allow
+    port: "{{ item.port }}"
+    proto: "{{ item.proto }}"
+  with_items: "{{ homebridge_plugin_ports }}"

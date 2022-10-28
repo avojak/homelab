@@ -1,0 +1,6 @@
+scrypted_device_ports:
+  - 33622 # Doorbell
+  - 38424 # Backyard Camera
+  - 38685 # Living Room Camera
+  - 41288 # Garage Camera
+  - 48096 # Front Yard Camera

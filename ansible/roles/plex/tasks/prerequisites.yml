@@ -2,7 +2,6 @@
 - name: Install packages
   become: true
   apt:
-    update_cache: yes
     name: nfs-common
     state: present
 
@@ -12,7 +11,7 @@
     src: "{{ plex_nas_host }}:{{ plex_nas_mount_path }}"
     path: "{{ plex_local_nas_mount_path }}"
     fstype: nfs
-    opts: defaults
+    opts: mountvers=4
     dump: '0'
     passno: '0'
     state: mounted

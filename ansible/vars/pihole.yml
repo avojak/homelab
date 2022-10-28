@@ -62,6 +62,8 @@ pihole_domainlist:
   - domain: "(\\.|^)plausible\\.io$"
     type: 2
     comment: "Allow plausible.io"
+  # - domain: "assets.huluim.com"
+  #   type: 0
   - domain: "fonts.gstatic.com"
     type: 0
   - domain: "t.co"

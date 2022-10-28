@@ -35,3 +35,10 @@
     rule: allow
     port: 10443
     proto: tcp
+
+- name: Ensure device ports open on the firewall
+  ufw:
+    rule: allow
+    port: "{{ item }}"
+    proto: tcp
+  with_items: "{{ scrypted_device_ports }}"

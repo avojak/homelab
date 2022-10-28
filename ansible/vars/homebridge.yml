@@ -43,6 +43,11 @@ homebridge_accessories:
 homebridge_platforms:
   - platform: 'TplinkSmarthome'
     name: 'TplinkSmarthome'
+    addCustomCharacteristics: true
+    discoveryPort: 47988
+    deviceTypes:
+      - plug
+      - bulb
   - platform: 'myQ'
     email: "{{ homebridge_myq_email }}"
     password: "{{ homebridge_myq_password }}"
@@ -57,6 +62,8 @@ homebridge_platforms:
     theme: 'auto'
     tempUnits: 'f'
     lang: 'auto'
+homebridge_plugin_ports:
+  - { port: 47988, proto: udp } # TPLink Smart Home (manually set above)
 
 homebridge_myq_email: !vault |
       $ANSIBLE_VAULT;1.1;AES256

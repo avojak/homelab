@@ -62,13 +62,22 @@
 # Installing homelab monitoring tools
 - hosts: homelab-mon
   become: true
-  vars:
-    nodejs_version: "16.x" # Needs to match the major version used by Homebridge
   vars_files:
     - vars/influxdb.yml
     - vars/grafana.yml
     - vars/portainer.yml
-    # -- temp --
+  roles:
+    - influxdb
+    - grafana
+    - portainer
+    - uptime-kuma    
+
+# Primary homelab applications
+- hosts: homelab-app-01
+  become: true
+  vars:
+    nodejs_version: "16.x" # Needs to match the major version used by Homebridge
+  vars_files:
     - vars/pihole.yml
     - vars/homebridge.yml
     - vars/scrypted.yml
@@ -76,36 +85,9 @@
     - vars/plausible.yml
     - vars/plex.yml
   roles:
-    - influxdb
-    - grafana
-    - portainer
-    - uptime-kuma
-    # -- temp --
-    - { role: geerlingguy.nodejs, tags: homebridge }
-    - { role: homebridge, tags: homebridge }
-    - { role: scrypted, tags: scrypted }
-    - { role: jellyfin, tags: jellyfin }
-    - { role: plausible, tags: plausible }
-    - { role: plex, tags: plex }
-
-# - hosts: homelab-app-01
-#   become: true
-#   vars_files:
-#     - vars/heimdall.yml
-#   roles:
-#     - heimdall
-
-# - hosts: coruscant
-#   become: true
-#   roles:
-#     - geerlingguy.docker
-#     - geerlingguy.pip
-#     - homebridge
-#     - plex
-#     - portainer
-  # vars:
-  #   pip_install_packages:
-  #     - name: docker
-  # vars_files:
-  #   - vars/homebridge.yml
-  #   - vars/plex.yml
+    - geerlingguy.nodejs
+    - homebridge
+    - scrypted
+    - jellyfin
+    - plausible
+    - plex

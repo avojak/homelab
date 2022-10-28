@@ -3,7 +3,9 @@ services:
   jellyfin:
     image: "jellyfin/jellyfin:{{ jellyfin_version }}"
     container_name: jellyfin
-    network_mode: "host"
+    # network_mode: "host"
+    ports:
+      - 8096:8096/tcp
     volumes:
       - "{{ jellyfin_config_dir }}:/config"
       - "{{ jellyfin_cache_dir }}:/cache"
