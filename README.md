@@ -94,9 +94,9 @@ In following with Ansible principles, this command can be run repeatedly to ensu
 
 | Host Alias (IP) | Virtual Host (IP) | OS | Software |
 | ----------------------- | ----------------- | -- | -------- |
-| `esx-mac-01` (192.168.1.64) | `homelab-mon` (192.168.1.114) | [Ubuntu Server 22.04 (amd64)](./packer/ubuntu-22.04-server-amd64/) | InfluxDB (`:8086`)<br>Grafana (`:3000`)<br>Uptime Kuma (`:3001`)<br>Portainer (`:9000`, `:9443`) |
-| `esx-mac-02` (TBD) | TBD | TBD | TBD |
-| `esx-rpi-01` (192.168.1.230) | `homelab-prx` (192.168.1.152) | [Ubuntu Server 22.04 (arm64)](./packer/ubuntu-22.04-server-arm64/) | Traefik (`:80`, `:443`, `:8081`)<br>Cloudflare DDNS<br>Heimdall (`:8080`, `:8443`) |
+| `esx-mac-01` (192.168.1.52) | `homelab-app-01` (192.168.1.202) | [Ubuntu Server 22.04 (amd64)](./packer/ubuntu-22.04-server-amd64/) | Plex (`:32400`)<br>Homebridge (`:8581`)<br>Scrypted (`:10443`)<br>Plausible (`:8000`)<br>Jellyfin (`:8096`)<br> |
+| `esx-mac-02` (192.168.1.64) | `homelab-mon` (192.168.1.114) | [Ubuntu Server 22.04 (amd64)](./packer/ubuntu-22.04-server-amd64/) | InfluxDB (`:8086`)<br>Grafana (`:3000`)<br>Uptime Kuma (`:3001`)<br>Portainer (`:9000`, `:9443`) |
+| `esx-rpi-01` (192.168.1.230) | `homelab-prx` (192.168.1.150) | [Ubuntu Server 22.04 (arm64)](./packer/ubuntu-22.04-server-arm64/) | Traefik (`:80`, `:443`, `:8081`)<br>Cloudflare DDNS<br>Heimdall (`:8080`, `:8443`) |
 | `esx-rpi-02` (192.168.1.22) | `pihole-01` (192.168.1.153) | [Ubuntu Server 22.04 (arm64)](./packer/ubuntu-22.04-server-arm64/) | Pi-hole (`:53`, `:80`) |
 |  | `pihole-02` (192.168.1.131) | [Ubuntu Server 22.04 (arm64)](./packer/ubuntu-22.04-server-arm64/) | Pi-hole (`:53`, `:80`) |
 <!-- | `esx-lvo-01` (192.168.1.112) | `homelab-app-01` (192.168.1.220) | [Ubuntu Server 22.04 (amd64)](./packer/ubuntu-22.04-server-amd64/) |  | -->
