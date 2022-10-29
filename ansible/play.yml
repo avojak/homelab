@@ -54,7 +54,10 @@
     - vars/cloudflare-ddns.yml
     - vars/traefik.yml
     - vars/heimdall.yml
+    # Following variables referenced by Traefik for routing
+    - roles/plex/defaults/main.yml
     - vars/plex.yml
+    - roles/plausible/defaults/main.yml
     - vars/plausible.yml
   roles:
     - cloudflare-ddns
