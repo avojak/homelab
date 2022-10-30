@@ -1,0 +1,9 @@
+---
+version: '3.3'
+services:
+  un-poller:
+    image: "golift/unifi-poller:{{ unpoller_version }}"
+    container_name: un-poller
+    restart: unless-stopped
+    volumes:
+      - "{{ unpoller_config_dir }}:/config"

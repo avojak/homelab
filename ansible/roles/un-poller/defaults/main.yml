@@ -1,0 +1,47 @@
+unpoller_version: latest
+unpoller_install_dir: /opt/un-poller
+unpoller_config_dir: "{{ unpoller_install_dir }}/config"
+
+# Poller configuration
+unpoller_poller_debug: false
+unpoller_poller_quiet: false
+
+# Prometheus output configuration
+unpoller_prometheus_disable: false
+unpoller_prometheus_http_listen: "0.0.0.0:9130"
+unpoller_prometheus_ssl_cert_path: ""
+unpoller_prometheus_ssl_key_path: ""
+unpoller_prometheus_report_errors: false
+
+# InfluxDB output configuration
+unpoller_influxdb_disable: false
+unpoller_influxdb_interval: "30s"
+unpoller_influxdb_url: "http://127.0.0.1:8086"
+unpoller_influxdb_username: "unifipoller"
+unpoller_influxdb_password: "unifipoller"
+unpoller_influxdb_db: "unifi"
+unpoller_influxdb_verify_ssl: false
+
+# Webserver configuration
+unpoller_webserver_enable: false
+unpoller_webserver_port: 37288
+unpoller_webserver_html_path: "/usr/lib/unifi-poller/web"
+unpoller_webserver_ssl_cert_path: ""
+unpoller_webserver_ssl_key_path: ""
+unpoller_webserver_max_events: 200
+unpoller_webserver_accounts: []
+
+unpoller_unifi_dynamic: false
+unpoller_unifi_defaults_url: "https://127.0.0.1:8443"
+unpoller_unifi_defaults_username: "unifipoller"
+unpoller_unifi_defaults_password: "unifipoller"
+unpoller_unifi_defaults_sites:
+  - all
+unpoller_unifi_defaults_save_ids: false
+unpoller_unifi_defaults_save_events: false
+unpoller_unifi_defaults_save_alarms: false
+unpoller_unifi_defaults_save_anomalies: false
+unpoller_unifi_defaults_save_dpi: false
+unpoller_unifi_defaults_save_sites: true
+unpoller_unifi_defaults_hash_pii: false
+unpoller_unifi_defaults_verify_ssl: false

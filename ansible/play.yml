@@ -71,11 +71,13 @@
     - vars/influxdb.yml
     - vars/grafana.yml
     - vars/portainer.yml
+    # - vars/un-poller.yml
   roles:
     - influxdb
     - grafana
     - portainer
-    - uptime-kuma    
+    - uptime-kuma
+    # - un-poller
 
 # Primary homelab applications
 - hosts: homelab-app-01
