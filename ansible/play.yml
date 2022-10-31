@@ -72,12 +72,16 @@
     - vars/grafana.yml
     - vars/portainer.yml
     # - vars/un-poller.yml
+    - vars/prometheus.yml
+    - vars/prometheus-vmware-exporter.yml
   roles:
     - influxdb
     - grafana
     - portainer
     - uptime-kuma
     # - un-poller
+    - prometheus
+    - prometheus-vmware-exporter
 
 # Primary homelab applications
 - hosts: homelab-app-01

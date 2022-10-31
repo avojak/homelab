@@ -1,0 +1,2 @@
+basic_auth_users:
+  {{ prometheus_username }}: {{ prometheus_password | string | password_hash('bcrypt', prometheus_password_salt) }}

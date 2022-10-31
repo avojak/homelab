@@ -1,0 +1,12 @@
+global:
+  scrape_interval:     60s # Set the scrape interval to every 60 seconds. Default is every 1 minute.
+  evaluation_interval: 60s # Evaluate rules every 60 seconds. The default is every 1 minute.
+
+scrape_configs:
+  - job_name: 'vmware-esxi'
+    static_configs:
+{% for instance in prometheus_vmware_exporter_instances %}
+    - targets: ['{{ hostvars[inventory_hostname].ansible_host }}:{{ instance.export_port }}']
+      labels:
+        alias: {{ instance.alias }}
+{% endfor %}

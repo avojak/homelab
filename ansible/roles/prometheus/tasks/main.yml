@@ -1,0 +1,57 @@
+---
+- name: Create install directory
+  file:
+    path: "{{ prometheus_install_dir }}"
+    state: directory
+    mode: 0744
+
+- name: Create directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0777
+  with_items:
+    - "{{ prometheus_config_dir }}"
+    - "{{ prometheus_data_dir }}"
+
+- name: Copy config files
+  template:
+    src: "{{ item }}.j2"
+    dest: "{{ prometheus_config_dir }}/{{ item }}"
+    mode: 0666
+  with_items:
+    - prometheus.yml
+    - web-config.yml
+  register: prometheus_config
+
+- name: Copy docker-compose template
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{ prometheus_install_dir }}/docker-compose.yml"
+    mode: 0644
+
+- name: Ensure stack is running
+  docker_compose:
+    project_name: Prometheus
+    project_src: "{{ prometheus_install_dir }}"
+    state: present
+    pull: yes
+
+- name: Restart service when config has changed
+  docker_compose:
+    project_src: "{{ prometheus_install_dir }}"
+    build: false
+    restarted: true
+  when: prometheus_config.changed
+
+- name: Cleanup stale Docker images
+  docker_prune:
+    images: yes
+    images_filters:
+      dangling: false
+
+- name: Ensure ports open on the firewall
+  ufw:
+    rule: allow
+    port: "{{ prometheus_port }}"
+    proto: tcp

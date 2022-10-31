@@ -1,0 +1,8 @@
+prometheus_vmware_exporter_install_dir: /opt/prometheus-vmware-exporter
+prometheus_vmware_exporter_instances:
+  - alias: esxi
+    host: esx.domain.local
+    username: user
+    password: pass
+    export_port: 9512
+    log_level: info

@@ -1,0 +1,9 @@
+prometheus_version: latest
+prometheus_port: 9090
+prometheus_username: admin
+prometheus_password: P@$$w0rd
+# Salt for bcrypt must be 22 characters
+prometheus_password_salt: R@nd0mS@1t123456789012
+prometheus_install_dir: /opt/prometheus
+prometheus_config_dir: "{{ prometheus_install_dir }}/etc"
+prometheus_data_dir: "{{ prometheus_install_dir }}/data"

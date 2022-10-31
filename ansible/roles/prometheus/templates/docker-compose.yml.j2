@@ -1,0 +1,23 @@
+---
+version: '3.3'
+services:
+  prometheus:
+    image: prom/prometheus:{{ prometheus_version }}
+    container_name: prometheus
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.config.file=/etc/prometheus/web-config.yml'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    ports:
+      - {{ prometheus_port }}:9090
+    volumes:
+      - {{ prometheus_config_dir }}:/etc/prometheus/
+      - {{ prometheus_data_dir }}:/prometheus
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "10"
