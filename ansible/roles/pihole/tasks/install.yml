@@ -1,4 +1,28 @@
 ---
+- name: Create install directory
+  file:
+    path: "{{ pihole_install_dir }}"
+    state: directory
+    mode: 0755
+
+- name: Create directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0777
+  with_items:
+    - "{{ pihole_etc_pihole_dir }}"
+    - "{{ pihole_etc_dnsmasqd_dir }}"
+
+# TODO: This seems to crash the application when the container restarts
+#       Contrary to what it seems, you can't just update this file...
+- name: Copy custom DNS list
+  template:
+    src: custom.list.j2
+    dest: "{{ pihole_etc_pihole_dir }}/custom.list"
+    mode: 0644
+  notify: "Update gravity"
+
 - name: Ensure container is running
   docker_container:
     name: pihole
@@ -13,8 +37,8 @@
       - '80:80/tcp'
       - '443:443/tcp'
     volumes:
-      - /opt/pihole/etc-pihole/:/etc/pihole/
-      - /opt/pihole/etc-dnsmasq.d:/etc/dnsmasq.d/
+      - "{{ pihole_etc_pihole_dir }}:/etc/pihole/"
+      - "{{ pihole_etc_dnsmasqd_dir }}:/etc/dnsmasq.d/"
     hostname: "{{ inventory_hostname }}"
     env:
       TZ: "{{ pihole_timezone }}"
@@ -27,13 +51,19 @@
       DNSSEC: "false"
       VIRTUAL_HOST: "{{ inventory_hostname }}"
 
+# - name: Restart service when custom DNS list has changed
+#   docker_container:
+#     name: pihole
+#     restart: yes
+#   when: pihole_dns_list.changed
+
 - name: Wait for container to be ready
   uri:
     url: http://localhost
   register: container_result
   until: container_result.status == 200
-  retries: 10
-  delay: 10
+  retries: 30
+  delay: 5
 
 # Install adlists and domainlist
 - include_tasks: install-adlists.yml

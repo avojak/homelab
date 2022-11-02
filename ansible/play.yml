@@ -59,6 +59,14 @@
     - vars/plex.yml
     - roles/plausible/defaults/main.yml
     - vars/plausible.yml
+    - roles/grafana/defaults/main.yml
+    - vars/grafana.yml
+    - roles/prometheus/defaults/main.yml
+    - vars/prometheus.yml
+    - roles/influxdb/defaults/main.yml
+    - vars/influxdb.yml
+    - roles/portainer/defaults/main.yml
+    - vars/portainer.yml
   roles:
     - cloudflare-ddns
     - traefik
@@ -94,11 +102,19 @@
     - vars/scrypted.yml
     - vars/jellyfin.yml
     - vars/plausible.yml
-    - vars/plex.yml
+    # - vars/plex.yml
   roles:
     - geerlingguy.nodejs
     - homebridge
     - scrypted
     - jellyfin
     - plausible
+    # - plex
+
+# Plex
+- hosts: homelab-plex
+  become: true
+  vars_files:
+    - vars/plex.yml
+  roles:
     - plex

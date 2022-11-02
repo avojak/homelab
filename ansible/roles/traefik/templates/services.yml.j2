@@ -1,15 +1,18 @@
 http:
   routers:
+{% if traefik_dashboard_enabled %}
     dashboard:
       rule: Host(`{{ traefik_dashboard_subdomain }}.{{ traefik_root_domain }}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
       service: api@internal
       middlewares:
         - auth
+{% endif %}
 {% for service in traefik_services %}
     {{ service.name }}:
       entrypoints: websecure
       rule: Host(`{{ service.hostname }}`)
-      tls: true
+      tls:
+        certResolver: le
       service: {{ service.name }}@file
 {% endfor %}
   middlewares:

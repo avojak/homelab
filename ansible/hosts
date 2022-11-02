@@ -4,6 +4,8 @@ all:
       ansible_host: 192.168.1.52
     esx-mac-02:
       ansible_host: 192.168.1.64
+    esx-luna-01:
+      ansible_host: 192.168.1.41
     esx-rpi-01:
       ansible_host: 192.168.1.230
     esx-rpi-02:
@@ -14,6 +16,9 @@ all:
       ansible_host: 192.168.1.150
     homelab-mon:
       ansible_host: 192.168.1.114
+      ansible_python_interpreter: /usr/bin/python3
+    homelab-plex:
+      ansible_host: 192.168.1.130
       ansible_python_interpreter: /usr/bin/python3
     homelab-app-01:
       ansible_host: 192.168.1.202
@@ -30,6 +35,7 @@ all:
       hosts:
         esx-mac-01:
         esx-mac-02:
+        esx-luna-01:
         esx-rpi-01:
         esx-rpi-02:
         # esx-lvo-01:
@@ -39,6 +45,7 @@ all:
         homelab-prx:
         homelab-mon:
         homelab-app-01:
+        homelab-plex:
         pihole-01:
         pihole-02:
     # Pi-hole VMs
@@ -61,3 +68,4 @@ all:
         esx-mac-02:
         homelab-mon:
         homelab-app-01:
+        homelab-plex:

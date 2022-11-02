@@ -25,10 +25,27 @@ traefik_password_salt: !vault |
           6639613438623732300a303330626462373764613938356635633931316135356639366636336235
           62303031663931626363613765353134643732336365393862323932356161626538
 traefik_services:
+  # External-facing services
   - name: plex
     hostname: plex.vojak.cloud
-    url: "http://{{ hostvars['homelab-app-01'].ansible_host }}:{{ plex_port_http }}"
+    url: "http://{{ hostvars['homelab-plex'].ansible_host }}:{{ plex_port_http }}"
   - name: plausible
     hostname: plausible.vojak.cloud
     url: "http://{{ hostvars['homelab-app-01'].ansible_host }}:{{ plausible_port_http }}"
+  # Internal-only services
+  - name: heimdall
+    hostname: heimdall.vojak.cloud
+    url: "http://{{ hostvars['homelab-prx'].ansible_host }}:{{ heimdall_port_http }}"
+  - name: grafana
+    hostname: grafana.vojak.cloud
+    url: "http://{{ hostvars['homelab-mon'].ansible_host }}:{{ grafana_port }}"
+  - name: prometheus
+    hostname: prometheus.vojak.cloud
+    url: "http://{{ hostvars['homelab-mon'].ansible_host }}:{{ prometheus_port }}"
+  - name: influxdb
+    hostname: influxdb.vojak.cloud
+    url: "http://{{ hostvars['homelab-mon'].ansible_host }}:{{ influxdb_port }}"
+  - name: portainer
+    hostname: portainer.vojak.cloud
+    url: "http://{{ hostvars['homelab-mon'].ansible_host }}:{{ portainer_port_http }}"
 traefik_port_api: 8081

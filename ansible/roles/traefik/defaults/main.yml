@@ -1,13 +1,14 @@
 traefik_version: latest
 traefik_root_domain: example.com
 traefik_dashboard_subdomain: traefik
+traefik_dashboard_enabled: true
 traefik_username: admin
 traefik_password: P@$$w0rd
 # Salt for bcrypt must be 22 characters
 traefik_password_salt: R@nd0mS@1t123456789012
 traefik_cloudflare_email_address: admin@example.com
 traefik_cloudflare_api_key:
-traefik_log_level: DEBUG
+traefik_log_level: INFO
 traefik_port_api: 8080
 traefik_port_http: 80
 traefik_port_https: 443

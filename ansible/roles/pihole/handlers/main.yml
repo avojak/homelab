@@ -3,3 +3,8 @@
   community.docker.docker_container_exec:
     container: pihole
     command: pihole -g
+
+# - name: Restart container
+#   docker_container:
+#     name: pihole
+#     restart: yes

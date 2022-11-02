@@ -3,6 +3,14 @@
 #########################################
 
 provider "esxi" {
+    alias = "esx-luna-01"
+    esxi_hostname = var.esxi_hostname["esx-luna-01"]
+    esxi_hostport = var.esxi_hostport
+    esxi_username = var.esxi_username
+    esxi_password = var.esxi_password
+}
+
+provider "esxi" {
     alias = "esx-mac-01"
     esxi_hostname = var.esxi_hostname["esx-mac-01"]
     esxi_hostport = var.esxi_hostport
@@ -149,6 +157,27 @@ resource "esxi_guest" "homelab-mon" {
     boot_disk_size = 100 # GB
     memsize = 14336 # 14 GB
     numvcpus = 4
+    power = "on"
+
+    ovf_source = var.ova_file["amd64"]
+}
+
+resource "esxi_guest" "homelab-plex" {
+    provider = esxi.esx-luna-01
+    guest_name = "homelab-plex"
+    disk_store = var.disk_store
+
+    network_interfaces {
+        virtual_network = var.virtual_network
+        nic_type = var.nic_type
+    }
+
+    guest_startup_timeout = var.guest_startup_timeout
+    guest_shutdown_timeout = var.guest_shutdown_timeout
+
+    boot_disk_size = 200 # GB
+    memsize = 30720 # 30 GB
+    numvcpus = 6
     power = "on"
 
     ovf_source = var.ova_file["amd64"]

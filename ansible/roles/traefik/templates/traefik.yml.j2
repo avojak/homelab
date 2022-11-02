@@ -2,7 +2,7 @@ global:
   sendAnonymousUsage: false
 
 api:
-  dashboard: true
+  dashboard: {{ traefik_dashboard_enabled }}
 
 log:
   level: "{{ traefik_log_level }}"
