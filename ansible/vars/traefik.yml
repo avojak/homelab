@@ -24,6 +24,9 @@ traefik_password_salt: !vault |
           35326432333465616633306565623430393533393332393938626631623431343931386530633666
           6639613438623732300a303330626462373764613938356635633931316135356639366636336235
           62303031663931626363613765353134643732336365393862323932356161626538
+traefik_servers_transports:
+  - name: insecureSkipVerifyTransport
+    insecure_skip_verify: true
 traefik_services:
   # External-facing services
   - name: plex
@@ -32,7 +35,15 @@ traefik_services:
   - name: plausible
     hostname: plausible.vojak.cloud
     url: "http://{{ hostvars['homelab-app-01'].ansible_host }}:{{ plausible_port_http }}"
-  # Internal-only services
+  # Internal-only application services
+  - name: esx-mac-01
+    hostname: esx-mac-01.vojak.cloud
+    url: "https://{{ hostvars['esx-mac-01'].ansible_host }}"
+    servers_transport: insecureSkipVerifyTransport
+  - name: esx-mac-02
+    hostname: esx-mac-02.vojak.cloud
+    url: "https://{{ hostvars['esx-mac-02'].ansible_host }}"
+    servers_transport: insecureSkipVerifyTransport
   - name: heimdall
     hostname: heimdall.vojak.cloud
     url: "http://{{ hostvars['homelab-prx'].ansible_host }}:{{ heimdall_port_http }}"
@@ -48,4 +59,15 @@ traefik_services:
   - name: portainer
     hostname: portainer.vojak.cloud
     url: "http://{{ hostvars['homelab-mon'].ansible_host }}:{{ portainer_port_http }}"
+  - name: uptime-kuma
+    hostname: uptime-kuma.vojak.cloud
+    url: "http://{{ hostvars['homelab-mon'].ansible_host }}:{{ uptime_kuma_port }}"
+  - name: homebridge
+    hostname: homebridge.vojak.cloud
+    url: "http://{{ hostvars['homelab-app-01'].ansible_host }}:{{ homebridge_port_http }}"
+  - name: scrypted
+    hostname: scrypted.vojak.cloud
+    url: "https://{{ hostvars['homelab-app-01'].ansible_host }}:{{ scrypted_port_https }}"
+    servers_transport: insecureSkipVerifyTransport
+
 traefik_port_api: 8081

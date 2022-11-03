@@ -64,7 +64,7 @@
     port: "{{ item.port }}"
     proto: "{{ item.proto }}"
   with_items:
-    - { port: 8581, proto: "tcp" } # HTTP dashboard
+    - { port: "{{ homebridge_port_http }}", proto: "tcp" } # HTTP dashboard
     - { port: 5353, proto: "udp" } # mDNS
     - { port: 5353, proto: "tcp" } # mDNS
     - { port: 51454, proto: "tcp" } # Bridge (See config.json)

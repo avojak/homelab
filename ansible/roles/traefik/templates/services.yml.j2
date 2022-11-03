@@ -20,6 +20,13 @@ http:
       basicAuth:
         users:
           - {{ traefik_username }}:{{ traefik_password | string | password_hash('bcrypt', traefik_password_salt) }}
+{% if traefik_servers_transports is defined and traefik_servers_transports|length %}
+  serversTransports:
+{% for servers_transport in traefik_servers_transports %}
+    {{ servers_transport.name }}:
+      insecureSkipVerify: {{ servers_transport.insecure_skip_verify }}
+{% endfor %}
+{% endif %}
 {% if traefik_services is defined and traefik_services|length %}
   services:
 {% for service in traefik_services %}
@@ -28,5 +35,8 @@ http:
         servers:
           - url: {{ service.url }}
         passHostHeader: true
+{% if service.servers_transport is defined %}
+        serversTransport: {{ service.servers_transport }}
+{% endif %}        
 {% endfor %}
 {% endif %}

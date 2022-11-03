@@ -1,5 +1,6 @@
 scrypted_version: latest
 scrypted_install_dir: /opt/scrypted
 scrypted_volume_dir: "{{ scrypted_install_dir }}/volume"
+scrypted_port_https: 10443
 # For devices setup in standalone accessory mode, ports will be manually or randomly assigned
 scrypted_device_ports: []

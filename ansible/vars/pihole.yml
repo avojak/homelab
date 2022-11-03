@@ -77,13 +77,29 @@ pihole_domainlist:
 
 pihole_custom_dns_records:
   # Point all entries to the proxy so Traefik can route and handle TLS
-  - ip_addr: "{{ hostvars['homelab-prx'].ansible_host }}"
-    hostname: heimdall.vojak.cloud
-  - ip_addr: "{{ hostvars['homelab-prx'].ansible_host }}"
-    hostname: grafana.vojak.cloud
-  - ip_addr: "{{ hostvars['homelab-prx'].ansible_host }}"
-    hostname: prometheus.vojak.cloud
-  - ip_addr: "{{ hostvars['homelab-prx'].ansible_host }}"
-    hostname: influxdb.vojak.cloud
-  - ip_addr: "{{ hostvars['homelab-prx'].ansible_host }}"
-    hostname: portainer.vojak.cloud
+  - hostname: esx-mac-01.vojak.cloud
+    ip_addr: "{{ hostvars['homelab-prx'].ansible_host }}"
+  - hostname: esx-mac-02.vojak.cloud
+    ip_addr: "{{ hostvars['homelab-prx'].ansible_host }}"
+  - hostname: esx-luna-01.vojak.cloud
+    ip_addr: "{{ hostvars['homelab-prx'].ansible_host }}"
+  - hostname: esx-rpi-01.vojak.cloud
+    ip_addr: "{{ hostvars['homelab-prx'].ansible_host }}"
+  - hostname: esx-rpi-02.vojak.cloud
+    ip_addr: "{{ hostvars['homelab-prx'].ansible_host }}"
+  - hostname: heimdall.vojak.cloud
+    ip_addr: "{{ hostvars['homelab-prx'].ansible_host }}"
+  - hostname: grafana.vojak.cloud
+    ip_addr: "{{ hostvars['homelab-prx'].ansible_host }}"
+  - hostname: prometheus.vojak.cloud
+    ip_addr: "{{ hostvars['homelab-prx'].ansible_host }}"
+  - hostname: influxdb.vojak.cloud
+    ip_addr: "{{ hostvars['homelab-prx'].ansible_host }}"
+  - hostname: portainer.vojak.cloud
+    ip_addr: "{{ hostvars['homelab-prx'].ansible_host }}"
+  - hostname: homebridge.vojak.cloud
+    ip_addr: "{{ hostvars['homelab-prx'].ansible_host }}"
+  - hostname: scrypted.vojak.cloud
+    ip_addr: "{{ hostvars['homelab-prx'].ansible_host }}"
+  - hostname: uptime-kuma.vojak.cloud
+    ip_addr: "{{ hostvars['homelab-prx'].ansible_host }}"

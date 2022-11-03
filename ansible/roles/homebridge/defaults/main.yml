@@ -4,6 +4,7 @@ homebridge_bridge_name: Homebridge
 homebridge_bridge_pin: 123-45-678
 homebridge_bridge_username: CC:22:3D:E3:CE:30
 homebridge_timezone: America/Chicago
+homebridge_port_http: 8581
 homebridge_plugins: []
 homebridge_accessories: []
 homebridge_platforms: []

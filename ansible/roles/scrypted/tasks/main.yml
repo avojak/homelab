@@ -33,7 +33,7 @@
 - name: Ensure port open on the firewall
   ufw:
     rule: allow
-    port: 10443
+    port: "{{ scrypted_port_https }}"
     proto: tcp
 
 - name: Ensure device ports open on the firewall

@@ -67,6 +67,11 @@
     - vars/influxdb.yml
     - roles/portainer/defaults/main.yml
     - vars/portainer.yml
+    - roles/homebridge/defaults/main.yml
+    - vars/homebridge.yml
+    - roles/scrypted/defaults/main.yml
+    - vars/scrypted.yml
+    - roles/uptime-kuma/defaults/main.yml
   roles:
     - cloudflare-ddns
     - traefik
