@@ -87,6 +87,8 @@ pihole_custom_dns_records:
     ip_addr: "{{ hostvars['homelab-prx'].ansible_host }}"
   - hostname: esx-rpi-02.vojak.cloud
     ip_addr: "{{ hostvars['homelab-prx'].ansible_host }}"
+  - hostname: traefik.vojak.cloud
+    ip_addr: "{{ hostvars['homelab-prx'].ansible_host }}"
   - hostname: heimdall.vojak.cloud
     ip_addr: "{{ hostvars['homelab-prx'].ansible_host }}"
   - hostname: grafana.vojak.cloud

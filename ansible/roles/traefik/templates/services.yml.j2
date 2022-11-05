@@ -6,6 +6,8 @@ http:
       service: api@internal
       middlewares:
         - auth
+      tls:
+        certResolver: le
 {% endif %}
 {% for service in traefik_services %}
     {{ service.name }}:
