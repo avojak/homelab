@@ -42,13 +42,13 @@ provider "esxi" {
     esxi_password = var.esxi_password
 }
 
-# provider "esxi" {
-#     alias = "esx-lvo-01"
-#     esxi_hostname = var.esxi_hostname["esx-lvo-01"]
-#     esxi_hostport = var.esxi_hostport
-#     esxi_username = var.esxi_username
-#     esxi_password = var.esxi_password
-# }
+provider "esxi" {
+    alias = "esx-lvo-01"
+    esxi_hostname = var.esxi_hostname["esx-lvo-01"]
+    esxi_hostport = var.esxi_hostport
+    esxi_username = var.esxi_username
+    esxi_password = var.esxi_password
+}
 
 #########################################
 #  ESXI Guest resources

@@ -10,8 +10,8 @@ all:
       ansible_host: 192.168.1.230
     esx-rpi-02:
       ansible_host: 192.168.1.22
-    # esx-lvo-01:
-    #   ansible_host: 192.168.1.112
+    esx-lvo-01:
+      ansible_host: 192.168.1.112
     homelab-prx:
       ansible_host: 192.168.1.150
     homelab-mon:
@@ -38,7 +38,7 @@ all:
         esx-luna-01:
         esx-rpi-01:
         esx-rpi-02:
-        # esx-lvo-01:
+        esx-lvo-01:
     # Guest VMs
     guests:
       hosts:

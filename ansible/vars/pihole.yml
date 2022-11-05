@@ -75,8 +75,9 @@ pihole_domainlist:
   - domain: "events.ads.vungle.com"
     type: 1
 
+# Point all entries to the proxy so Traefik can route and handle TLS
 pihole_custom_dns_records:
-  # Point all entries to the proxy so Traefik can route and handle TLS
+  # ESXi hosts
   - hostname: esx-mac-01.vojak.cloud
     ip_addr: "{{ hostvars['homelab-prx'].ansible_host }}"
   - hostname: esx-mac-02.vojak.cloud
@@ -87,6 +88,11 @@ pihole_custom_dns_records:
     ip_addr: "{{ hostvars['homelab-prx'].ansible_host }}"
   - hostname: esx-rpi-02.vojak.cloud
     ip_addr: "{{ hostvars['homelab-prx'].ansible_host }}"
+  - hostname: esx-lvo-01.vojak.cloud
+    ip_addr: "{{ hostvars['homelab-prx'].ansible_host }}"
+  # Virtual hosts
+  # TODO
+  # Applications
   - hostname: traefik.vojak.cloud
     ip_addr: "{{ hostvars['homelab-prx'].ansible_host }}"
   - hostname: heimdall.vojak.cloud

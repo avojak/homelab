@@ -56,6 +56,10 @@ traefik_services:
     hostname: esx-rpi-02.vojak.cloud
     url: "https://{{ hostvars['esx-rpi-02'].ansible_host }}"
     servers_transport: insecureSkipVerifyTransport
+  - name: esx-lvo-01
+    hostname: esx-lvo-01.vojak.cloud
+    url: "https://{{ hostvars['esx-lvo-01'].ansible_host }}"
+    servers_transport: insecureSkipVerifyTransport
   - name: heimdall
     hostname: heimdall.vojak.cloud
     url: "http://{{ hostvars['homelab-prx'].ansible_host }}:{{ heimdall_port_http }}"
