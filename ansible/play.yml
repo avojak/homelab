@@ -87,6 +87,8 @@
     # - vars/un-poller.yml
     - vars/prometheus.yml
     - vars/prometheus-vmware-exporter.yml
+    # - vars/speedflux.yml
+    - vars/docker-speedtest-influxdbv2.yml
   roles:
     - influxdb
     - grafana
@@ -95,6 +97,8 @@
     # - un-poller
     - prometheus
     - prometheus-vmware-exporter
+    # - speedflux
+    - docker-speedtest-influxdbv2
 
 # Primary homelab applications
 - hosts: homelab-app-01

@@ -1,0 +1,8 @@
+speedtest_influxdb_host: "{{ hostvars['homelab-mon'].ansible_host }}"
+speedtest_influxdb_port: "{{ influxdb_port }}"
+speedtest_influxdb_admin_token: "{{ influxdb_admin_token }}"
+speedtest_influxdb_org: "{{ influxdb_org }}"
+speedtest_influxdb_database: speedtests
+speedtest_interval: 300 # Seconds
+speedtest_host: homelab-mon
+speedtest_server: 52079
