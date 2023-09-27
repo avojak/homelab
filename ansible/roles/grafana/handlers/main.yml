@@ -1,0 +1,6 @@
+---
+- name: Restart Grafana
+  community.docker.docker_compose:
+    project_src: "{{ grafana_install_dir }}"
+    build: false
+    restarted: true

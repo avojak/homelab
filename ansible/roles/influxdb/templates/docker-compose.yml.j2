@@ -18,3 +18,8 @@ services:
     volumes:
       - "{{ influxdb_data_dir }}:/var/lib/influxdb2"
       - "{{ influxdb_config_dir }}:/etc/influxdb2"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10mb"
+        max-file: "1"

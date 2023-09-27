@@ -1,3 +1,4 @@
+---
 traefik_version: latest
 traefik_root_domain: example.com
 traefik_dashboard_subdomain: traefik

@@ -1,65 +1,49 @@
 ---
 - name: Create install directory
-  file:
+  ansible.builtin.file:
     path: "{{ homebridge_install_dir }}"
     state: directory
     mode: '0755'
 
 - name: Copy the config file
-  template:
+  ansible.builtin.template:
     src: config.json.j2
     dest: "{{ homebridge_install_dir }}/config.json"
     mode: '0644'
-  register: config
+  notify: Restart Homebridge
 
 - name: Copy docker-compose template
-  template:
+  ansible.builtin.template:
     src: docker-compose.yml.j2
     dest: "{{ homebridge_install_dir }}/docker-compose.yml"
     mode: '0644'
 
 - name: Ensure stack is running
-  docker_compose:
+  community.docker.docker_compose:
     project_name: Homebridge
     project_src: "{{ homebridge_install_dir }}"
     state: present
-    pull: yes
+    pull: true
 
 - name: Install plugins
   community.general.npm:
     name: "{{ item.name }}"
-    version: "{{ item.version|default('') }}"
+    version: "{{ item.version | default('') }}"
     state: present
-    # global: yes
-    unsafe_perm: yes
+    # global: true
+    unsafe_perm: true
     path: "{{ homebridge_install_dir }}"
   with_items: "{{ homebridge_plugins }}"
-  register: npm_packages
-
-- name: Restart service when plugins or config have changed
-  docker_compose:
-    project_src: "{{ homebridge_install_dir }}"
-    build: false
-    restarted: true
-  when: npm_packages.changed or config.changed
+  notify: Restart Homebridge
 
 - name: Cleanup stale Docker images
-  docker_prune:
-    images: yes
+  community.docker.docker_prune:
+    images: true
     images_filters:
       dangling: false
 
-# - name: Ensure ports open on the firewall
-#   ufw:
-#     rule: allow
-#     port: "{{ item.port }}"
-#     proto: "{{ item.proto }}"
-#   loop:
-#     - { port: "{{ homebridge_port_http }}", proto: "tcp" }
-#     - { port: "{{ homebridge_port_https }}", proto: "tcp" }
-
-- name: Ensure port open on the firewall
-  ufw:
+- name: Ensure ports open on the firewall
+  community.general.ufw:
     rule: allow
     port: "{{ item.port }}"
     proto: "{{ item.proto }}"
@@ -69,8 +53,8 @@
     - { port: 5353, proto: "tcp" } # mDNS
     - { port: 51454, proto: "tcp" } # Bridge (See config.json)
 
-- name: Ensure port open on the firewall for plugins
-  ufw:
+- name: Ensure ports open on the firewall for plugins
+  community.general.ufw:
     rule: allow
     port: "{{ item.port }}"
     proto: "{{ item.proto }}"

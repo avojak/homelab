@@ -6,11 +6,22 @@ apiVersion: 1
 datasources:
   - name: InfluxDB-Flux
     type: influxdb
-    url: "http://{{ hostvars['homelab-mon'].ansible_host }}:{{ influxdb_port }}"
+    url: "http://{{ hostvars['monitoring.vojak.cloud'].ansible_host }}:{{ influxdb_port }}"
     secureJsonData:
       token: "{{ influxdb_admin_token }}"
     jsonData:
       version: Flux
       organization: "{{ influxdb_org }}"
       defaultBucket: "{{ influxdb_bucket }}"
-    
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: "http://{{ hostvars['monitoring.vojak.cloud'].ansible_host }}:{{ prometheus_port }}"
+    basicAuth: true
+    basicAuthUser: {{ prometheus_username }}
+    secureJsonData:
+      basicAuthPassword: {{ prometheus_password }}
+    jsonData:
+      httpMethod: POST
+      prometheusType: Prometheus
+      prometheusVersion: {{ prometheus_version }}

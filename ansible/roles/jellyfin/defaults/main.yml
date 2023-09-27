@@ -1,8 +1,0 @@
-jellyfin_version: latest
-jellyfin_install_dir: /opt/jellyfin
-jellyfin_config_dir: "{{ jellyfin_install_dir }}/config"
-jellyfin_cache_dir: "{{ jellyfin_install_dir }}/cache"
-jellyfin_media_dir: "{{ jellyfin_install_dir }}/media"
-jellyfin_nas_host:
-jellyfin_nas_mount_path:
-jellyfin_local_nas_mount_path: "/mnt/jellyfinmedia"

@@ -1,0 +1,25 @@
+---
+- name: Create install directory
+  ansible.builtin.file:
+    path: "{{ pihole_influxdb_monitor_install_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Copy docker-compose template
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: "{{ pihole_influxdb_monitor_install_dir }}/docker-compose.yml"
+    mode: '0644'
+
+- name: Ensure stack is running
+  community.docker.docker_compose:
+    project_name: Pi-hole InfluxDB Monitor
+    project_src: "{{ pihole_influxdb_monitor_install_dir }}"
+    state: present
+    pull: true
+
+- name: Cleanup stale Docker images
+  community.docker.docker_prune:
+    images: true
+    images_filters:
+      dangling: false

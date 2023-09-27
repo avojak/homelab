@@ -1,0 +1,50 @@
+---
+- name: Create installation directory
+  ansible.builtin.file:
+    path: "{{ uptime_kuma_install_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Create data directory
+  ansible.builtin.file:
+    path: "{{ uptime_kuma_data_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Copy docker-compose template
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: "{{ uptime_kuma_install_dir }}/docker-compose.yml"
+    mode: '0644'
+
+- name: Ensure stack is running
+  community.docker.docker_compose:
+    project_name: Uptime Kuma
+    project_src: "{{ uptime_kuma_install_dir }}"
+    state: present
+
+- name: Wait for container to be ready
+  ansible.builtin.uri:
+    url: "http://localhost:{{ uptime_kuma_port }}"
+  register: uptime_kuma_container_result
+  until: uptime_kuma_container_result.status == 200
+  retries: 30
+  delay: 5
+
+- name: Specify the initial username and password
+  lucasheld.uptime_kuma.setup:
+    api_url: "http://localhost:{{ uptime_kuma_port }}"
+    api_username: "{{ uptime_kuma_username }}"
+    api_password: "{{ uptime_kuma_password }}"
+
+- name: Cleanup stale Docker images
+  community.docker.docker_prune:
+    images: true
+    images_filters:
+      dangling: false
+
+- name: Ensure ports open on the firewall
+  community.general.ufw:
+    rule: allow
+    port: "{{ uptime_kuma_port }}"
+    proto: tcp

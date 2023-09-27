@@ -1,12 +1,13 @@
 *.lck
 *.vmdk
 *.nvram
+!disablesip.nvram
 *.ova
 *.vmsd
 *.vmxf
 *.plist
 packer_cache/
-build/*.vmx
+**/build/*.vmx
 
 .terraform/
 .terraform.lock.hcl
@@ -14,6 +15,8 @@ build/*.vmx
 terraform-provider-esxi
 terraform.tfstate
 terraform.tfstate.backup
+terraform.tfstate.*.backup
+*.tfplan
 
 .vault-password-file
 .esxi_root_password

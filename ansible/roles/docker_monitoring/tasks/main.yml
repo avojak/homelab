@@ -1,0 +1,13 @@
+---
+- name: Copy updated Docker service file
+  ansible.builtin.template:
+    src: docker.service.j2
+    dest: /lib/systemd/system/docker.service
+    mode: '0644'
+  notify: Restart Docker
+
+- name: Open port for Docker API
+  community.general.ufw:
+    rule: allow
+    port: 2375
+    proto: tcp

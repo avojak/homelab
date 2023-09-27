@@ -1,0 +1,46 @@
+all:
+  hosts:
+    esx-asus-01.vojak.cloud:
+      ansible_host: 192.168.1.112
+    esx-mac-02.vojak.cloud:
+      ansible_host: 192.168.1.64
+    esx-mac-03.vojak.cloud:
+      ansible_host: 192.168.1.120
+    esx-mac-04.vojak.cloud:
+      ansible_host: 192.168.1.79
+    homebridge.vojak.cloud:
+      ansible_host: 192.168.1.200
+    pihole-01.vojak.cloud:
+      ansible_host: 192.168.1.30
+    pihole-02.vojak.cloud:
+      ansible_host: 192.168.1.183
+    plausible.vojak.cloud:
+      ansible_host: 192.168.1.233
+    plex.vojak.cloud:
+      ansible_host: 192.168.1.29
+    routing.vojak.cloud:
+      ansible_host: 192.168.1.94
+    monitoring.vojak.cloud:
+      ansible_host: 192.168.1.194
+  children:
+    # ESXi hosts
+    esxi:
+      hosts:
+        esx-asus-01.vojak.cloud:
+        esx-mac-02.vojak.cloud:
+        esx-mac-03.vojak.cloud:
+        esx-mac-04.vojak.cloud:
+    # Guest VMs
+    guests:
+      hosts:
+        homebridge.vojak.cloud:
+        plausible.vojak.cloud:
+        plex.vojak.cloud:
+        routing.vojak.cloud:
+        monitoring.vojak.cloud:
+      children:
+        # Pi-hole VMs
+        piholes:
+          hosts:
+            pihole-01.vojak.cloud:
+            pihole-02.vojak.cloud:

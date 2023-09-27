@@ -8,11 +8,15 @@ To create an ecrypted secret that can safely be checked-in to version control, u
 $ ansible-vault encrypt_string --vault-password-file .vault-password-file <string>
 ```
 
+```bash
+$ ansible-vault encrypt --vault-password-file .vault-password-file inventories/production/group_vars/guests/vault.yml
+```
+
 ## Prerequisites
 
 1. The NAS containing Plex media needs to allow the VM to mount it
 
-## Installed Software
+<!-- ## Installed Software
 
 | Name | UI Port/Path |
 | ---- | ------------ |
@@ -33,4 +37,4 @@ $ ansible-vault encrypt_string --vault-password-file .vault-password-file <strin
 | `pihole_temp_unit` | `string` | `"pihole_temp_unit"` | The temperature unit when displaying host CPU temperature in the dashboard |
 | `pihole_dnsmasq` | `string` | `"pihole_dnsmasq"` | |
 | `pihole_adlists` | `list(dict)` | `[{address: "", enabled: yes, comment: ""}]` | |
-| `pihole_domainlist` | `list(dict)` | `[{domain: "", type: 0, enabled: yes, comment: ""}]` | |
+| `pihole_domainlist` | `list(dict)` | `[{domain: "", type: 0, enabled: yes, comment: ""}]` | | -->

@@ -4,6 +4,11 @@ services:
   mail:
     image: bytemark/smtp:{{ plausible_smtp_version }}
     restart: always
+    logging:
+      driver: json-file
+      options:
+        max-size: "10mb"
+        max-file: "1"
 
   plausible_db:
     image: postgres:{{ plausible_postgres_vesion }}
@@ -12,6 +17,11 @@ services:
       - {{ plausible_postgres_data_dir }}:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=postgres
+    logging:
+      driver: json-file
+      options:
+        max-size: "10mb"
+        max-file: "1"
 
   plausible_events_db:
     image: clickhouse/clickhouse-server:{{ plausible_clickhouse_version }}
@@ -24,6 +34,11 @@ services:
       nofile:
         soft: 262144
         hard: 262144
+    logging:
+      driver: json-file
+      options:
+        max-size: "10mb"
+        max-file: "1"
 
   plausible:
     image: plausible/analytics:{{ plausible_version }}
@@ -41,3 +56,8 @@ services:
       - "ADMIN_USER_PWD={{ plausible_admin_password }}"
       - "BASE_URL={{ plausible_base_url }}"
       - "SECRET_KEY_BASE={{ plausible_secret_key_base }}"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10mb"
+        max-file: "1"

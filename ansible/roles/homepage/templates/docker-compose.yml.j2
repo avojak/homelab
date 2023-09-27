@@ -1,0 +1,16 @@
+---
+version: '3.3'
+services:
+  homepage:
+    image: "ghcr.io/benphelps/homepage:{{ homepage_version }}"
+    container_name: homepage
+    restart: always
+    ports:
+      - "{{ homepage_port_http }}:3000"
+    volumes:
+      - "{{ homepage_config_dir }}:/app/config"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10mb"
+        max-file: "1"

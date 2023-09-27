@@ -1,0 +1,31 @@
+---
+version: '3.3'
+services:
+  pihole:
+    image: pihole/pihole:{{ pihole_version }}
+    container_name: pihole
+    hostname: {{ inventory_hostname }}
+    restart: always
+    ports:
+      - {{ ansible_host }}:53:53/udp
+      - {{ ansible_host }}:53:53/tcp
+      - 80:80/tcp
+      - 443:443/tcp
+    environment:
+      - "TZ={{ pihole_timezone }}"
+      - "WEBPASSWORD={{ pihole_web_password }}"
+      - "PIHOLE_DNS_={{ pihole_upstream_dns | join(';') }}"
+      - "TEMPERATUREUNIT={{ pihole_temp_unit }}"
+      - "DNSMASQ_LISTENING={{ pihole_dnsmasq }}"
+      - "FTLCONF_LOCAL_IPV4=127.0.0.1"
+      - "DNS_FQDN_REQUIRED=true"
+      - "DNSSEC=false"
+      - "VIRTUAL_HOST={{ inventory_hostname }}"
+    volumes:
+      - "{{ pihole_etc_dnsmasqd_dir }}:/etc/dnsmasq.d"
+      - "{{ pihole_etc_pihole_dir }}:/etc/pihole"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10mb"
+        max-file: "1"

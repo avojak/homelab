@@ -1,3 +1,4 @@
+---
 influxdb_version: latest
 influxdb_mode: "setup"
 influxdb_username: "my-user"

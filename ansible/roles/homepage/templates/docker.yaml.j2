@@ -1,0 +1,16 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/en/configs/docker/
+
+# my-docker:
+#   host: 127.0.0.1
+#   port: 2375
+
+# my-docker:
+#   socket: /var/run/docker.sock
+
+{% for host in homepage_docker_hosts %}
+{{ host }}:
+    host: {{ hostvars[host].ansible_host }}
+    port: 2375
+{% endfor %}

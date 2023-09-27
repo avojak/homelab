@@ -1,0 +1,146 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/en/configs/services
+
+- Hypervisors:
+    - esx-asus-01:
+        href: https://{{ hostvars['esx-asus-01.vojak.cloud'].ansible_host }}
+        ping: https://{{ hostvars['esx-asus-01.vojak.cloud'].ansible_host }}
+        icon: vmware-esxi
+    - esx-mac-02:
+        href: https://{{ hostvars['esx-mac-02.vojak.cloud'].ansible_host }}
+        ping: https://{{ hostvars['esx-mac-02.vojak.cloud'].ansible_host }}
+        icon: vmware-esxi
+    - esx-mac-03:
+        href: https://{{ hostvars['esx-mac-03.vojak.cloud'].ansible_host }}
+        ping: https://{{ hostvars['esx-mac-03.vojak.cloud'].ansible_host }}
+        icon: vmware-esxi
+    - esx-mac-04:
+        href: https://{{ hostvars['esx-mac-04.vojak.cloud'].ansible_host }}
+        ping: https://{{ hostvars['esx-mac-04.vojak.cloud'].ansible_host }}
+        icon: vmware-esxi
+
+- DNS:
+    - Pi-hole 01:
+        href: http://{{ hostvars['pihole-01.vojak.cloud'].ansible_host }}/admin
+        ping: http://{{ hostvars['pihole-01.vojak.cloud'].ansible_host }}/admin
+        icon: pi-hole
+        server: pihole-01.vojak.cloud
+        container: pihole
+        widget:
+            type: pihole
+            url: http://{{ hostvars['pihole-01.vojak.cloud'].ansible_host }}
+            key: {{ pihole_api_key }}
+    - Pi-hole 02:
+        href: http://{{ hostvars['pihole-02.vojak.cloud'].ansible_host }}/admin
+        ping: http://{{ hostvars['pihole-02.vojak.cloud'].ansible_host }}/admin
+        icon: pi-hole
+        server: pihole-02.vojak.cloud
+        container: pihole
+        widget:
+            type: pihole
+            url: http://{{ hostvars['pihole-02.vojak.cloud'].ansible_host }}
+            key: {{ pihole_api_key }}
+
+- Smart Home:
+    - Homebridge:
+        href: http://{{ hostvars['homebridge.vojak.cloud'].ansible_host }}:{{ homebridge_port_http }}
+        ping: http://{{ hostvars['homebridge.vojak.cloud'].ansible_host }}:{{ homebridge_port_http }}
+        icon: homebridge
+        server: homebridge.vojak.cloud
+        container: homebridge
+        widget:
+            type: homebridge
+            url: http://{{ hostvars['homebridge.vojak.cloud'].ansible_host }}:{{ homebridge_port_http }}
+            username: {{ homebridge_username }}
+            password: {{ homebridge_password }}
+    - Scrypted:
+        href: https://{{ hostvars['homebridge.vojak.cloud'].ansible_host }}:{{ scrypted_port_https }}
+        ping: https://{{ hostvars['homebridge.vojak.cloud'].ansible_host }}:{{ scrypted_port_https }}
+        icon: scrypted
+        server: homebridge.vojak.cloud
+        container: scrypted
+
+- Network Infrastructure:
+    - UniFi Controller:
+        href: https://192.168.1.1
+        ping: https://192.168.1.1
+        icon: unifi
+        #widget:
+        #  type: unifi
+        #  url: https://192.168.1.1
+        #  username:
+        #  password: 
+    - Traefik:
+        href: https://traefik.vojak.cloud/dashboard/
+        ping: https://traefik.vojak.cloud/dashboard/
+        icon: traefik
+        #widget:
+        #  type: traefik
+        #  url: https://traefik.vojak.cloud
+        #  username:
+        #  password:
+    - Synology NAS:
+        href: http://{{ synology_nas_host }}:{{ synology_nas_port }}
+        ping: http://{{ synology_nas_host }}:{{ synology_nas_port }}
+        icon: synology-dsm
+        widget:
+            type: diskstation
+            url: http://{{ synology_nas_host }}:{{ synology_nas_port }}
+            username: {{ synology_nas_username }}
+            password: {{ synology_nas_password }}
+            volume: volume_1
+
+- Monitoring:
+    - Prometheus:
+        href: http://{{ hostvars['monitoring.vojak.cloud'].ansible_host }}:{{ prometheus_port }}
+        ping: http://{{ hostvars['monitoring.vojak.cloud'].ansible_host }}:{{ prometheus_port }}
+        icon: prometheus
+        server: monitoring.vojak.cloud
+        container: prometheus
+        widget:
+            type: prometheus
+            url: http://{{ hostvars['monitoring.vojak.cloud'].ansible_host }}:{{ prometheus_port }}
+            username: {{ prometheus_username }}
+            password: {{ prometheus_password }}
+    - InfluxDB:
+        href: http://{{ hostvars['monitoring.vojak.cloud'].ansible_host }}:{{ influxdb_port }}
+        ping: http://{{ hostvars['monitoring.vojak.cloud'].ansible_host }}:{{ influxdb_port }}
+        icon: influxdb
+        server: monitoring.vojak.cloud
+        container: influxdb
+    - Grafana:
+        href: http://{{ hostvars['monitoring.vojak.cloud'].ansible_host }}:{{ grafana_port }}
+        ping: http://{{ hostvars['monitoring.vojak.cloud'].ansible_host }}:{{ grafana_port }}
+        icon: grafana
+        server: monitoring.vojak.cloud
+        container: grafana
+        widget:
+            type: grafana
+            url: http://{{ hostvars['monitoring.vojak.cloud'].ansible_host }}:{{ grafana_port }}
+            username: {{ grafana_admin_user }}
+            password: {{ grafana_admin_password }}
+    - Uptime Kuma:
+        href: http://{{ hostvars['monitoring.vojak.cloud'].ansible_host }}:{{ uptime_kuma_port }}
+        ping: http://{{ hostvars['monitoring.vojak.cloud'].ansible_host }}:{{ uptime_kuma_port }}
+        icon: uptime-kuma
+        server: monitoring.vojak.cloud
+        container: uptime-kuma
+
+- Media:
+    - Plex:
+        href: http://{{ hostvars['plex.vojak.cloud'].ansible_host }}:{{ plex_port_http }}
+        ping: http://{{ hostvars['plex.vojak.cloud'].ansible_host }}:{{ plex_port_http }}
+        icon: plex
+        server: plex.vojak.cloud
+        container: plex
+        #widget:
+        #    type: plex
+        #    url: http://{{ hostvars['plex.vojak.cloud'].ansible_host }}:{{ plex_port_http }}
+        #    key: 
+
+- Public:
+    - Plausible:
+        href: http://{{ hostvars['plausible.vojak.cloud'].ansible_host }}:{{ plausible_port_http }}
+        ping: http://{{ hostvars['plausible.vojak.cloud'].ansible_host }}:{{ plausible_port_http }}
+        icon: plausible

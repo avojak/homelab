@@ -1,12 +1,12 @@
 ---
 - name: Create install directory
-  file:
+  ansible.builtin.file:
     path: "{{ traefik_installation_dir }}"
     state: directory
     mode: '0755'
 
 - name: Create directories
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     mode: '0755'
@@ -15,45 +15,38 @@
     - "{{ traefik_dir_dynamic_config }}"
 
 - name: Copy the static config file
-  template:
+  ansible.builtin.template:
     src: traefik.yml.j2
     dest: "{{ traefik_installation_dir }}/traefik.yml"
     mode: '0644'
-  register: traefik_static_config
+  notify: Restart Traefik
 
 - name: Copy the dynamic config file
-  template:
+  ansible.builtin.template:
     src: services.yml.j2
     dest: "{{ traefik_dir_dynamic_config }}/services.yml"
     mode: '0644'
 
 - name: Copy docker-compose template
-  template:
+  ansible.builtin.template:
     src: docker-compose.yml.j2
     dest: "{{ traefik_installation_dir }}/docker-compose.yml"
     mode: '0644'
 
 - name: Ensure stack is running
-  docker_compose:
+  community.docker.docker_compose:
     project_name: Traefik
     project_src: "{{ traefik_installation_dir }}"
     state: present
 
-- name: Restart service when config has changed
-  docker_compose:
-    project_src: "{{ traefik_installation_dir }}"
-    build: false
-    restarted: true
-  when: traefik_static_config.changed
-
 - name: Cleanup stale Docker images
-  docker_prune:
-    images: yes
+  community.docker.docker_prune:
+    images: true
     images_filters:
       dangling: false
 
 - name: Ensure port open on the firewall for HTTPS dashboard
-  ufw:
+  community.general.ufw:
     rule: allow
     port: "{{ item }}"
     proto: tcp

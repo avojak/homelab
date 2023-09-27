@@ -1,0 +1,375 @@
+---
+#
+# Host system variables
+#
+filesystem_device: /dev/sda
+filesystem_device_number: 2
+filesystem_type: ext4
+
+#
+# Docker configuration
+#
+pip_package: python3-pip
+docker_install_compose: true
+pip_install_packages:
+  - name: docker
+  - name: docker-compose
+
+#
+# Telegraf output to InfluxDB configuration
+#
+telegraf_output_influxdb_host: "{{ hostvars['monitoring.vojak.cloud'].ansible_host }}"
+telegraf_output_influxdb_port: "{{ influxdb_port }}"
+telegraf_output_influxdb_admin_token: "{{ influxdb_admin_token }}"
+telegraf_output_influxdb_org: "{{ influxdb_org }}"
+telegraf_output_influxdb_bucket: "{{ influxdb_bucket }}"
+
+#
+# Synology NAS
+#
+synology_nas_host: "{{ nas_host }}"
+synology_nas_port: 5000
+synology_nas_username: "{{ vault_synology_nas_username }}"
+synology_nas_password: "{{ vault_synology_nas_password }}"
+
+#
+# Pi-holes
+#
+pihole_web_password: "{{ vault_pihole_web_password }}"
+pihole_api_key: "{{ vault_pihole_api_key }}"
+pihole_timezone: "{{ homelab_timezone }}"
+pihole_dnsmasq: "all"
+
+pihole_adlists:
+  - address: "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"
+    comment: "StevenBlack/hosts (adware + malware)"
+  - address: "https://blocklistproject.github.io/Lists/abuse.txt"
+    comment: "Block List Project (Abuse)"
+  - address: "https://blocklistproject.github.io/Lists/ads.txt"
+    comment: "Block List Project (Ads)"
+  - address: "https://blocklistproject.github.io/Lists/malware.txt"
+    comment: "Block List Project (Malware)"
+  - address: "https://blocklistproject.github.io/Lists/phishing.txt"
+    comment: "Block List Project (Phishing)"
+  - address: "https://blocklistproject.github.io/Lists/porn.txt"
+    comment: "Block List Project (Porn)"
+  - address: "https://blocklistproject.github.io/Lists/ransomware.txt"
+    comment: "Block List Project (Ransomware)"
+  - address: "https://blocklistproject.github.io/Lists/redirect.txt"
+    comment: "Block List Project (Redirect)"
+  - address: "https://blocklistproject.github.io/Lists/scam.txt"
+    comment: "Block List Project (Scam)"
+  - address: "https://blocklistproject.github.io/Lists/tracking.txt"
+    comment: "Block List Project (Tracking)"
+  - address: "https://www.github.developerdan.com/hosts/lists/ads-and-tracking-extended.txt"
+    comment: "Developer Dan (Ads & Tracking)"
+  - address: "https://www.github.developerdan.com/hosts/lists/dating-services-extended.txt"
+    comment: "Developer Dan (Dating Services)"
+  - address: "https://adaway.org/hosts.txt"
+  - address: "https://v.firebog.net/hosts/AdguardDNS.txt"
+  - address: "https://v.firebog.net/hosts/Admiral.txt"
+  - address: "https://raw.githubusercontent.com/anudeepND/blacklist/master/adservers.txt"
+  - address: "https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt"
+    comment: "Disconnect.me SimpleAd"
+  - address: "https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt"
+    comment: "Disconnect.me SimpleTracking"
+  - address: "https://v.firebog.net/hosts/Easylist.txt"
+  - address: "https://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext"
+  - address: "https://raw.githubusercontent.com/FadeMind/hosts.extras/master/UncheckyAds/hosts"
+  - address: "https://raw.githubusercontent.com/bigdargon/hostsVN/master/hosts"
+  - address: "https://raw.githubusercontent.com/jdlingyu/ad-wars/master/hosts"
+  - address: "https://dbl.oisd.nl/"
+    comment: "Ads, Mobile Ads, Phishing, Malvertising, Malware, Spyware, Ransomware, CryptoJacking and some Telemetry, Analytics, Tracking"
+  - address: "https://osint.digitalside.it/Threat-Intel/lists/latestdomains.txt"
+    comment: "osint.digitalside.it malicious domains + malware"
+  - address: "https://urlhaus.abuse.ch/downloads/hostfile/"
+    comment: "abuse.ch malicious domains + malware"
+  - address: "https://raw.githubusercontent.com/crazy-max/WindowsSpyBlocker/master/data/dnscrypt/spy.txt"
+    comment: "windows telemetry"
+  - address: "https://raw.githubusercontent.com/hectorm/hmirror/master/data/adaway.org/list.txt"
+    comment: "AdAway"
+
+pihole_domainlist:
+  - domain: "(\\.|^)plausible\\.io$"
+    type: 2
+    comment: "Allow plausible.io"
+  # - domain: "assets.huluim.com"
+  #   type: 0
+  - domain: "fonts.gstatic.com"
+    type: 0
+  - domain: "vod-gcs-cedexis.cbsaavideo.com"
+    type: 0
+  - domain: "t.co"
+    type: 0
+  - domain: "clipcentric-a.akamaihd.net"
+    type: 1
+  - domain: "app-measurement.com"
+    type: 1
+  - domain: "events.ads.vungle.com"
+    type: 1
+
+pihole_custom_dns_records:
+  # ESXi hosts - route to Traefik to handle TLS
+  # - hostname: "esx-mac-01.{{ homelab_domain }}"
+  #   ip_addr: "{{ hostvars['routing.vojak.cloud'].ansible_host }}"
+  - hostname: "esx-mac-02.{{ homelab_domain }}"
+    ip_addr: "{{ hostvars['routing.vojak.cloud'].ansible_host }}"
+  - hostname: "esx-mac-03.{{ homelab_domain }}"
+    ip_addr: "{{ hostvars['routing.vojak.cloud'].ansible_host }}"
+  - hostname: "esx-mac-04.{{ homelab_domain }}"
+    ip_addr: "{{ hostvars['routing.vojak.cloud'].ansible_host }}"
+  - hostname: "esx-asus-01.{{ homelab_domain }}"
+    ip_addr: "{{ hostvars['routing.vojak.cloud'].ansible_host }}"
+#   # Virtual hosts
+#   # TODO
+#   # Applications
+  - hostname: "traefik.{{ homelab_domain }}"
+    ip_addr: "{{ hostvars['routing.vojak.cloud'].ansible_host }}"
+  - hostname: "homepage.{{ homelab_domain }}"
+    ip_addr: "{{ hostvars['routing.vojak.cloud'].ansible_host }}"
+  - hostname: "grafana.{{ homelab_domain }}"
+    ip_addr: "{{ hostvars['monitoring.vojak.cloud'].ansible_host }}"
+  - hostname: "prometheus.{{ homelab_domain }}"
+    ip_addr: "{{ hostvars['monitoring.vojak.cloud'].ansible_host }}"
+  - hostname: "influxdb.{{ homelab_domain }}"
+    ip_addr: "{{ hostvars['monitoring.vojak.cloud'].ansible_host }}"
+  - hostname: "portainer.{{ homelab_domain }}"
+    ip_addr: "{{ hostvars['monitoring.vojak.cloud'].ansible_host }}"
+  - hostname: "uptime-kuma.{{ homelab_domain }}"
+    ip_addr: "{{ hostvars['monitoring.vojak.cloud'].ansible_host }}"
+  - hostname: "homebridge.{{ homelab_domain }}"
+    ip_addr: "{{ hostvars['homebridge.vojak.cloud'].ansible_host }}"
+  - hostname: "scrypted.{{ homelab_domain }}"
+    ip_addr: "{{ hostvars['homebridge.vojak.cloud'].ansible_host }}"
+#   - hostname: "plex.{{ homelab_domain }}"
+#     ip_addr: "{{ hostvars['homelab-plex'].ansible_host }}"
+
+#
+# Homebridge
+#
+homebridge_username: admin
+homebridge_password: "{{ vault_homebridge_password }}"
+homebridge_port_http: 8581
+homebridge_bridge_name: Homebridge
+homebridge_bridge_pin: "{{ vault_homebridge_bridge_pin }}"
+homebridge_bridge_username: CC:22:3D:E3:CE:30
+homebridge_timezone: "{{ homelab_timezone }}"
+homebridge_plugins:
+  - name: homebridge-tplink-smarthome
+    version: '7.0.1'
+  - name: homebridge-myq
+    version: '3.4.1'
+  - name: homebridge-tcc
+    version: '0.2.34'
+  - name: homebridge-prometheus-exporter
+    version: '1.0.5'
+homebridge_platforms:
+  - platform: 'TplinkSmarthome'
+    name: 'TplinkSmarthome'
+    addCustomCharacteristics: true
+    discoveryPort: 47988
+    deviceTypes:
+      - plug
+      - bulb
+  - platform: 'myQ'
+    email: "{{ homebridge_myq_email }}"
+    password: "{{ homebridge_myq_password }}"
+  - platform: 'tcc'
+    name: 'Thermostat'
+    username: "{{ homebridge_honeywell_tcc_username }}"
+    password: "{{ homebridge_honeywell_tcc_password }}"
+  - platform: 'config'
+    name: 'Config'
+    port: 8581
+    auth: 'form'
+    theme: 'auto'
+    tempUnits: 'f'
+    lang: 'auto'
+  - platform: 'PrometheusExporter'
+    pin: '{{ homebridge_bridge_pin }}'
+    debug: false
+    prefix: 'homebridge'
+    port: 36123
+    refresh_interval: 60
+    request_timeout: 1
+    discovery_timeout: 20
+homebridge_plugin_ports:
+  - { port: 47988, proto: udp } # TPLink Smart Home (manually set above)
+  - { port: 36123, proto: tcp } # PrometheusExporter (manually set above)
+
+homebridge_myq_email: "{{ vault_homebridge_myq_email }}"
+homebridge_myq_password: "{{ vault_homebridge_myq_password }}"
+homebridge_honeywell_tcc_username: "{{ vault_homebridge_honeywell_tcc_username }}"
+homebridge_honeywell_tcc_password: "{{ vault_homebridge_honeywell_tcc_password }}"
+
+#
+# Scrypted
+#
+scrypted_port_https: 10443
+scrypted_device_ports:
+  - 40871 # HomeKit Plugin
+  - 33622 # Doorbell
+  - 38424 # Backyard Camera
+  - 38685 # Living Room Camera
+  - 41288 # Garage Camera
+  - 48096 # Front Yard Camera
+  - 39755 # Laundry Room Camera
+
+#
+# Portainer
+#
+portainer_version: "2.18.3"
+portainer_password: "{{ vault_portainer_password }}"
+# Salt for bcrypt must be 22 characters
+portainer_password_salt: "{{ vault_portainer_password_salt }}"
+portainer_port_https: 9443
+portainer_environments:
+  - name: Homebridge
+    url: "tcp://{{ hostvars['homebridge.vojak.cloud'].ansible_host }}:2375"
+  - name: Pi-hole 01
+    url: "tcp://{{ hostvars['pihole-01.vojak.cloud'].ansible_host }}:2375"
+  - name: Pi-hole 02
+    url: "tcp://{{ hostvars['pihole-02.vojak.cloud'].ansible_host }}:2375"
+  - name: Plausible
+    url: "tcp://{{ hostvars['plausible.vojak.cloud'].ansible_host }}:2375"
+  - name: Plex
+    url: "tcp://{{ hostvars['plex.vojak.cloud'].ansible_host }}:2375"
+  - name: Routing
+    url: "tcp://{{ hostvars['routing.vojak.cloud'].ansible_host }}:2375"
+
+#
+# InfluxDB
+#
+influxdb_version: "2.7.1"
+influxdb_port: 8086
+influxdb_username: "admin"
+influxdb_password: "{{ vault_influxdb_password }}"
+influxdb_org: "homelab"
+influxdb_bucket: "production"
+influxdb_retention: "1w"
+influxdb_admin_token: "{{ vault_influxdb_admin_token }}"
+
+#
+# Prometheus
+#
+prometheus_version: "v2.44.0"
+prometheus_port: 9090
+prometheus_username: avojak
+prometheus_password: "{{ vault_prometheus_password }}"
+prometheus_password_salt: "{{ vault_prometheus_password_salt }}"
+
+#
+# Prometheus VMWare Exporter
+#
+prometheus_vmware_exporter_instances:
+  - alias: esx-mac-02
+    host: "{{ hostvars['esx-mac-02.vojak.cloud'].ansible_host }}"
+    username: "{{ vault_esxi_username }}"
+    password: "{{ vault_esxi_password }}"
+    export_port: 9512
+    log_level: info
+  - alias: esx-mac-03
+    host: "{{ hostvars['esx-mac-03.vojak.cloud'].ansible_host }}"
+    username: "{{ vault_esxi_username }}"
+    password: "{{ vault_esxi_password }}"
+    export_port: 9513
+    log_level: info
+  - alias: esx-mac-04
+    host: "{{ hostvars['esx-mac-04.vojak.cloud'].ansible_host }}"
+    username: "{{ vault_esxi_username }}"
+    password: "{{ vault_esxi_password }}"
+    export_port: 9514
+    log_level: info
+  - alias: esx-asus-01
+    host: "{{ hostvars['esx-asus-01.vojak.cloud'].ansible_host }}"
+    username: "{{ vault_esxi_username }}"
+    password: "{{ vault_esxi_password }}"
+    export_port: 9515
+    log_level: info
+
+#
+# Grafana
+#
+grafana_version: "9.5.3"
+grafana_port: 3000
+grafana_admin_user: admin
+grafana_admin_password: "{{ vault_grafana_admin_password }}"
+
+#
+# Pi-hole InfluxDB Monitor
+#
+pihole_influxdb_monitor_version: "1.1.0"
+pihole_influxdb_monitor_pihole_alias: pihole-01,pihole-02
+pihole_influxdb_monitor_pihole_address: http://{{ hostvars['pihole-01.vojak.cloud'].ansible_host }},http://{{ hostvars['pihole-02.vojak.cloud'].ansible_host }}
+pihole_influxdb_monitor_pihole01_token: "{{ pihole_api_key }}"
+pihole_influxdb_monitor_pihole02_token: "{{ pihole_api_key }}"
+pihole_influxdb_monitor_pihole_token: "{{ pihole_influxdb_monitor_pihole01_token }},{{ pihole_influxdb_monitor_pihole02_token }}"
+pihole_influxdb_monitor_influxdb_address: "http://{{ hostvars['monitoring.vojak.cloud'].ansible_host }}:{{ influxdb_port }}"
+pihole_influxdb_monitor_influxdb_org: "{{ influxdb_org }}"
+pihole_influxdb_monitor_influxdb_token: "{{ influxdb_admin_token }}"
+pihole_influxdb_monitor_influxdb_create_bucket: true
+
+#
+# Speedtest
+#
+speedtest_version: "1.3.0"
+speedtest_influxdb_host: "{{ hostvars['monitoring.vojak.cloud'].ansible_host }}"
+speedtest_influxdb_port: "{{ influxdb_port }}"
+speedtest_influxdb_admin_token: "{{ influxdb_admin_token }}"
+speedtest_influxdb_org: "{{ influxdb_org }}"
+speedtest_influxdb_database: speedtests
+speedtest_interval: 300 # Seconds
+speedtest_host: "monitoring.{{ homelab_domain }}"
+speedtest_server: 16797
+
+#
+# Uptime Kuma
+#
+uptime_kuma_version: "1.21.3"
+uptime_kuma_port: 3001
+uptime_kuma_username: avojak
+uptime_kuma_password: "{{ vault_uptime_kuma_password }}"
+
+#
+# Plausible
+#
+plausible_version: v2.0.0
+plausible_clickhouse_version: 22.6-alpine
+plausible_hostname: "plausible.{{ homelab_domain }}"
+plausible_port_http: 8000
+plausible_admin_email: andrew.vojak@gmail.com
+plausible_admin_username: avojak
+plausible_admin_password: "{{ vault_plausible_admin_password }}"
+plausible_base_url: "https://{{ plausible_hostname }}"
+plausible_secret_key_base: "{{ vault_plausible_secret_key_base }}"
+
+#
+# Plex
+#
+plex_hostname: "plex.{{ homelab_domain }}"
+plex_ip_address: "{{ hostvars[plex_hostname].ansible_host }}"
+plex_port_http: 32400
+plex_timezone: "{{ homelab_timezone }}"
+plex_claim_token: "{{ vault_plex_claim_token }}"
+plex_nas_host: "{{ nas_host }}"
+plex_nas_mount_path: "/volume1/Plex"
+
+#
+# Homepage
+#
+homepage_version: v0.6.20
+homepage_port_http: 3000
+homepage_docker_hosts:
+  - "homebridge.{{ homelab_domain }}"
+  - "monitoring.{{ homelab_domain }}"
+  - "pihole-01.{{ homelab_domain }}"
+  - "pihole-02.{{ homelab_domain }}"
+  - "plausible.{{ homelab_domain }}"
+  - "plex.{{ homelab_domain }}"
+
+#
+# Cloudflare DDNS
+#
+cloudflare_ddns_api_key: "{{ vault_cloudflare_ddns_api_key }}"
+cloudflare_ddns_zone: "{{ homelab_domain }}"
+cloudflare_ddns_subdomain: homelab

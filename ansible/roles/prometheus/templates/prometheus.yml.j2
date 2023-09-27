@@ -6,7 +6,10 @@ scrape_configs:
   - job_name: 'vmware-esxi'
     static_configs:
 {% for instance in prometheus_vmware_exporter_instances %}
-    - targets: ['{{ hostvars[inventory_hostname].ansible_host }}:{{ instance.export_port }}']
+    - targets: ['prometheus-vmware-exporter-{{ instance.alias }}:{{ prometheus_vmware_exporter_port }}']
       labels:
         alias: {{ instance.alias }}
 {% endfor %}
+  - job_name: 'homebridge'
+    static_configs:
+    - targets: ['{{ hostvars['homebridge.vojak.cloud'].ansible_host }}:36123']

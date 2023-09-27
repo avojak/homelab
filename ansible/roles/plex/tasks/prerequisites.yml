@@ -1,13 +1,13 @@
 ---
 - name: Install packages
   become: true
-  apt:
+  ansible.builtin.apt:
     name: nfs-common
     state: present
 
 - name: Mount NFS
-  become: yes
-  mount:
+  become: true
+  ansible.posix.mount:
     src: "{{ plex_nas_host }}:{{ plex_nas_mount_path }}"
     path: "{{ plex_local_nas_mount_path }}"
     fstype: nfs

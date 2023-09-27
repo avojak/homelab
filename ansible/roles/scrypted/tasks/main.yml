@@ -1,43 +1,43 @@
 ---
 - name: Create install directory
-  file:
+  ansible.builtin.file:
     path: "{{ scrypted_install_dir }}"
     state: directory
     mode: '0755'
 
 - name: Create volume directory
-  file:
+  ansible.builtin.file:
     path: "{{ scrypted_volume_dir }}"
     state: directory
     mode: '0755'
 
 - name: Copy docker-compose template
-  template:
+  ansible.builtin.template:
     src: docker-compose.yml.j2
     dest: "{{ scrypted_install_dir }}/docker-compose.yml"
     mode: '0644'
 
 - name: Ensure stack is running
-  docker_compose:
+  community.docker.docker_compose:
     project_name: Scrypted
     project_src: "{{ scrypted_install_dir }}"
     state: present
-    pull: yes
+    pull: true
 
 - name: Cleanup stale Docker images
-  docker_prune:
-    images: yes
+  community.docker.docker_prune:
+    images: true
     images_filters:
       dangling: false
 
 - name: Ensure port open on the firewall
-  ufw:
+  community.general.ufw:
     rule: allow
     port: "{{ scrypted_port_https }}"
     proto: tcp
 
 - name: Ensure device ports open on the firewall
-  ufw:
+  community.general.ufw:
     rule: allow
     port: "{{ item }}"
     proto: tcp

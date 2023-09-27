@@ -1,0 +1,63 @@
+---
+- name: Create install directory
+  ansible.builtin.file:
+    path: "{{ speedtest_install_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Ensure that the InfluxDB database exists
+  block:
+    - name: Lookup the org ID
+      ansible.builtin.uri:
+        url: "http://{{ speedtest_influxdb_host }}:{{ speedtest_influxdb_port }}/api/v2/orgs?org={{ speedtest_influxdb_org }}"
+        method: GET
+        headers:
+          Authorization: "Token {{ speedtest_influxdb_admin_token }}"
+      register: speedtest_org_response
+      changed_when: false
+      failed_when: speedtest_org_response.json.orgs | length == 0
+
+    - name: Save org ID
+      ansible.builtin.set_fact:
+        speedtest_org_id: "{{ speedtest_org_response.json.orgs[0].id }}"
+
+    - name: Lookup the existing buckets
+      ansible.builtin.uri:
+        url: "http://{{ speedtest_influxdb_host }}:{{ speedtest_influxdb_port }}/api/v2/buckets?name={{ speedtest_influxdb_database }}"
+        method: GET
+        headers:
+          Authorization: "Token {{ speedtest_influxdb_admin_token }}"
+      register: speedtest_buckets_response
+      changed_when: false
+
+    - name: Create bucket
+      ansible.builtin.uri:
+        url: "http://{{ speedtest_influxdb_host }}:{{ speedtest_influxdb_port }}/api/v2/buckets"
+        method: POST
+        headers:
+          Authorization: "Token {{ speedtest_influxdb_admin_token }}"
+        body_format: json
+        body: "{ \"name\": \"{{ speedtest_influxdb_database }}\", \"orgID\": \"{{ speedtest_org_id }}\" }"
+        status_code: 201
+      when: speedtest_buckets_response.json.buckets | length == 0
+      register: speedtest_create_response
+      changed_when: speedtest_create_response.status == 201
+
+- name: Copy docker-compose template
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: "{{ speedtest_install_dir }}/docker-compose.yml"
+    mode: '0644'
+
+- name: Ensure stack is running
+  community.docker.docker_compose:
+    project_name: Speedtest
+    project_src: "{{ speedtest_install_dir }}"
+    state: present
+    pull: true
+
+- name: Cleanup stale Docker images
+  community.docker.docker_prune:
+    images: true
+    images_filters:
+      dangling: false

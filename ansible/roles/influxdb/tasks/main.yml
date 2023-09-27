@@ -1,12 +1,12 @@
 ---
 - name: Create install directory
-  file:
+  ansible.builtin.file:
     path: "{{ influxdb_install_dir }}"
     state: directory
     mode: '0755'
 
 - name: Create directories
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     mode: '0755'
@@ -15,26 +15,26 @@
     - "{{ influxdb_config_dir }}"
 
 - name: Copy docker-compose template
-  template:
+  ansible.builtin.template:
     src: docker-compose.yml.j2
     dest: "{{ influxdb_install_dir }}/docker-compose.yml"
     mode: '0644'
 
 - name: Ensure stack is running
-  docker_compose:
+  community.docker.docker_compose:
     project_name: InfluxDB
     project_src: "{{ influxdb_install_dir }}"
     state: present
-    pull: yes
+    pull: true
 
 - name: Cleanup stale Docker images
-  docker_prune:
-    images: yes
+  community.docker.docker_prune:
+    images: true
     images_filters:
       dangling: false
 
 - name: Ensure ports open on the firewall
-  ufw:
+  community.general.ufw:
     rule: allow
     port: "{{ influxdb_port }}"
     proto: "tcp"

@@ -1,12 +1,12 @@
 ---
 - name: Create installation directory
-  file:
+  ansible.builtin.file:
     path: "{{ grafana_install_dir }}"
     state: directory
     mode: '0775'
 
 - name: Create directories
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     mode: '0775'
@@ -20,40 +20,33 @@
     - "{{ grafana_dashboard_dir }}"
 
 - name: Copy datasource config
-  template:
+  ansible.builtin.template:
     src: datasource.yml.j2
     dest: "{{ grafana_datasource_dir }}/datasource.yml"
     mode: '0755'
-  register: datasource_config
+  notify: Restart Grafana
 
 - name: Copy docker-compose template
-  template:
+  ansible.builtin.template:
     src: docker-compose.yml.j2
     dest: "{{ grafana_install_dir }}/docker-compose.yml"
     mode: '0644'
 
 - name: Ensure stack is running
-  docker_compose:
+  community.docker.docker_compose:
     project_name: Grafana
     project_src: "{{ grafana_install_dir }}"
     state: present
-    pull: yes
-
-- name: Restart service when config has changed
-  docker_compose:
-    project_src: "{{ grafana_install_dir }}"
-    build: false
-    restarted: true
-  when: datasource_config.changed
+    pull: true
 
 - name: Cleanup stale Docker images
-  docker_prune:
-    images: yes
+  community.docker.docker_prune:
+    images: true
     images_filters:
       dangling: false
 
 - name: Ensure ports open on the firewall
-  ufw:
+  community.general.ufw:
     rule: allow
     port: "{{ grafana_port }}"
     proto: tcp

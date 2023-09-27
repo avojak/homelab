@@ -135,3 +135,4 @@ Issues & TODOs:
 
 [ ] Setup a different datastore for the Pi host that's building the templates so we don't take up disk space from VMs
 [ ] Unable to resize the boot volume for the arm64 templates
+[ ] Auto resize root volume: https://askubuntu.com/a/937351/919056

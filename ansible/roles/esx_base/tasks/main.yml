@@ -1,0 +1,12 @@
+---
+- name: Get current FQDN
+  ansible.builtin.shell: |
+    set -e -o pipefail
+    esxcli system hostname get | grep "  Fully Qualified Domain Name:" | cut -d':' -f2 | xargs
+  register: esx_base_fqdn_output
+  changed_when: false
+
+- name: Set FQDN
+  ansible.builtin.command: "esxcli system hostname set --fqdn {{ inventory_hostname }}"
+  when: esx_base_fqdn_output.stdout != inventory_hostname
+  changed_when: true

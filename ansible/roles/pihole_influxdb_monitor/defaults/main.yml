@@ -1,0 +1,10 @@
+---
+pihole_influxdb_monitor_version: latest
+pihole_influxdb_monitor_install_dir: /opt/pihole-influxdb-monitor
+
+pihole_influxdb_monitor_pihole_alias: pihole
+pihole_influxdb_monitor_pihole_address: http://pi.hole
+pihole_influxdb_monitor_influxdb_address: http://influxdb:8086
+pihole_influxdb_monitor_influxdb_org: my-org
+pihole_influxdb_monitor_influxdb_bucket: pihole
+pihole_influxdb_monitor_influxdb_create_bucket: false

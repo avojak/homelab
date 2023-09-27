@@ -1,3 +1,4 @@
+---
 prometheus_version: latest
 prometheus_port: 9090
 prometheus_username: admin
@@ -7,3 +8,6 @@ prometheus_password_salt: R@nd0mS@1t123456789012
 prometheus_install_dir: /opt/prometheus
 prometheus_config_dir: "{{ prometheus_install_dir }}/etc"
 prometheus_data_dir: "{{ prometheus_install_dir }}/data"
+prometheus_scrape_configs: []
+prometheus_vmware_exporter_instances: []
+prometheus_vmware_exporter_port: 9879

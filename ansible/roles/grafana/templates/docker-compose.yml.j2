@@ -15,3 +15,8 @@ services:
     volumes:
       - "{{ grafana_data_dir }}:/var/lib/grafana"
       - "{{ grafana_provisioning_dir }}:/etc/grafana/provisioning"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10mb"
+        max-file: "1"

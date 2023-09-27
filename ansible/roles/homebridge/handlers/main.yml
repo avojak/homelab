@@ -1,0 +1,6 @@
+---
+- name: Restart Homebridge
+  community.docker.docker_compose:
+    project_src: "{{ homebridge_install_dir }}"
+    build: false
+    restarted: true

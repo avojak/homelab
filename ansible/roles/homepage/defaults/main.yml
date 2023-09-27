@@ -1,0 +1,6 @@
+---
+homepage_version: latest
+homepage_install_dir: /opt/homepage
+homepage_config_dir: "{{ homepage_install_dir }}/config"
+homepage_port_http: 3000
+homepage_docker_hosts: []

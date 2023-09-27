@@ -1,6 +1,0 @@
-heimdall_version: latest
-heimdall_timezone: America/Chicago
-heimdall_port_http: 80
-heimdall_port_https: 443
-heimdall_install_dir: /opt/heimdall
-heimdall_config_dir: "{{ heimdall_install_dir }}/config"

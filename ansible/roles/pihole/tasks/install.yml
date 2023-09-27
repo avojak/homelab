@@ -1,15 +1,15 @@
 ---
 - name: Create install directory
-  file:
+  ansible.builtin.file:
     path: "{{ pihole_install_dir }}"
     state: directory
-    mode: 0755
+    mode: '755'
 
 - name: Create directories
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: directory
-    mode: 0777
+    mode: '777'
   with_items:
     - "{{ pihole_etc_pihole_dir }}"
     - "{{ pihole_etc_dnsmasqd_dir }}"
@@ -17,66 +17,54 @@
 # TODO: This seems to crash the application when the container restarts
 #       Contrary to what it seems, you can't just update this file...
 - name: Copy custom DNS list
-  template:
+  ansible.builtin.template:
     src: custom.list.j2
     dest: "{{ pihole_etc_pihole_dir }}/custom.list"
-    mode: 0644
-  notify: "Update gravity"
+    mode: '644'
+  notify: Update gravity
 
-- name: Ensure container is running
-  docker_container:
-    name: pihole
-    image: pihole/pihole:latest
-    state: started
-    restart: no
-    restart_policy: unless-stopped
-    pull: yes
-    ports:
-      - '{{ ansible_host }}:53:53/udp'
-      - '{{ ansible_host }}:53:53/tcp'
-      - '80:80/tcp'
-      - '443:443/tcp'
-    volumes:
-      - "{{ pihole_etc_pihole_dir }}:/etc/pihole/"
-      - "{{ pihole_etc_dnsmasqd_dir }}:/etc/dnsmasq.d/"
-    hostname: "{{ inventory_hostname }}"
-    env:
-      TZ: "{{ pihole_timezone }}"
-      WEBPASSWORD: "{{ pihole_web_password }}"
-      PIHOLE_DNS_: "{{ pihole_upstream_dns | join(';') }}"
-      TEMPERATUREUNIT: "{{ pihole_temp_unit }}"
-      DNSMASQ_LISTENING: "{{ pihole_dnsmasq }}"
-      FTLCONF_LOCAL_IPV4: "127.0.0.1"
-      DNS_FQDN_REQUIRED: "true"
-      DNSSEC: "false"
-      VIRTUAL_HOST: "{{ inventory_hostname }}"
+- name: Copy docker-compose template
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: "{{ pihole_install_dir }}/docker-compose.yml"
+    mode: '0644'
 
-# - name: Restart service when custom DNS list has changed
-#   docker_container:
-#     name: pihole
-#     restart: yes
-#   when: pihole_dns_list.changed
+- name: Ensure stack is running
+  community.docker.docker_compose:
+    project_name: Pi-hole
+    project_src: "{{ pihole_install_dir }}"
+    state: present
+    pull: true
+
+# - name: Restart service when config has changed
+#   community.docker.docker_compose:
+#     project_src: "{{ pihole_install_dir }}"
+#     build: false
+#     restarted: true
+#   when: pihole_setup_vars.changed
 
 - name: Wait for container to be ready
-  uri:
-    url: http://localhost
-  register: container_result
-  until: container_result.status == 200
+  ansible.builtin.uri:
+    url: http://localhost/admin/api.php
+  register: pihole_container_result
+  until: pihole_container_result.status == 200
   retries: 30
   delay: 5
 
-# Install adlists and domainlist
-- include_tasks: install-adlists.yml
-- include_tasks: install-domainlist.yml
+- name: Install ad lists
+  ansible.builtin.include_tasks: install-adlists.yml
+
+- name: Install domain lists
+  ansible.builtin.include_tasks: install-domainlist.yml
 
 - name: Cleanup stale Docker images
-  docker_prune:
-    images: yes
+  community.docker.docker_prune:
+    images: true
     images_filters:
       dangling: false
 
 - name: Ensure ports open on the firewall
-  ufw:
+  community.general.ufw:
     rule: allow
     port: "{{ item.port }}"
     proto: "{{ item.proto }}"

@@ -2,10 +2,11 @@
 collections:
   - name: community.general
   - name: community.docker
+  - name: lucasheld.uptime_kuma
 roles:
   - name: geerlingguy.docker
-    version: 5.2.0
-  - name: geerlingguy.docker_arm
-    version: 5.0.0
+    version: 6.2.0
+  # - name: geerlingguy.docker_arm
+  #   version: 5.0.0
   - name: geerlingguy.nodejs
     version: 6.0.0

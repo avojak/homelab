@@ -18,3 +18,8 @@ services:
       - "{{ traefik_dir_letsencrypt }}:/letsencrypt"
       - "{{ traefik_dir_dynamic_config }}:/dynamic_config"
       - "{{ traefik_installation_dir }}/traefik.yml:/etc/traefik/traefik.yml"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10mb"
+        max-file: "1"

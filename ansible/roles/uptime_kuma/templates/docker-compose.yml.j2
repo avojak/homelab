@@ -1,0 +1,16 @@
+---
+version: '3.3'
+services:
+  uptime-kuma:
+    image: "louislam/uptime-kuma:{{ uptime_kuma_version }}"
+    container_name: uptime-kuma
+    restart: always
+    ports:
+      - "{{ uptime_kuma_port }}:3001"
+    volumes:
+      - "{{ uptime_kuma_data_dir }}:/app/data"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10mb"
+        max-file: "1"

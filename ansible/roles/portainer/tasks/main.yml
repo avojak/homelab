@@ -1,37 +1,71 @@
 ---
 - name: Create install directory
-  file:
+  ansible.builtin.file:
     path: "{{ portainer_install_dir }}"
     state: directory
     mode: '0755'
 
 - name: Create data directory
-  file:
+  ansible.builtin.file:
     path: "{{ portainer_data_dir }}"
     state: directory
     mode: '0755'
 
 - name: Copy docker-compose template
-  template:
+  ansible.builtin.template:
     src: docker-compose.yml.j2
     dest: "{{ portainer_install_dir }}/docker-compose.yml"
     mode: '0644'
 
+- name: Copy password file
+  ansible.builtin.template:
+    src: portainer_password.j2
+    dest: "{{ portainer_data_dir }}/portainer_password"
+    mode: '0644'
+
 - name: Ensure stack is running
-  docker_compose:
+  community.docker.docker_compose:
     project_name: Portainer
     project_src: "{{ portainer_install_dir }}"
     state: present
-    pull: yes
+    pull: true
 
 - name: Cleanup stale Docker images
-  docker_prune:
-    images: yes
+  community.docker.docker_prune:
+    images: true
     images_filters:
       dangling: false
 
 - name: Ensure ports open on the firewall
-  ufw:
+  community.general.ufw:
     rule: allow
     port: "{{ portainer_port_https }}"
     proto: tcp
+
+- name: Wait for container to be ready
+  ansible.builtin.uri:
+    url: "http://localhost:{{ portainer_port_http }}/api/status"
+  register: portainer_container_result
+  until: portainer_container_result.status == 200
+  retries: 30
+  delay: 5
+
+- name: Fetch API token
+  block:
+    - name: Authenticate with the API
+      ansible.builtin.uri:
+        url: "http://localhost:{{ portainer_port_http }}/api/auth"
+        method: POST
+        body_format: json
+        body:
+          username: admin
+          password: "{{ portainer_password }}"
+      register: portainer_login_result
+      changed_when: false
+    - name: Save the token
+      ansible.builtin.set_fact:
+        portainer_token: "{{ portainer_login_result.json.jwt }}"
+
+- name: Create environments
+  ansible.builtin.include_tasks: create-environment.yml
+  with_items: "{{ portainer_environments }}"

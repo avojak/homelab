@@ -1,5 +1,5 @@
 ---
-version: '3.3'
+version: '3.5'
 services:
   prometheus:
     image: prom/prometheus:{{ prometheus_version }}
@@ -21,3 +21,19 @@ services:
       options:
         max-size: "10m"
         max-file: "10"
+{% for instance in prometheus_vmware_exporter_instances %}
+  prometheus-vmware-exporter-{{ instance.alias }}:
+    image: avojak/prometheus-vmware-exporter:latest
+    container_name: prometheus-vmware-exporter-{{ instance.alias }}
+    restart: unless-stopped
+    environment:
+      - "ESX_HOST={{ instance.host }}"
+      - "ESX_USERNAME={{ instance.username }}"
+      - "ESX_PASSWORD={{ instance.password }}"
+      - "ESX_LOG={{ instance.log_level }}"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "10"
+{% endfor %}

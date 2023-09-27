@@ -1,129 +1,78 @@
 ---
-# Run base role against all guests
-- hosts: guests
-  become: true
+# Run base roles against all ESXi hosts
+- name: Base configuration for all ESXi hosts
+  hosts: esxi
+  gather_facts: false
   roles:
-    - guest-base
+    - esx_base
 
-# Install Docker on ARM guests
-- hosts: guests:&arm64
+# Run base roles against all guests, including Docker setup
+- name: Base configuration for all guests
+  hosts: guests
   become: true
-  vars:
-    pip_package: python3-pip
-    docker_install_compose: true
   roles:
-    - geerlingguy.pip
-    - geerlingguy.docker_arm
-
-# Install Docker on x86 guests
-- hosts: guests:&amd64
-  become: true
-  vars:
-    pip_package: python3-pip
-    docker_install_compose: true
-    pip_install_packages:
-      - name: docker
-      - name: docker-compose
-  roles:
+    - guest_base
     - geerlingguy.pip
     - geerlingguy.docker
-
-# Install Docker-based monitoring on all guests
-- hosts: guests
-  become: true
-  vars_files:
-    - roles/influxdb/defaults/main.yml
-    - vars/influxdb.yml
-  roles:
     - telegraf
-    - docker-monitoring
+    - docker_monitoring
 
 # Setup Pi-holes
-- hosts: piholes
+- name: Configure Pi-holes
+  hosts: piholes
   become: true
   serial: 1 # Prevent a total loss of DNS on the network
-  vars_files:
-    - vars/pihole.yml
   roles:
     - pihole
 
-# Install homelab proxy & routing tools
-- hosts: homelab-prx
+# Traefik
+- name: Install Traefik
+  hosts: plausible.vojak.cloud,plex.vojak.cloud,routing.vojak.cloud,homebridge.vojak.cloud,monitoring.vojak.cloud
   become: true
-  vars_files:
-    - vars/cloudflare-ddns.yml
-    - vars/traefik.yml
-    - vars/heimdall.yml
-    # Following variables referenced by Traefik for routing
-    - roles/plex/defaults/main.yml
-    - vars/plex.yml
-    - roles/plausible/defaults/main.yml
-    - vars/plausible.yml
-    - roles/grafana/defaults/main.yml
-    - vars/grafana.yml
-    - roles/prometheus/defaults/main.yml
-    - vars/prometheus.yml
-    - roles/influxdb/defaults/main.yml
-    - vars/influxdb.yml
-    - roles/portainer/defaults/main.yml
-    - vars/portainer.yml
-    - roles/homebridge/defaults/main.yml
-    - vars/homebridge.yml
-    - roles/scrypted/defaults/main.yml
-    - vars/scrypted.yml
-    - roles/uptime-kuma/defaults/main.yml
   roles:
-    - cloudflare-ddns
     - traefik
-    - heimdall
 
-# Installing homelab monitoring tools
-- hosts: homelab-mon
+# Plausible
+- name: Configure Plausible
+  hosts: plausible.vojak.cloud
   become: true
-  vars_files:
-    - vars/influxdb.yml
-    - vars/grafana.yml
-    - vars/portainer.yml
-    # - vars/un-poller.yml
-    - vars/prometheus.yml
-    - vars/prometheus-vmware-exporter.yml
-    # - vars/speedflux.yml
-    - vars/docker-speedtest-influxdbv2.yml
   roles:
-    - influxdb
-    - grafana
-    - portainer
-    - uptime-kuma
-    # - un-poller
-    - prometheus
-    - prometheus-vmware-exporter
-    # - speedflux
-    - docker-speedtest-influxdbv2
+    - plausible
 
-# Primary homelab applications
-- hosts: homelab-app-01
+# Plex
+- name: Configure Plex
+  hosts: plex.vojak.cloud
   become: true
-  vars:
-    nodejs_version: "16.x" # Needs to match the major version used by Homebridge
-  vars_files:
-    - vars/pihole.yml
-    - vars/homebridge.yml
-    - vars/scrypted.yml
-    - vars/jellyfin.yml
-    - vars/plausible.yml
-    # - vars/plex.yml
+  roles:
+    - plex
+
+# Routing applications and dashboard
+- name: Configuring routing services
+  hosts: routing.vojak.cloud
+  become: true
+  roles:
+    - cloudflare_ddns
+    - homepage
+
+# Homebridge and smart home
+- name: Configure Homebridge
+  hosts: homebridge.vojak.cloud
+  become: true
   roles:
     - geerlingguy.nodejs
     - homebridge
     - scrypted
-    - jellyfin
-    - plausible
-    # - plex
 
-# Plex
-- hosts: homelab-plex
+# Prometheus, Grafana, InfluxDB, and other monitoring tools
+- name: Configure monitoring services
+  hosts: monitoring.vojak.cloud
   become: true
-  vars_files:
-    - vars/plex.yml
   roles:
-    - plex
+    - influxdb
+    - grafana
+    - portainer
+    - uptime_kuma
+    - prometheus
+    - pihole_influxdb_monitor
+    - speedtest
+    # - un-poller

@@ -6,10 +6,15 @@ services:
     container_name: portainer
     restart: always
     command:
-      - "--admin-password='{{ portainer_password | string | password_hash('bcrypt', portainer_password_salt) | replace('$', '$$') }}'"
+      - "--admin-password-file=/data/portainer_password"
     ports:
       - "{{ portainer_port_http }}:9000"
       - "{{ portainer_port_https }}:9443"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - "{{ portainer_data_dir }}:/data"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10mb"
+        max-file: "1"

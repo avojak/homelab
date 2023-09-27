@@ -1,41 +1,46 @@
 ---
 - name: Create install directory
-  file:
+  ansible.builtin.file:
     path: "{{ plausible_install_dir }}"
     state: directory
     mode: '0755'
 
 - name: Create service directories
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     mode: '0755'
   with_items:
-    - "{{ plausible_postgres_data_dir }}"
     - "{{ plausible_clickhouse_dir }}"
     - "{{ plausible_clickhouse_event_dir }}"
 
+- name: Create Postgres directory
+  ansible.builtin.file:
+    path: "{{ plausible_postgres_data_dir }}"
+    state: directory
+    mode: '0700'
+
 - name: Copy docker-compose template
-  template:
+  ansible.builtin.template:
     src: docker-compose.yml.j2
     dest: "{{ plausible_install_dir }}/docker-compose.yml"
     mode: '0644'
 
 - name: Ensure stack is running
-  docker_compose:
+  community.docker.docker_compose:
     project_name: Plausible Analytics
     project_src: "{{ plausible_install_dir }}"
     state: present
-    pull: yes
+    pull: true
 
 - name: Cleanup stale Docker images
-  docker_prune:
-    images: yes
+  community.docker.docker_prune:
+    images: true
     images_filters:
       dangling: false
 
 - name: Ensure ports open on the firewall
-  ufw:
+  community.general.ufw:
     rule: allow
     port: "{{ plausible_port_http }}"
     proto: tcp

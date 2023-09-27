@@ -1,0 +1,6 @@
+---
+- name: Restart Homepage
+  community.docker.docker_compose:
+    project_src: "{{ homepage_install_dir }}"
+    build: false
+    restarted: true

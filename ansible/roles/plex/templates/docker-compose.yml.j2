@@ -18,8 +18,13 @@ services:
     environment:
       - "TZ={{ plex_timezone }}"
       - "PLEX_CLAIM={{ plex_claim_token }}"
-      - "ADVERTISE_IP=http://{{ hostvars['homelab-mon'].ansible_host }}:{{ plex_port_http }}/"
+      - "ADVERTISE_IP=http://{{ plex_ip_address }}:{{ plex_port_http }}/"
     volumes:
       - "{{ plex_database_dir }}:/config"
       - "{{ plex_transcode_dir }}:/transcode"
       - "{{ plex_local_nas_mount_path }}:/data"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10mb"
+        max-file: "1"

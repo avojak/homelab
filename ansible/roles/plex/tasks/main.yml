@@ -1,3 +1,6 @@
 ---
-- include_tasks: prerequisites.yml
-- include_tasks: install.yml
+- name: Configure prerequisites
+  ansible.builtin.include_tasks: prerequisites.yml
+
+- name: Install Plex
+  ansible.builtin.include_tasks: install.yml

@@ -1,4 +1,0 @@
-speedflux_influxdb_address: "{{ hostvars['homelab-mon'].ansible_host }}:{{ influxdb_port }}"
-speedflux_influxdb_org: "{{ influxdb_org }}"
-speedflux_influxdb_admin_token: "{{ influxdb_admin_token }}"
-speedflux_influxdb_verify_ssl: False

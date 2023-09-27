@@ -1,0 +1,21 @@
+---
+version: '3.3'
+services:
+  pihole-influxdb-monitor:
+    image: "avojak/pihole-influxdb:{{ pihole_influxdb_monitor_version }}"
+    container_name: pihole-influxdb-monitor
+    restart: unless-stopped
+    environment:
+      - "PIHOLE_ALIAS={{ pihole_influxdb_monitor_pihole_alias }}"
+      - "PIHOLE_ADDRESS={{ pihole_influxdb_monitor_pihole_address }}"
+      - "PIHOLE_TOKEN={{ pihole_influxdb_monitor_pihole_token }}"
+      - "INFLUXDB_ADDRESS={{ pihole_influxdb_monitor_influxdb_address }}"
+      - "INFLUXDB_ORG={{ pihole_influxdb_monitor_influxdb_org }}"
+      - "INFLUXDB_TOKEN={{ pihole_influxdb_monitor_influxdb_token }}"
+      - "INFLUXDB_BUCKET={{ pihole_influxdb_monitor_influxdb_bucket }}"
+      - "INFLUXDB_CREATE_BUCKET={{ pihole_influxdb_monitor_influxdb_create_bucket }}"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10mb"
+        max-file: "1"

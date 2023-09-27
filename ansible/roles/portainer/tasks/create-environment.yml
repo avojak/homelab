@@ -1,0 +1,34 @@
+---
+- name: Check if environment already exists
+  ansible.builtin.uri:
+    url: "http://localhost:{{ portainer_port_http }}/api/endpoints?name={{ item.name | urlencode }}"
+    method: GET
+    headers:
+      Authorization: "Bearer {{ portainer_token }}"
+  changed_when: false
+  register: portainer_environment_check
+
+- name: Delete environment if configuration has changed
+  ansible.builtin.uri:
+    url: "http://localhost:{{ portainer_port_http }}/api/endpoints/{{ portainer_environment_check.json[0].Id }}"
+    method: DELETE
+    headers:
+      Authorization: "Bearer {{ portainer_token }}"
+    status_code: 204
+  when:
+    - portainer_environment_check.json | length == 1
+    - portainer_environment_check.json[0].URL != item.url
+  register: portainer_environment_deleted
+
+- name: Create environment
+  ansible.builtin.uri:
+    url: "http://localhost:{{ portainer_port_http }}/api/endpoints"
+    method: POST
+    body_format: form-urlencoded
+    body:
+      Name: "{{ item.name }}"
+      EndpointCreationType: 1
+      URL: "{{ item.url }}"
+    headers:
+      Authorization: "Bearer {{ portainer_token }}"
+  when: (portainer_environment_check.json | length == 0) or portainer_environment_deleted.changed

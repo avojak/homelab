@@ -1,8 +1,15 @@
 telegraf_version: latest
 telegraf_host_etc: /etc
 telegraf_host_proc: /proc
+telegraf_host_proc_mount_info: /proc/1
 telegraf_host_sys: /sys
 telegraf_host_var: /var
 telegraf_host_run: /run
-telegraf_host_mnt_prefix: /mnt
+telegraf_host_mnt_prefix: /hostfs
 telegraf_install_dir: /opt/telegraf
+
+telegraf_output_influxdb_host: influxdb.example.com
+telegraf_output_influxdb_port: 8086
+telegraf_output_influxdb_admin_token: my-super-secret-auth-token
+telegraf_output_influxdb_org: my-org
+telegraf_output_influxdb_bucket: my-bucket
