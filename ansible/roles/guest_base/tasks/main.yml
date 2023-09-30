@@ -53,6 +53,12 @@
     name: fail2ban
     state: started
 
+- name: Disable password auth for SSH
+  ansible.builtin.template:
+    src: disablePasswordAuth.j2
+    dest: /etc/ssh/sshd_config.d/disablePasswordAuth.conf
+  notify: Restart sshd
+
 - name: Check if the partition can be expanded
   ansible.builtin.command: "growpart {{ filesystem_device }} {{ filesystem_device_number }} --dry-run"
   changed_when: false
