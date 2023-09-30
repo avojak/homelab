@@ -82,16 +82,18 @@ In following with Ansible principles, this command can be run repeatedly to ensu
 
 ## Landscape
 
-| Physical Host | Model | Specs | OS | Alias |
+![Homelab Architecture](./documentation/Homelab%20Architecture.png)
+
+<!-- | Physical Host | Model | Specs | OS | Alias |
 | ------------- | ----- | ----- | -- | ----- |
 | Mac mini | Late 2012 (6,2) | Quad-core i7-3720QM @ 2.6GHz, 16 GB RAM | ESXi 7.0 | `esx-mac-01` |
 | Mac mini | Late 2012 (6,2) | Quad-core i7-3720QM @ 2.6GHz, 16 GB RAM | ESXi 7.0 | `esx-mac-02` |
 | Luna Design | DNK-H | Hexa-core i5-9400 @ 2.9 GHz, 32 GB RAM| ESXi 6.7.0* | `esx-luna-01` |
 | Raspberry Pi | Model 4B | Quad-core ARM Cortex-A72, 8 GB RAM | ESXi 7.0 |  `esx-rpi-01` |
-| Raspberry Pi | Model 4B | Quad-core ARM Cortex-A72, 4 GB RAM | ESXi 7.0 |  `esx-rpi-02` |
+| Raspberry Pi | Model 4B | Quad-core ARM Cortex-A72, 4 GB RAM | ESXi 7.0 |  `esx-rpi-02` | -->
 <!-- | Lenovo | W540 | Quad-core i7-4800MQ @ 2.7GHz, 16 GB RAM | ESXi 6.7.0 U3 | `esx-lvo-01` | -->
 
-_\* Patched with RTL8111 driver (See: [Installing ESXi for Realtek 8111 NIC](https://avojak.com/blog/2020/12/19/installing-esxi-for-realtek-8111-nic/))_
+<!-- _\* Patched with RTL8111 driver (See: [Installing ESXi for Realtek 8111 NIC](https://avojak.com/blog/2020/12/19/installing-esxi-for-realtek-8111-nic/))_
 
 
 | Physical Host Alias (IP) | Virtual Host (IP) | Guest OS | Software |
@@ -101,7 +103,7 @@ _\* Patched with RTL8111 driver (See: [Installing ESXi for Realtek 8111 NIC](htt
 | `esx-luna-01` (192.168.1.41) | `homelab-plex` (192.168.1.130) | [Ubuntu Server 22.04 (amd64)](./packer/ubuntu-22.04-server-amd64/) | Plex (`:32400`) |
 | `esx-rpi-01` (192.168.1.230) | `homelab-prx` (192.168.1.150) | [Ubuntu Server 22.04 (arm64)](./packer/ubuntu-22.04-server-arm64/) | Traefik (`:80`, `:443`, `:8081`)<br>Cloudflare DDNS<br>Heimdall (`:8080`, `:8443`) |
 | `esx-rpi-02` (192.168.1.22) | `pihole-01` (192.168.1.153) | [Ubuntu Server 22.04 (arm64)](./packer/ubuntu-22.04-server-arm64/) | Pi-hole (`:53`, `:80`) |
-|  | `pihole-02` (192.168.1.131) | [Ubuntu Server 22.04 (arm64)](./packer/ubuntu-22.04-server-arm64/) | Pi-hole (`:53`, `:80`) |
+|  | `pihole-02` (192.168.1.131) | [Ubuntu Server 22.04 (arm64)](./packer/ubuntu-22.04-server-arm64/) | Pi-hole (`:53`, `:80`) | -->
 <!-- | `esx-lvo-01` (192.168.1.112) | `homelab-app-01` (192.168.1.220) | [Ubuntu Server 22.04 (amd64)](./packer/ubuntu-22.04-server-amd64/) |  | -->
 
 <!-- ## Pi-hole Hosts
