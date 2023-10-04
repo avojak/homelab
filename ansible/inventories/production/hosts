@@ -2,6 +2,8 @@ all:
   hosts:
     esx-asus-01.vojak.cloud:
       ansible_host: 192.168.1.112
+    esx-mac-01.vojak.cloud:
+      ansible_host: 192.168.1.52
     esx-mac-02.vojak.cloud:
       ansible_host: 192.168.1.64
     esx-mac-03.vojak.cloud:
@@ -27,6 +29,7 @@ all:
     esxi:
       hosts:
         esx-asus-01.vojak.cloud:
+        esx-mac-01.vojak.cloud:
         esx-mac-02.vojak.cloud:
         esx-mac-03.vojak.cloud:
         esx-mac-04.vojak.cloud:

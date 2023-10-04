@@ -89,6 +89,11 @@ pihole_adlists:
   - address: "https://raw.githubusercontent.com/hectorm/hmirror/master/data/adaway.org/list.txt"
     comment: "AdAway"
 
+# Types:
+#   0 = exact whitelist
+#   1 = exact blacklist
+#   2 = regex whitelist
+#   3 = regex blacklist
 pihole_domainlist:
   - domain: "(\\.|^)plausible\\.io$"
     type: 2
@@ -107,11 +112,13 @@ pihole_domainlist:
     type: 1
   - domain: "events.ads.vungle.com"
     type: 1
+  - domain: "log.samsunghrm.com"
+    type: 1
 
 pihole_custom_dns_records:
   # ESXi hosts - route to Traefik to handle TLS
-  # - hostname: "esx-mac-01.{{ homelab_domain }}"
-  #   ip_addr: "{{ hostvars['routing.vojak.cloud'].ansible_host }}"
+  - hostname: "esx-mac-01.{{ homelab_domain }}"
+    ip_addr: "{{ hostvars['routing.vojak.cloud'].ansible_host }}"
   - hostname: "esx-mac-02.{{ homelab_domain }}"
     ip_addr: "{{ hostvars['routing.vojak.cloud'].ansible_host }}"
   - hostname: "esx-mac-03.{{ homelab_domain }}"
@@ -262,6 +269,12 @@ prometheus_password_salt: "{{ vault_prometheus_password_salt }}"
 # Prometheus VMWare Exporter
 #
 prometheus_vmware_exporter_instances:
+  - alias: esx-mac-01
+    host: "{{ hostvars['esx-mac-01.vojak.cloud'].ansible_host }}"
+    username: "{{ vault_esxi_username }}"
+    password: "{{ vault_esxi_password }}"
+    export_port: 9511
+    log_level: info
   - alias: esx-mac-02
     host: "{{ hostvars['esx-mac-02.vojak.cloud'].ansible_host }}"
     username: "{{ vault_esxi_username }}"

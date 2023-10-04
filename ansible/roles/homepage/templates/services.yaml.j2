@@ -7,6 +7,10 @@
         href: https://{{ hostvars['esx-asus-01.vojak.cloud'].ansible_host }}
         ping: https://{{ hostvars['esx-asus-01.vojak.cloud'].ansible_host }}
         icon: vmware-esxi
+    - esx-mac-01:
+        href: https://{{ hostvars['esx-mac-01.vojak.cloud'].ansible_host }}
+        ping: https://{{ hostvars['esx-mac-01.vojak.cloud'].ansible_host }}
+        icon: vmware-esxi
     - esx-mac-02:
         href: https://{{ hostvars['esx-mac-02.vojak.cloud'].ansible_host }}
         ping: https://{{ hostvars['esx-mac-02.vojak.cloud'].ansible_host }}
