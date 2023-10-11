@@ -1,0 +1,19 @@
+---
+version: '3.8'
+services:
+  minecraft:
+    image: "itzg/minecraft-server:{{ minecraft_version }}"
+    container_name: minecraft
+    tty: true
+    stdin_open: true
+    ports:
+      - "{{ minecraft_port }}:25565"
+    environment:
+      - "EULA=TRUE"
+    volumes:
+      - "{{ minecraft_data_dir }}:/data"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10mb"
+        max-file: "1"

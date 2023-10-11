@@ -1,4 +1,28 @@
 ---
+- name: Get system version
+  block:
+    - name: Get full system version
+      ansible.builtin.shell: |
+        set -e -o pipefail
+        esxcli system version get | grep "Version:" | cut -d':' -f2 | xargs
+      register: esx_version_output
+      changed_when: false
+
+    - name: Save full ESXi version
+      ansible.builtin.set_fact:
+        esx_version: "{{ esx_version_output.stdout }}"
+
+    - name: Get system major version
+      ansible.builtin.shell: |
+        set -e -o pipefail
+        esxcli system version get | grep "Version:" | cut -d':' -f2 | xargs | cut -d'.' -f1
+      register: esx_major_version_output
+      changed_when: false
+
+    - name: Save ESXi major version
+      ansible.builtin.set_fact:
+        esx_major_version: "{{ esx_major_version_output.stdout }}"
+
 - name: Get current FQDN
   ansible.builtin.shell: |
     set -e -o pipefail
@@ -10,3 +34,30 @@
   ansible.builtin.command: "esxcli system hostname set --fqdn {{ inventory_hostname }}"
   when: esx_base_fqdn_output.stdout != inventory_hostname
   changed_when: true
+
+- name: Configure ntpd
+  block:
+    - name: Get current ntpd server settings
+      ansible.builtin.shell: |
+        set -e -o pipefail
+        esxcli system ntp get | grep "Servers:" | cut -d':' -f2 | xargs
+      register: ntpd_servers_output
+      changed_when: false
+
+    - name: Set ntpd server
+      ansible.builtin.command: "esxcli system ntp set -s {{ ntpd_server }}"
+      when: ntpd_servers_output.stdout != ntpd_server
+      changed_when: true
+
+    - name: Get current ntpd enabled setting
+      ansible.builtin.shell: |
+        set -e -o pipefail
+        esxcli system ntp get | grep "Enabled:" | cut -d':' -f2 | xargs
+      register: ntpd_enabled_output
+      changed_when: false
+
+    - name: Set ntpd enabled
+      ansible.builtin.command: "esxcli system ntp set -e true"
+      when: ntpd_enabled_output.stdout != "true"
+      changed_when: true
+  when: esx_major_version == "7" # The ntp subcommand was introduced in version 7.x

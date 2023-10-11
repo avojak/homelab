@@ -47,3 +47,11 @@ provider "esxi" {
   esxi_username = var.esxi_username
   esxi_password = var.esxi_password
 }
+
+provider "esxi" {
+  alias         = "esx_mac_05"
+  esxi_hostname = "192.168.1.107"
+  esxi_hostport = var.esxi_hostport
+  esxi_username = var.esxi_username
+  esxi_password = var.esxi_password
+}

@@ -46,6 +46,13 @@
   roles:
     - plex
 
+# Minecraft
+- name: Configure Minecraft
+  hosts: minecraft.vojak.cloud
+  become: true
+  roles:
+    - minecraft
+
 # Routing applications and dashboard
 - name: Configuring routing services
   hosts: routing.vojak.cloud

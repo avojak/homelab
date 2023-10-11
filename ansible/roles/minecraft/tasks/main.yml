@@ -1,0 +1,37 @@
+---
+- name: Create install directory
+  ansible.builtin.file:
+    path: "{{ minecraft_install_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Create data directory
+  ansible.builtin.file:
+    path: "{{ minecraft_data_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Copy docker-compose template
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: "{{ minecraft_install_dir }}/docker-compose.yml"
+    mode: '0644'
+
+- name: Ensure stack is running
+  community.docker.docker_compose:
+    project_name: Minecraft
+    project_src: "{{ minecraft_install_dir }}"
+    state: present
+    pull: true
+
+- name: Cleanup stale Docker images
+  community.docker.docker_prune:
+    images: true
+    images_filters:
+      dangling: false
+
+- name: Ensure port open on the firewall
+  community.general.ufw:
+    rule: allow
+    port: "{{ minecraft_port }}"
+    proto: tcp

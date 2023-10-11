@@ -125,6 +125,8 @@ pihole_custom_dns_records:
     ip_addr: "{{ hostvars['routing.vojak.cloud'].ansible_host }}"
   - hostname: "esx-mac-04.{{ homelab_domain }}"
     ip_addr: "{{ hostvars['routing.vojak.cloud'].ansible_host }}"
+  - hostname: "esx-mac-05.{{ homelab_domain }}"
+    ip_addr: "{{ hostvars['routing.vojak.cloud'].ansible_host }}"
   - hostname: "esx-asus-01.{{ homelab_domain }}"
     ip_addr: "{{ hostvars['routing.vojak.cloud'].ansible_host }}"
 #   # Virtual hosts
@@ -150,6 +152,8 @@ pihole_custom_dns_records:
     ip_addr: "{{ hostvars['homebridge.vojak.cloud'].ansible_host }}"
 #   - hostname: "plex.{{ homelab_domain }}"
 #     ip_addr: "{{ hostvars['homelab-plex'].ansible_host }}"
+  - hostname: "minecraft.{{ homelab_domain }}"
+    ip_addr: "{{ hostvars['minecraft.vojak.cloud'].ansible_host }}"
 
 #
 # Homebridge
@@ -221,6 +225,7 @@ scrypted_device_ports:
   - 41288 # Garage Camera
   - 48096 # Front Yard Camera
   - 39755 # Laundry Room Camera
+  - 34941 # Garage Sensor
 
 #
 # Portainer
@@ -243,6 +248,8 @@ portainer_environments:
     url: "tcp://{{ hostvars['plex.vojak.cloud'].ansible_host }}:2375"
   - name: Routing
     url: "tcp://{{ hostvars['routing.vojak.cloud'].ansible_host }}:2375"
+  - name: Minecraft
+    url: "tcp://{{ hostvars['minecraft.vojak.cloud'].ansible_host }}:2375"
 
 #
 # InfluxDB
@@ -292,6 +299,12 @@ prometheus_vmware_exporter_instances:
     username: "{{ vault_esxi_username }}"
     password: "{{ vault_esxi_password }}"
     export_port: 9514
+    log_level: info
+  - alias: esx-mac-05
+    host: "{{ hostvars['esx-mac-04.vojak.cloud'].ansible_host }}"
+    username: "{{ vault_esxi_username }}"
+    password: "{{ vault_esxi_password }}"
+    export_port: 9516
     log_level: info
   - alias: esx-asus-01
     host: "{{ hostvars['esx-asus-01.vojak.cloud'].ansible_host }}"
@@ -370,7 +383,7 @@ plex_nas_mount_path: "/volume1/Plex"
 #
 # Homepage
 #
-homepage_version: v0.6.20
+homepage_version: v0.7.3
 homepage_port_http: 3000
 homepage_docker_hosts:
   - "homebridge.{{ homelab_domain }}"
@@ -379,6 +392,7 @@ homepage_docker_hosts:
   - "pihole-02.{{ homelab_domain }}"
   - "plausible.{{ homelab_domain }}"
   - "plex.{{ homelab_domain }}"
+  - "minecraft.{{ homelab_domain }}"
 
 #
 # Cloudflare DDNS
@@ -386,3 +400,8 @@ homepage_docker_hosts:
 cloudflare_ddns_api_key: "{{ vault_cloudflare_ddns_api_key }}"
 cloudflare_ddns_zone: "{{ homelab_domain }}"
 cloudflare_ddns_subdomain: homelab
+
+#
+# Minecraft
+#
+minecraft_port: 25565

@@ -37,6 +37,9 @@ traefik_services:
   - name: plausible
     hostname: plausible.vojak.cloud
     url: "http://{{ hostvars['plausible.vojak.cloud'].ansible_host }}:{{ plausible_port_http }}"
+  - name: minecraft
+    hostname: minecraft.vojak.cloud
+    url: "http://{{ hostvars['minecraft.vojak.cloud'].ansible_host }}:{{ minecraft_port }}"
   # ESXi hosts routed through Traefik for HTTPS
   - name: esx-mac-01
     hostname: esx-mac-01.vojak.cloud
@@ -53,6 +56,10 @@ traefik_services:
   - name: esx-mac-04
     hostname: esx-mac-04.vojak.cloud
     url: "https://{{ hostvars['esx-mac-04.vojak.cloud'].ansible_host }}"
+    servers_transport: insecureSkipVerifyTransport
+  - name: esx-mac-05
+    hostname: esx-mac-05.vojak.cloud
+    url: "https://{{ hostvars['esx-mac-05.vojak.cloud'].ansible_host }}"
     servers_transport: insecureSkipVerifyTransport
   - name: esx-asus-01
     hostname: esx-asus-01.vojak.cloud

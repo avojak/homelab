@@ -1,0 +1,5 @@
+---
+minecraft_version: stable
+minecraft_port: 25565
+minecraft_install_dir: /opt/minecraft
+minecraft_data_dir: "{{ minecraft_install_dir }}/data"
