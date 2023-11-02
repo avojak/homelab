@@ -19,3 +19,4 @@ pihole_adlists: []
   #   comment: "Migrated from /etc/pihole/adlists.list"
 pihole_domainlist: []
 pihole_custom_dns_records: []
+pihole_block_icloud_private_relay: false

@@ -169,7 +169,7 @@ homebridge_plugins:
   - name: homebridge-tplink-smarthome
     version: '7.0.1'
   - name: homebridge-myq
-    version: '3.4.1'
+    version: '3.4.3'
   - name: homebridge-tcc
     version: '0.2.34'
   - name: homebridge-prometheus-exporter

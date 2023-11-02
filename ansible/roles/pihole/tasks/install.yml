@@ -23,6 +23,13 @@
     mode: '644'
   notify: Update gravity
 
+- name: Copy FTL config
+  ansible.builtin.template:
+    src: pihole-FTL.conf.j2
+    dest: "{{ pihole_etc_pihole_dir }}/pihole-FTL.conf"
+    mode: '644'
+  notify: Restart container
+
 - name: Copy docker-compose template
   ansible.builtin.template:
     src: docker-compose.yml.j2
@@ -34,7 +41,7 @@
     project_name: Pi-hole
     project_src: "{{ pihole_install_dir }}"
     state: present
-    pull: true
+    pull: false
 
 # - name: Restart service when config has changed
 #   community.docker.docker_compose:

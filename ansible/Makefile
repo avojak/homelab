@@ -4,7 +4,7 @@ init: $(REQUIREMENTS_FILE)
 	ansible-galaxy install -r $< --force
 
 install:
-	ansible-playbook play.yml --vault-password-file .vault-password-file --inventory inventories/production --limit routing.vojak.cloud
+	ansible-playbook play.yml --vault-password-file .vault-password-file --inventory inventories/production
 
 lint:
 	ansible-lint

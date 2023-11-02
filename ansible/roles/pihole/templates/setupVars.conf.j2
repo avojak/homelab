@@ -1,6 +1,6 @@
 INSTALL_WEB_INTERFACE=true
 WEBPASSWORD={{ pihole_api_key }}
-TEMPERATUREUNIT={{ pihole_temp_unit|upper }}
+TEMPERATUREUNIT={{ pihole_temp_unit | upper }}
 {% for ip_addr in pihole_upstream_dns %}
 PIHOLE_DNS_{{ loop.index }}={{ ip_addr }}
 {% endfor %}
