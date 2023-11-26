@@ -167,9 +167,7 @@ homebridge_bridge_username: CC:22:3D:E3:CE:30
 homebridge_timezone: "{{ homelab_timezone }}"
 homebridge_plugins:
   - name: homebridge-tplink-smarthome
-    version: '7.0.1'
-  - name: homebridge-myq
-    version: '3.4.3'
+    version: '8.0.1'
   - name: homebridge-tcc
     version: '0.2.34'
   - name: homebridge-prometheus-exporter
@@ -182,9 +180,6 @@ homebridge_platforms:
     deviceTypes:
       - plug
       - bulb
-  - platform: 'myQ'
-    email: "{{ homebridge_myq_email }}"
-    password: "{{ homebridge_myq_password }}"
   - platform: 'tcc'
     name: 'Thermostat'
     username: "{{ homebridge_honeywell_tcc_username }}"
@@ -208,8 +203,6 @@ homebridge_plugin_ports:
   - { port: 47988, proto: udp } # TPLink Smart Home (manually set above)
   - { port: 36123, proto: tcp } # PrometheusExporter (manually set above)
 
-homebridge_myq_email: "{{ vault_homebridge_myq_email }}"
-homebridge_myq_password: "{{ vault_homebridge_myq_password }}"
 homebridge_honeywell_tcc_username: "{{ vault_homebridge_honeywell_tcc_username }}"
 homebridge_honeywell_tcc_password: "{{ vault_homebridge_honeywell_tcc_password }}"
 

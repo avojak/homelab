@@ -2,7 +2,7 @@
 version: '3.3'
 services:
   homebridge:
-    image: "oznu/homebridge:{{ homebridge_version }}"
+    image: "homebridge/homebridge:{{ homebridge_version }}"
     container_name: homebridge
     restart: always
     environment:
