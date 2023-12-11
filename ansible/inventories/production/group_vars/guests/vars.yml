@@ -114,6 +114,8 @@ pihole_domainlist:
     type: 1
   - domain: "log.samsunghrm.com"
     type: 1
+  - domain: "cdn.jsdelivr.net"
+    type: 0
 
 pihole_custom_dns_records:
   # ESXi hosts - route to Traefik to handle TLS
