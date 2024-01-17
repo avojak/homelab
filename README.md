@@ -138,3 +138,23 @@ Issues & TODOs:
 [ ] Setup a different datastore for the Pi host that's building the templates so we don't take up disk space from VMs
 [ ] Unable to resize the boot volume for the arm64 templates
 [ ] Auto resize root volume: https://askubuntu.com/a/937351/919056
+
+----
+
+Update ESXi hosts:
+
+https://www.vinchin.com/vm-tips/esxi-update-upgrade.html
+
+```bash
+esxcli system maintenanceMode set -e true
+esxcli software vib update -d /vmfs/volumes/datastore1/VMware-ESXi-7.0U3o-22348816-depot.zip --dry-run
+esxcli software vib update -d /vmfs/volumes/datastore1/VMware-ESXi-7.0U3o-22348816-depot.zip
+esxcli system shutdown reboot -r "ESXi system upgrade"
+esxcli system maintenanceMode set -e false
+vmware -v
+```
+
+```bash
+esxcli software profile update -p ESXi-7.0U3o-22348816-standard -d https://hostupdate.vmware.com/sof
+tware/VUM/PRODUCTION/main/vmw-depot-index.xml
+```

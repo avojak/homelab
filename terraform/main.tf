@@ -81,15 +81,3 @@ module "monitoring" {
   numvcpus       = 8
   ova_file       = var.ova_files["ubuntu"]["amd64"]
 }
-
-module "minecraft" {
-  source = "./modules/appserver"
-  providers = {
-    esxi = esxi.esx_mac_05
-  }
-  guest_name     = "minecraft"
-  boot_disk_size = 100
-  memsize        = 16
-  numvcpus       = 8
-  ova_file       = var.ova_files["ubuntu"]["amd64"]
-}

@@ -28,7 +28,7 @@ telegraf_output_influxdb_bucket: "{{ influxdb_bucket }}"
 # Synology NAS
 #
 synology_nas_host: "{{ nas_host }}"
-synology_nas_port: 5000
+synology_nas_port: 5001
 synology_nas_username: "{{ vault_synology_nas_username }}"
 synology_nas_password: "{{ vault_synology_nas_password }}"
 
@@ -129,6 +129,8 @@ pihole_custom_dns_records:
     ip_addr: "{{ hostvars['routing.vojak.cloud'].ansible_host }}"
   - hostname: "esx-mac-05.{{ homelab_domain }}"
     ip_addr: "{{ hostvars['routing.vojak.cloud'].ansible_host }}"
+  - hostname: "esx-mac-06.{{ homelab_domain }}"
+    ip_addr: "{{ hostvars['routing.vojak.cloud'].ansible_host }}"
   - hostname: "esx-asus-01.{{ homelab_domain }}"
     ip_addr: "{{ hostvars['routing.vojak.cloud'].ansible_host }}"
 #   # Virtual hosts
@@ -154,8 +156,6 @@ pihole_custom_dns_records:
     ip_addr: "{{ hostvars['homebridge.vojak.cloud'].ansible_host }}"
 #   - hostname: "plex.{{ homelab_domain }}"
 #     ip_addr: "{{ hostvars['homelab-plex'].ansible_host }}"
-  - hostname: "minecraft.{{ homelab_domain }}"
-    ip_addr: "{{ hostvars['minecraft.vojak.cloud'].ansible_host }}"
 
 #
 # Homebridge
@@ -243,8 +243,6 @@ portainer_environments:
     url: "tcp://{{ hostvars['plex.vojak.cloud'].ansible_host }}:2375"
   - name: Routing
     url: "tcp://{{ hostvars['routing.vojak.cloud'].ansible_host }}:2375"
-  - name: Minecraft
-    url: "tcp://{{ hostvars['minecraft.vojak.cloud'].ansible_host }}:2375"
 
 #
 # InfluxDB
@@ -296,10 +294,16 @@ prometheus_vmware_exporter_instances:
     export_port: 9514
     log_level: info
   - alias: esx-mac-05
-    host: "{{ hostvars['esx-mac-04.vojak.cloud'].ansible_host }}"
+    host: "{{ hostvars['esx-mac-05.vojak.cloud'].ansible_host }}"
     username: "{{ vault_esxi_username }}"
     password: "{{ vault_esxi_password }}"
     export_port: 9516
+    log_level: info
+  - alias: esx-mac-06
+    host: "{{ hostvars['esx-mac-06.vojak.cloud'].ansible_host }}"
+    username: "{{ vault_esxi_username }}"
+    password: "{{ vault_esxi_password }}"
+    export_port: 9517
     log_level: info
   - alias: esx-asus-01
     host: "{{ hostvars['esx-asus-01.vojak.cloud'].ansible_host }}"
@@ -387,7 +391,6 @@ homepage_docker_hosts:
   - "pihole-02.{{ homelab_domain }}"
   - "plausible.{{ homelab_domain }}"
   - "plex.{{ homelab_domain }}"
-  - "minecraft.{{ homelab_domain }}"
 
 #
 # Cloudflare DDNS
@@ -395,8 +398,3 @@ homepage_docker_hosts:
 cloudflare_ddns_api_key: "{{ vault_cloudflare_ddns_api_key }}"
 cloudflare_ddns_zone: "{{ homelab_domain }}"
 cloudflare_ddns_subdomain: homelab
-
-#
-# Minecraft
-#
-minecraft_port: 25565

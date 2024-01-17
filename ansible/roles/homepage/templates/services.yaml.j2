@@ -27,6 +27,10 @@
         href: https://{{ hostvars['esx-mac-05.vojak.cloud'].ansible_host }}
         ping: https://{{ hostvars['esx-mac-05.vojak.cloud'].ansible_host }}
         icon: vmware-esxi
+    - esx-mac-06:
+        href: https://{{ hostvars['esx-mac-06.vojak.cloud'].ansible_host }}
+        ping: https://{{ hostvars['esx-mac-06.vojak.cloud'].ansible_host }}
+        icon: vmware-esxi
 
 - DNS:
     - Pi-hole 01:
@@ -85,12 +89,12 @@
         #  username:
         #  password:
     - Synology NAS:
-        href: http://{{ synology_nas_host }}:{{ synology_nas_port }}
-        ping: http://{{ synology_nas_host }}:{{ synology_nas_port }}
+        href: https://{{ synology_nas_host }}:{{ synology_nas_port }}
+        ping: https://{{ synology_nas_host }}:{{ synology_nas_port }}
         icon: synology-dsm
         widget:
             type: diskstation
-            url: http://{{ synology_nas_host }}:{{ synology_nas_port }}
+            url: https://{{ synology_nas_host }}:{{ synology_nas_port }}
             username: {{ synology_nas_username }}
             password: {{ synology_nas_password }}
             volume: volume_1
@@ -137,13 +141,6 @@
         #    type: plex
         #    url: http://{{ hostvars['plex.vojak.cloud'].ansible_host }}:{{ plex_port_http }}
         #    key: 
-    - Minecraft:
-        icon: minecraft
-        server: minecraft.vojak.cloud
-        container: minecraft
-        widget:
-            type: minecraft
-            url: udp://minecraft.vojak.cloud:{{ minecraft_port }}
 
 - Public:
     - Plausible:

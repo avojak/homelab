@@ -25,7 +25,3 @@ output "homebridge_ip_address" {
 output "monitoring_ip_address" {
   value = module.monitoring.ip_address
 }
-
-output "minecraft_ip_address" {
-  value = module.minecraft.ip_address
-}

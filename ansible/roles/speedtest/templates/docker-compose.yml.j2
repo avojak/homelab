@@ -2,7 +2,7 @@
 version: '3.3'
 services:
   speedtest:
-    image: loganmarchione/docker-speedtest-influxdbv2:{{ speedtest_version }}
+    image: avojak/docker-speedtest-influxdbv2:{{ speedtest_version }}
     container_name: speedtest
     restart: unless-stopped
     network_mode: host

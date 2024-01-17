@@ -1,4 +1,4 @@
-BASE_UBUNTU_IMAGE_NAME  := ubuntu-22.04-server
+BASE_UBUNTU_IMAGE_NAME := ubuntu-22.04-server
 OUTPUT_DIR := output
 
 UBUNTU_AMD64_IMAGE_NAME := $(BASE_UBUNTU_IMAGE_NAME)-amd64
@@ -40,20 +40,24 @@ $(UBUNTU_ARM64_OVA_FILE): $(UBUNTU_ARM64_TEMPLATE_FILE)
 		$<
 
 # Download the macOS ISO using Mist
-$(MACOS_AMD64_ISO):
-	cd $(MACOS_AMD64_IMAGE_NAME) && ./scripts/macosiso.sh $(MACOS_VERSION)
+# $(MACOS_AMD64_ISO):
+# 	cd $(MACOS_AMD64_IMAGE_NAME) && ./scripts/macosiso.sh $(MACOS_VERSION)
 
 # Build the macOS amd64 .ova image
-$(MACOS_AMD64_OVA_FILE): $(MACOS_AMD64_TEMPLATE_FILE) $(MACOS_AMD64_VARS_FILE) $(MACOS_AMD64_ISO)
-	@echo Building $(MACOS_AMD64_IMAGE_NAME)...
-	@packer build \
-		-force \
-		-only=base.vmware-iso.macOS \
-		-var-file $(MACOS_AMD64_VARS_FILE) \
-		$<
+# $(MACOS_AMD64_OVA_FILE): $(MACOS_AMD64_TEMPLATE_FILE) $(MACOS_AMD64_VARS_FILE) $(MACOS_AMD64_ISO)
+# 	@echo Building $(MACOS_AMD64_IMAGE_NAME)...
+# 	@packer build \
+# 		-force \
+# 		-only=base.vmware-iso.macOS \
+# 		-var-file $(MACOS_AMD64_VARS_FILE) \
+# 		$<
+
+.PHONY: ubuntu-amd64 ubuntu-arm64
+ubuntu-amd64: $(UBUNTU_AMD64_OVA_FILE)
+ubuntu-arm64: $(UBUNTU_ARM64_OVA_FILE)
 
 # Build all .ova images
-ova: $(UBUNTU_AMD64_OVA_FILE) $(UBUNTU_ARM64_OVA_FILE) $(MACOS_AMD64_OVA_FILE)
+ova: $(UBUNTU_AMD64_OVA_FILE) $(UBUNTU_ARM64_OVA_FILE) # $(MACOS_AMD64_OVA_FILE)
 
 .PHONY: clean
 clean:

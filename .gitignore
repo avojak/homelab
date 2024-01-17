@@ -20,8 +20,11 @@ terraform.tfstate.*.backup
 
 .vault-password-file
 .esxi_root_password
+.cluster_join_command
 
 id_rsa
 id_rsa.pub
+
+.cache/
 
 .DS_Store
