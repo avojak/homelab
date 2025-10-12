@@ -16,13 +16,13 @@ provider "esxi" {
   esxi_password = var.esxi_password
 }
 
-# provider "esxi" {
-#   alias         = "esx_mac_01"
-#   esxi_hostname = "192.168.1.52"
-#   esxi_hostport = var.esxi_hostport
-#   esxi_username = var.esxi_username
-#   esxi_password = var.esxi_password
-# }
+provider "esxi" {
+  alias         = "esx_mac_01"
+  esxi_hostname = "192.168.1.76"
+  esxi_hostport = var.esxi_hostport
+  esxi_username = var.esxi_username
+  esxi_password = var.esxi_password
+}
 
 provider "esxi" {
   alias         = "esx_mac_02"
@@ -48,10 +48,10 @@ provider "esxi" {
   esxi_password = var.esxi_password
 }
 
-# provider "esxi" {
-#   alias         = "esx_mac_05"
-#   esxi_hostname = "192.168.1.107"
-#   esxi_hostport = var.esxi_hostport
-#   esxi_username = var.esxi_username
-#   esxi_password = var.esxi_password
-# }
+provider "esxi" {
+  alias         = "esx_mac_05"
+  esxi_hostname = "192.168.1.107"
+  esxi_hostport = var.esxi_hostport
+  esxi_username = var.esxi_username
+  esxi_password = var.esxi_password
+}

@@ -47,6 +47,9 @@ traefik_services:
   - name: uptime_kuma
     hostname: "uptime-kuma.{{ homelab_domain }}"
     url: "http://{{ hostvars['monitoring.vojak.cloud'].ansible_host }}:{{ uptime_kuma_port }}"
+  - name: status
+    hostname: "status.{{ homelab_domain }}"
+    url: "http://{{ hostvars['monitoring.vojak.cloud'].ansible_host }}:{{ uptime_kuma_port }}"
   - name: prometheus
     hostname: "prometheus.{{ homelab_domain }}"
     url: "http://{{ hostvars['monitoring.vojak.cloud'].ansible_host }}:{{ prometheus_port }}"

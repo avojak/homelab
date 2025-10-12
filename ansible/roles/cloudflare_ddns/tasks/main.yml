@@ -12,11 +12,11 @@
     mode: '0644'
 
 - name: Ensure stack is running
-  community.docker.docker_compose:
-    project_name: Cloudflare DDNS
+  community.docker.docker_compose_v2:
+    project_name: cloudflare-ddns
     project_src: "{{ cloudflare_ddns_install_dir }}"
     state: present
-    pull: true
+    pull: missing
 
 - name: Cleanup stale Docker images
   community.docker.docker_prune:

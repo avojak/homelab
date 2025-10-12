@@ -1,0 +1,29 @@
+---
+services:
+  minecraft:
+    image: "itzg/minecraft-server:{{ minecraft_version }}"
+    container_name: minecraft
+    restart: always
+    ports:
+      - "{{ minecraft_port }}:25565"
+    environment:
+      - "EULA=true"
+      - "TYPE=FABRIC"
+      - "MODRINTH_PROJECTS=fabric-api"
+      - "WHITELIST={{ minecraft_users|join(',') }}"
+      - "OPS={{ minecraft_ops|join(',') }}"
+      - "MOTD={{ minecraft_motd }}"
+      - "DIFFICULTY={{ minecraft_difficulty }}"
+      - "ENABLE_QUERY={{ minecraft_enable_query }}"
+      - "MODE={{ minecraft_mode }}"
+      - "INIT_MEMORY={{ minecraft_jvm_init_memory_gb }}G"
+      - "MAX_MEMORY={{ minecraft_jvm_max_memory_gb }}G"
+      - "USE_MEOWICE_FLAGS={{ minecraft_use_meowice_flags }}"
+      - "USE_MEOWICE_GRAALVM_FLAGS={{ minecraft_use_meowice_graalvm_flags }}"
+    volumes:
+      - "{{ minecraft_data_dir }}:/data"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10mb"
+        max-file: "1"

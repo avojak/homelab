@@ -37,6 +37,9 @@ traefik_services:
   - name: plausible
     hostname: plausible.vojak.cloud
     url: "http://{{ hostvars['plausible.vojak.cloud'].ansible_host }}:{{ plausible_port_http }}"
+  - name: status
+    hostname: status.vojak.cloud
+    url: "http://{{ hostvars['monitoring.vojak.cloud'].ansible_host }}:{{ uptime_kuma_port }}"
   # ESXi hosts routed through Traefik for HTTPS
   - name: esx-mac-01
     hostname: esx-mac-01.vojak.cloud

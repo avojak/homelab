@@ -32,11 +32,11 @@
     mode: '0644'
 
 - name: Ensure stack is running
-  community.docker.docker_compose:
-    project_name: Homepage
+  community.docker.docker_compose_v2:
+    project_name: homepage
     project_src: "{{ homepage_install_dir }}"
     state: present
-    pull: true
+    pull: missing
 
 - name: Cleanup stale Docker images
   community.docker.docker_prune:

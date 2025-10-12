@@ -10,6 +10,14 @@
 - name: Base configuration for all guests
   hosts: guests
   become: true
+  vars:
+    pip_install_packages:
+      - name: requests
+        version: "<2.32.0"
+    docker_install_compose_plugin: true
+    docker_compose_package: docker-compose-plugin
+    docker_compose_package_state: latest
+    # docker_compose_version: "v2.27.1"
   roles:
     - guest_base
     - geerlingguy.pip
@@ -58,6 +66,8 @@
 - name: Configure Homebridge
   hosts: homebridge.vojak.cloud
   become: true
+  vars:
+    nodejs_version: "20.x"
   roles:
     - geerlingguy.nodejs
     - homebridge
@@ -76,3 +86,9 @@
     - pihole_influxdb_monitor
     - speedtest
     # - un-poller
+
+- name: Configure Fabric Minecraft
+  hosts: minecraft.vojak.cloud
+  become: true
+  roles:
+    - minecraft_fabric

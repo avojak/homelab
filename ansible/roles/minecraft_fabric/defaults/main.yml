@@ -1,0 +1,15 @@
+---
+minecraft_port: 25565
+minecraft_version: 2025.9.2-java21-graalvm
+minecraft_install_dir: /opt/minecraft
+minecraft_data_dir: "{{ minecraft_install_dir }}/data"
+minecraft_users: []
+minecraft_ops: []
+minecraft_motd: "A Minecraft server"
+minecraft_difficulty: "normal"
+minecraft_enable_query: true
+minecraft_mode: "survival"
+minecraft_jvm_init_memory_gb: 8
+minecraft_jvm_max_memory_gb: 16
+minecraft_use_meowice_flags: true
+minecraft_use_meowice_graalvm_flags: true

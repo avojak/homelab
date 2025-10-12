@@ -5,6 +5,7 @@
     command: pihole -g
 
 - name: Restart container
-  docker_container:
-    name: pihole
-    restart: yes
+  community.docker.docker_compose_v2:
+    project_name: pi-hole
+    project_src: "{{ pihole_install_dir }}"
+    state: restarted

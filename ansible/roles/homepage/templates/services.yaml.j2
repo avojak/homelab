@@ -141,6 +141,14 @@
         #    type: plex
         #    url: http://{{ hostvars['plex.vojak.cloud'].ansible_host }}:{{ plex_port_http }}
         #    key: 
+    - Minecraft:
+        href: http://{{ hostvars['minecraft.vojak.cloud'].ansible_host }}:{{ minecraft_port }}
+        icon: minecraft
+        server: minecraft.vojak.cloud
+        container: minecraft
+        widget:
+            type: minecraft
+            url: udp://{{ hostvars['minecraft.vojak.cloud'].ansible_host }}:{{ minecraft_port }}
 
 - Public:
     - Plausible:

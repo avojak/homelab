@@ -19,11 +19,11 @@
   notify: Restart Telegraf
 
 - name: Ensure stack is running
-  community.docker.docker_compose:
-    project_name: Telegraf
+  community.docker.docker_compose_v2:
+    project_name: telegraf
     project_src: "{{ telegraf_install_dir }}"
     state: present
-    pull: true
+    pull: missing
 
 - name: Cleanup stale Docker images
   community.docker.docker_prune:

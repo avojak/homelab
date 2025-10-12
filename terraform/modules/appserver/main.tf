@@ -16,5 +16,7 @@ resource "esxi_guest" "appserver" {
   numvcpus       = var.numvcpus
   power          = "on"
 
+  boot_disk_type = var.boot_disk_type
+
   ovf_source = var.ova_file
 }

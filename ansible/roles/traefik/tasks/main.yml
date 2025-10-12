@@ -34,8 +34,8 @@
     mode: '0644'
 
 - name: Ensure stack is running
-  community.docker.docker_compose:
-    project_name: Traefik
+  community.docker.docker_compose_v2:
+    project_name: traefik
     project_src: "{{ traefik_installation_dir }}"
     state: present
 

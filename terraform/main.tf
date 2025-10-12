@@ -13,13 +13,15 @@ module "pihole01" {
 module "pihole02" {
   source = "./modules/appserver"
   providers = {
-    esxi = esxi.esx_mac_03
+    esxi = esxi.esx_mac_05
   }
   guest_name     = "pihole02"
   boot_disk_size = 25
   memsize        = 4
   numvcpus       = 2
   ova_file       = var.ova_files["ubuntu"]["amd64"]
+
+  boot_disk_type = "zeroedthick"
 }
 
 module "routing" {
@@ -81,3 +83,30 @@ module "monitoring" {
   numvcpus       = 8
   ova_file       = var.ova_files["ubuntu"]["amd64"]
 }
+
+module "minecraft" {
+  source = "./modules/appserver"
+  providers = {
+    esxi = esxi.esx_asus_01
+  }
+  guest_name     = "minecraft"
+  boot_disk_size = 200
+  memsize        = 30
+  numvcpus       = 6
+  ova_file       = var.ova_files["ubuntu"]["amd64"]
+
+  boot_disk_type = "zeroedthick"
+}
+
+# module "gitlab" {
+#   source = "./modules/appserver"
+#   providers = {
+#     esxi = esxi.esx_mac_01
+#   }
+#   guest_name     = "gitlab"
+#   boot_disk_size = 75
+#   memsize        = 16
+#   numvcpus       = 8
+#   ova_file       = var.ova_files["ubuntu"]["amd64"]
+#   boot_disk_type = "zeroedthick"
+# }

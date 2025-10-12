@@ -18,6 +18,7 @@ pip_install_packages:
 #
 # Telegraf output to InfluxDB configuration
 #
+telegraf_version: 1.29.2
 telegraf_output_influxdb_host: "{{ hostvars['monitoring.vojak.cloud'].ansible_host }}"
 telegraf_output_influxdb_port: "{{ influxdb_port }}"
 telegraf_output_influxdb_admin_token: "{{ influxdb_admin_token }}"
@@ -150,10 +151,14 @@ pihole_custom_dns_records:
     ip_addr: "{{ hostvars['monitoring.vojak.cloud'].ansible_host }}"
   - hostname: "uptime-kuma.{{ homelab_domain }}"
     ip_addr: "{{ hostvars['monitoring.vojak.cloud'].ansible_host }}"
+  - hostname: "status.{{ homelab_domain }}"
+    ip_addr: "{{ hostvars['monitoring.vojak.cloud'].ansible_host }}"
   - hostname: "homebridge.{{ homelab_domain }}"
     ip_addr: "{{ hostvars['homebridge.vojak.cloud'].ansible_host }}"
   - hostname: "scrypted.{{ homelab_domain }}"
     ip_addr: "{{ hostvars['homebridge.vojak.cloud'].ansible_host }}"
+  - hostname: "minecraft.{{ homelab_domain }}"
+    ip_addr: "{{ hostvars['minecraft.vojak.cloud'].ansible_host }}"
 #   - hostname: "plex.{{ homelab_domain }}"
 #     ip_addr: "{{ hostvars['homelab-plex'].ansible_host }}"
 
@@ -169,11 +174,15 @@ homebridge_bridge_username: CC:22:3D:E3:CE:30
 homebridge_timezone: "{{ homelab_timezone }}"
 homebridge_plugins:
   - name: homebridge-tplink-smarthome
-    version: '8.0.1'
+    version: '8.0.3'
   - name: homebridge-tcc
-    version: '0.2.34'
+    version: '0.3.0'
   - name: homebridge-prometheus-exporter
     version: '1.0.5'
+  - name: homebridge-http-webhooks
+    version: '0.1.19'
+  - name: homebridge-rachio-irrigation
+    version: '1.4.0'
 homebridge_platforms:
   - platform: 'TplinkSmarthome'
     name: 'TplinkSmarthome'
@@ -201,6 +210,29 @@ homebridge_platforms:
     refresh_interval: 60
     request_timeout: 1
     discovery_timeout: 20
+  - platform: 'rachio'
+    name: 'Rachio'
+    api_key: "{{ vault_homebridge_rachio_api_key }}"
+    default_runtime: 3
+    runtime_source: 0
+    use_irrigation_display: true
+    show_standby: false
+    show_runall: false
+    show_schedules: false
+    internal_IP_address: '127.0.0.1'
+    auto_correct_IP: false
+    external_webhook_port: 12453
+    internal_webhook_port: 27546
+    use_basic_auth: false
+    delete_webhooks: false
+    showAPIMessages: false
+    showWebhookMessages: false
+    valveType: 0
+    showBridge: false
+    showControllers: true
+    showValves: true
+    liveRefreshTimeout: 2
+    liveRefreshRate: 20
 homebridge_plugin_ports:
   - { port: 47988, proto: udp } # TPLink Smart Home (manually set above)
   - { port: 36123, proto: tcp } # PrometheusExporter (manually set above)
@@ -216,11 +248,10 @@ scrypted_device_ports:
   - 40871 # HomeKit Plugin
   - 33622 # Doorbell
   - 38424 # Backyard Camera
-  - 38685 # Living Room Camera
+  - 38684 # Living Room Camera
   - 41288 # Garage Camera
   - 48096 # Front Yard Camera
   - 39755 # Laundry Room Camera
-  - 34941 # Garage Sensor
 
 #
 # Portainer
@@ -323,7 +354,7 @@ grafana_admin_password: "{{ vault_grafana_admin_password }}"
 #
 # Pi-hole InfluxDB Monitor
 #
-pihole_influxdb_monitor_version: "1.1.0"
+pihole_influxdb_monitor_version: "1.4.0"
 pihole_influxdb_monitor_pihole_alias: pihole-01,pihole-02
 pihole_influxdb_monitor_pihole_address: http://{{ hostvars['pihole-01.vojak.cloud'].ansible_host }},http://{{ hostvars['pihole-02.vojak.cloud'].ansible_host }}
 pihole_influxdb_monitor_pihole01_token: "{{ pihole_api_key }}"
@@ -398,3 +429,14 @@ homepage_docker_hosts:
 cloudflare_ddns_api_key: "{{ vault_cloudflare_ddns_api_key }}"
 cloudflare_ddns_zone: "{{ homelab_domain }}"
 cloudflare_ddns_subdomain: homelab
+
+#
+# GitLab
+#
+gitlab_version: 17.8.1
+
+#
+# Minecraft
+#
+minecraft_port: 25565
+minecraft_hostname: "minecraft.{{ homelab_domain }}"

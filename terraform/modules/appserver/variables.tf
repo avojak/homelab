@@ -29,3 +29,9 @@ variable "ova_file" {
   type        = string
   description = "The OVA template to use to create the VM"
 }
+
+variable "boot_disk_type" {
+  type        = string
+  description = "The disk type for the boot disk"
+  default     = "thin"
+}

@@ -23,7 +23,7 @@ apply:
 .PHONY: destroy
 destroy:
 	@echo Destroying Terraform deployment...
-	@terraform $@ -var='esxi_password=$(ESXI_ROOT_PASSWORD)'
+	@terraform $@ -var='esxi_password=$(ESXI_ROOT_PASSWORD)' $(CLI_PARAMETERS)
 
 .PHONY: lint
 lint:

@@ -36,12 +36,13 @@
     dest: "{{ pihole_install_dir }}/docker-compose.yml"
     mode: '0644'
 
+# TODO: There's a bug here where the name conflicts with the existing container...
 - name: Ensure stack is running
-  community.docker.docker_compose:
-    project_name: Pi-hole
+  community.docker.docker_compose_v2:
+    project_name: pi-hole
     project_src: "{{ pihole_install_dir }}"
     state: present
-    pull: false
+    pull: missing
 
 # - name: Restart service when config has changed
 #   community.docker.docker_compose:
@@ -52,7 +53,7 @@
 
 - name: Wait for container to be ready
   ansible.builtin.uri:
-    url: http://localhost/admin/api.php
+    url: http://{{ ansible_host }}/admin/api.php
   register: pihole_container_result
   until: pihole_container_result.status == 200
   retries: 30
