@@ -1,0 +1,1 @@
+The target hosts are running an older version of ESXi (7.0.0) due to hardware support limitations. ESXi 7.0.0 contains Python version 3.5. To ensure that we're using a version of Ansible on the control node which is compliant with Python 3.5 on the target nodes, we build a Docker image for Ansible.

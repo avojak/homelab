@@ -1,0 +1,12 @@
+---
+- name: Populate service facts
+  ansible.builtin.service_facts:
+
+- name: Install K3s agent
+  ansible.builtin.shell: /tmp/install-k3s.sh
+  environment:
+    INSTALL_K3S_EXEC: agent
+    K3S_URL: "https://{{ hostvars['eks-server.vojak.cloud']['ansible_host'] }}:6443"
+    K3S_TOKEN: "{{ k3s_token }}"
+    K3S_NODE_NAME: "{{ inventory_hostname }}"
+  when: ("k3s-agent.service" not in services)

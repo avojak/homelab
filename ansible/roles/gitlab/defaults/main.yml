@@ -1,0 +1,7 @@
+---
+gitlab_version: latest
+gitlab_port_http: 8080
+gitlab_install_dir: /opt/gitlab
+gitlab_config_dir: "{{ gitlab_install_dir }}/config"
+gitlab_logs_dir: "{{ gitlab_install_dir }}/logs"
+gitlab_data_dir: "{{ gitlab_install_dir }}/data"

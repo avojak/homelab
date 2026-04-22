@@ -1,0 +1,141 @@
+---
+# - name: Install control plane packages
+#   hosts: control_plane
+#   become: true
+#   tasks:
+#     - name: Install kubectl
+#       community.general.rpm_ostree_pkg:
+#         name: kubectl
+#         state: present
+#       notify: reboot
+#   handlers:
+#     - name: Reboot control plane
+#       ansible.builtin.reboot:
+#         msg: "Rebooting machine..."
+#       listen: "reboot"
+
+- name: Start services
+  hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Start CRI-O and kubelet
+      ansible.builtin.systemd_service:
+        state: started
+        enabled: true
+        name: "{{ item }}"
+      with_items:
+        - crio
+        - kubelet
+
+- name: Initialize cluster
+  hosts: control_plane
+  become: true
+  tasks:
+    - name: Create ClusterConfiguration
+      ansible.builtin.template:
+        src: kubeadm-config.yml.j2
+        dest: /tmp/kubeadm-config.yml
+      register: kubeadm_config
+
+    - name: Initialize cluster
+      block:
+        - name: kubeadm init
+          ansible.builtin.command:
+            cmd: kubeadm init --config /tmp/kubeadm-config.yml
+          register: kubeadm_init
+
+        - name: Print to console
+          debug:
+            msg: "{{ kubeadm_init.stdout_lines }}"
+      when: kubeadm_config.changed
+
+    - name: Save cluster join command
+      block:
+        - name: Print join command
+          ansible.builtin.command:
+            cmd: kubeadm token create --print-join-command
+          register: join_command
+          changed_when: false
+        
+        - name: Copy join command to local file.
+          delegate_to: localhost
+          ansible.builtin.copy:
+            content: "{{ join_command.stdout_lines[0] }}"
+            dest: "{{ playbook_dir }}/.cluster_join_command"
+            mode: '0777'
+          vars:
+            ansible_become: false
+          changed_when: false
+
+    - name: Configure kubectl
+      block:
+        - name: Lookup user
+          ansible.builtin.user:
+            name: "{{ ansible_user }}"
+            state: present
+            shell: /bin/bash
+          register: user_info
+
+        - name: Create ~/.kube
+          ansible.builtin.file:
+            path: "{{ user_info.home }}/.kube"
+            state: directory
+
+        - name: Copy config file
+          ansible.builtin.copy:
+            src: /etc/kubernetes/admin.conf
+            dest: "{{ user_info.home }}/.kube/config"
+            remote_src: true
+            owner: "{{ user_info.uid }}"
+            group: "{{ user_info.group }}"
+
+    - name: Setup pod networking
+      block:
+        - name: Copy Calico config
+          ansible.builtin.copy:
+            src: "calico-{{ calico_version }}.yaml"
+            dest: /tmp/calico.yaml
+            mode: '0644'
+          register: calico_config
+
+        - name: Deploy Calico
+          ansible.builtin.command:
+            cmd: kubectl apply -f /tmp/calico.yaml
+          vars:
+            ansible_become: false
+          when: calico_config.changed
+
+        - name: Install calicoctl as a kubectl plugin
+          ansible.builtin.get_url:
+            url: "https://github.com/projectcalico/calico/releases/download/v{{ calico_version }}/calicoctl-linux-amd64"
+            dest: /usr/local/bin/kubectl-calico
+            mode: '0755'
+
+- name: Join worker nodes to cluster
+  hosts: nodes
+  become: true
+  tasks:
+    - name: Lookup kubelet.conf
+      ansible.builtin.command:
+        cmd: cat /etc/kubernetes/kubelet.conf
+      register: kubelet_conf
+      changed_when: false
+
+    - name: Create variables
+      ansible.builtin.set_fact:
+        clusters: "{{ obj.clusters }}"
+      vars:
+        obj: "{{ kubelet_conf.stdout | from_yaml }}"
+
+    - debug:
+        msg: "Server: {{ obj }}"
+      vars:
+        obj: "{{ clusters | map(attribute='cluster') | flatten | map(attribute='server') | flatten }}"
+      when: clusters | length > 0
+
+      # clusters | map(attribute='')
+
+    # - name: Run join command
+    #   ansible.builtin.command:
+    #     cmd: "{{ lookup('ansible.builtin.file', '{{ playbook_dir }}/.cluster_join_command') }}"

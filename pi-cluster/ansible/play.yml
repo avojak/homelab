@@ -1,0 +1,25 @@
+---
+- name: Base configuration for all ESXi hosts
+  hosts: esxi
+  gather_facts: false
+  roles:
+    - esx_base
+
+- name: Base configuration for all nodes
+  hosts: guests
+  become: true
+  roles:
+    - guest_base
+    - k3s_base
+
+- name: Configure K3s server
+  hosts: server
+  become: true
+  roles:
+    - k3s_server
+
+- name: Configure K3s agents
+  hosts: agents
+  become: true
+  roles:
+    - k3s_agent

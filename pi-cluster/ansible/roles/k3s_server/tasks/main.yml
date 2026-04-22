@@ -1,0 +1,25 @@
+---
+- name: Create K3s config directory
+  ansible.builtin.file:
+    path: /etc/rancher/k3s
+    state: directory
+    owner: root
+    group: root
+
+- name: Populate service facts
+  ansible.builtin.service_facts:
+
+- name: Install K3s
+  block:
+    - name: Copy installation config file
+      ansible.builtin.template:
+        src: config.yaml.j2
+        dest: /etc/rancher/k3s/config.yaml
+        mode: '0644'
+        
+    - name: Install
+      ansible.builtin.shell: /tmp/install-k3s.sh
+      environment:
+        INSTALL_K3S_EXEC: server
+        K3S_TOKEN: "{{ k3s_token }}"
+  when: ("k3s.service" not in services)

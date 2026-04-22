@@ -1,0 +1,12 @@
+#
+# Host system variables
+#
+filesystem_device: /dev/sda
+filesystem_device_number: 2
+filesystem_type: ext4
+
+#
+# K3s variables
+#
+# k3s_version: v1.31.2+k3s1
+k3s_token: "{{ vault_k3s_token }}"

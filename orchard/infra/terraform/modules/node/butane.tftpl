@@ -1,0 +1,211 @@
+variant: fcos
+version: 1.5.0
+storage:
+  files:
+    # CRI-O DNF module
+    - path: /etc/dnf/modules.d/cri-o.module
+      mode: 0644
+      overwrite: true
+      contents:
+        inline: |
+          [cri-o]
+          name=cri-o
+          stream=${kubernetes_version}
+          profiles=
+          state=enabled
+    # YUM repository for Kubernetes
+    - path: /etc/yum.repos.d/kubernetes.repo
+      mode: 0644
+      overwrite: true
+      contents:
+        inline: |
+          [kubernetes]
+          name=Kubernetes
+          baseurl=https://pkgs.k8s.io/core:/stable:/v${kubernetes_version}/rpm/
+          enabled=1
+          gpgcheck=1
+          gpgkey=https://pkgs.k8s.io/core:/stable:/v${kubernetes_version}/rpm/repodata/repomd.xml.key
+    # Configure automatic loading of br_netfilter on startup
+    - path: /etc/modules-load.d/k8s.conf
+      mode: 0644
+      overwrite: true
+      contents:
+        inline: |
+          overlay
+          br_netfilter
+    # Set kernel parameters required by kubelet
+    - path: /etc/sysctl.d/k8s.conf
+      mode: 0644
+      overwrite: true
+      contents:
+        inline: |
+          net.bridge.bridge-nf-call-iptables  = 1
+          net.bridge.bridge-nf-call-ip6tables = 1
+          net.ipv4.ip_forward                 = 1
+    # Set the hostname
+    - path: /etc/hostname
+      mode: 420
+      overwrite: true
+      contents:
+        inline: ${hostname}
+    # # Kubernetes install script
+    # - path: /usr/local/bin/install-k8s.sh
+    #   mode: 0755
+    #   overwrite: true
+    #   contents:
+    #     inline: |
+    #       #!/usr/bin/env bash
+
+    #       # Set SELinux in permissive mode (effectively disabling it)
+    #       sudo setenforce 0
+    #       sudo sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
+
+    #       # Install kubelet, kubeadm, cri-o, and optionally kubectl
+    #       /usr/bin/rpm-ostree install --apply-live --allow-inactive kubelet kubeadm cri-o %{ if install_kubectl ~}kubectl%{ endif }
+    #       systemctl enable --now {crio,kubelet}
+
+    # Kubernetes install script
+    - path: /usr/local/bin/install-k8s.sh
+      mode: 0755
+      overwrite: true
+      contents:
+        inline: |
+          #!/usr/bin/env bash
+
+          echo "Installing CNI plugins ${cni_version}"
+          cni_dest="/opt/cni/bin/"
+          mkdir -p $cni_dest
+          curl -fsL https://github.com/containernetworking/plugins/releases/download/${cni_version}/cni-plugins-linux-amd64-${cni_version}.tgz | tar -C $cni_dest -xz
+          
+          echo "Installing crictl"
+          download_dir="/usr/local/bin"
+          curl -L "https://github.com/kubernetes-sigs/cri-tools/releases/download/${crictl_version}/crictl-${crictl_version}-linux-amd64.tar.gz" | sudo tar -C $download_dir -xz
+
+          echo "Installing Kubernetes ${kubernetes_version}"
+          for f in kubeadm kubelet %{ if install_kubectl ~}kubectl%{ endif }; do
+            curl -sfL --remote-name-all https://storage.googleapis.com/kubernetes-release/release/${kubernetes_version}/bin/linux/amd64/$f --output /usr/local/bin/$f
+            chmod 755 /usr/local/bin/$f;
+          done
+systemd:
+  units:
+    # Prevent stripping of the guestinfo from the .vmx file, which causes Terraform to always detect changes
+    - name: ignition-delete-config.service
+      mask: true
+    # Run Open VM Tools because we're running on ESXi hosts
+    - name: open-vm-tools.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Open VM Tools
+        After=network-online.target
+        Wants=network-online.target
+
+        [Service]
+        TimeoutStartSec=0
+        ExecStartPre=-/bin/podman stop open-vm-tools --ignore
+        ExecStartPre=-/bin/podman rm open-vm-tools --ignore
+        ExecStartPre=/bin/podman pull docker.io/avojak/open-vm-tools:f${fedora_version}
+        ExecStart=/bin/podman run \
+            --privileged \
+            --rm \
+            -v /proc/:/hostproc/ \
+            -v /sys/fs/cgroup:/sys/fs/cgroup \
+            -v /var/log:/var/log \
+            -v /run/systemd:/run/systemd \
+            -v /sysroot:/sysroot \
+            -v /etc/passwd:/etc/passwd \
+            -v /etc/shadow:/etc/shadow \
+            -v /etc/adjtime:/etc/adjtime \
+            -v /var/lib/sss/pipes/:/var/lib/sss/pipes/:rw \
+            -v /tmp:/tmp:rw \
+            -v /etc/sysconfig:/etc/sysconfig:rw \
+            -v /etc/resolv.conf:/etc/resolv.conf:rw \
+            -v /etc/nsswitch.conf:/etc/nsswitch.conf:rw \
+            -v /etc/hosts:/etc/hosts:rw \
+            --net=host \
+            --pid=host \
+            --ipc=host \
+            --uts=host \
+            --name open-vm-tools \
+            docker.io/avojak/open-vm-tools:f${fedora_version}
+        ExecStop=-/usr/bin/podman stop open-vm-tools
+        ExecStopPost=-/usr/bin/podman rm open-vm-tools
+
+        [Install]
+        WantedBy=multi-user.target
+    # Installing python as a layered package with rpm-ostree
+    - name: rpm-ostree-install-python.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Layer python with rpm-ostree
+        Wants=network-online.target
+        After=network-online.target
+        # We run before `zincati.service` to avoid conflicting rpm-ostree
+        # transactions.
+        Before=zincati.service
+        ConditionPathExists=!/var/lib/%N.stamp
+
+        [Service]
+        Type=oneshot
+        RemainAfterExit=yes
+        # `--allow-inactive` ensures that rpm-ostree does not return an error
+        # if the package is already installed. This is useful if the package is
+        # added to the root image in a future Fedora CoreOS release as it will
+        # prevent the service from failing.
+        ExecStart=/usr/bin/rpm-ostree install --apply-live --allow-inactive python3
+        ExecStart=/bin/touch /var/lib/%N.stamp
+
+        [Install]
+        WantedBy=multi-user.target
+    # Installing base Kubernetes packages as a layered package with rpm-ostree
+    - name: rpm-ostree-install-kubernetes.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Layer kubelet, kubeadm, cri-o, and optionally kubectl with rpm-ostree
+        Wants=network-online.target
+        After=network-online.target
+        # We run after `rpm-ostree-install-python.service` to avoid conflicting
+        # rpm-ostree transactions.
+        After=rpm-ostree-install-python.service
+        # We run before `zincati.service` to avoid conflicting rpm-ostree
+        # transactions.
+        Before=zincati.service
+        ConditionPathExists=!/var/lib/%N.stamp
+
+        [Service]
+        Type=oneshot
+        RemainAfterExit=yes
+        # `--allow-inactive` ensures that rpm-ostree does not return an error
+        # if the package is already installed. This is useful if the package is
+        # added to the root image in a future Fedora CoreOS release as it will
+        # prevent the service from failing.
+        ExecStart=/usr/local/bin/install-k8s.sh
+        ExecStart=/bin/touch /var/lib/%N.stamp
+
+        [Install]
+        WantedBy=multi-user.target
+    # Enable CRI-O to run on boot
+    - name: crio.service
+      enabled: true
+      dropins:
+        - name: crio.conf
+          contents: |
+            [Unit]
+            After=rpm-ostree-install-kubernetes.service
+            Before=zincati.service
+    # Enable kubelet to run on boot
+    - name: kubelet.service
+      enabled: true
+      dropins:
+        - name: kubelet.conf
+          contents: |
+            [Unit]
+            After=rpm-ostree-install-kubernetes.service
+            Before=zincati.service
+passwd:
+  users:
+    - name: core
+      ssh_authorized_keys:
+        - ${ssh_public_key}

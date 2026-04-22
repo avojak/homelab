@@ -1,0 +1,43 @@
+---
+- name: Create installation directory
+  ansible.builtin.file:
+    path: "{{ gitlab_install_dir }}"
+    state: directory
+    mode: '0775'
+
+- name: Create directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0775'
+  with_items:
+    - "{{ gitlab_config_dir }}"
+    - "{{ gitlab_logs_dir }}"
+    - "{{ gitlab_data_dir }}"
+
+- name: Copy docker-compose template
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: "{{ gitlab_install_dir }}/docker-compose.yml"
+    mode: '0644'
+
+- name: Ensure stack is running
+  community.docker.docker_compose_v2:
+    project_name: gitlab
+    project_src: "{{ gitlab_install_dir }}"
+    state: present
+    pull: missing
+
+- name: Cleanup stale Docker images
+  community.docker.docker_prune:
+    images: true
+    images_filters:
+      dangling: false
+
+- name: Ensure ports open on the firewall
+  community.general.ufw:
+    rule: allow
+    port: "{{ item.port }}"
+    proto: "{{ item.proto }}"
+  with_items:
+    - { port: "{{ gitlab_port_http }}", proto: "tcp" }

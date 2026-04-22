@@ -1,0 +1,26 @@
+---
+version: '3.6'
+services:
+  gitlab:
+    image: gitlab/gitlab-ce:{{ gitlab_version }}-ce.0
+    container_name: gitlab
+    restart: unless-stopped
+    hostname: 'gitlab.vojak.cloud'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        # Add any other gitlab.rb configuration here, each on its own line
+        external_url 'https://gitlab.vojak.cloud'
+    ports:
+      - "{{ gitlab_port_http }}:80"
+      # - '443:443'
+      # - '22:22'
+    volumes:
+      - "{{ gitlab_config_dir }}:/etc/gitlab"
+      - "{{ gitlab_logs_dir }}:/var/log/gitlab"
+      - "{{ gitlab_data_dir }}:/var/opt/gitlab"
+    shm_size: '256m'
+    logging:
+      driver: json-file
+      options:
+        max-size: "10mb"
+        max-file: "1"
